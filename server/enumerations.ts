@@ -1,3 +1,10 @@
+export enum BucketType{
+    country =1,
+    activity =2,
+    continent =3,
+}
+
+
 export enum OrganizationType{
     system = 1,
     guest = 2,
@@ -15,15 +22,7 @@ export enum OrderStatus{
 }
 
 export enum NotificationType{
-    NewOrder_Supplier = 1,
-    OrderAccepted_Core = 2,
-    OrderRejected_Core = 3,
-    InventoryAdded_Core = 4,
-    InventoryFinalized_Core = 5,
-    InventoryRemoved_Core = 6,
-    PriceUpdated_Core = 7,
-    TeamMemberJoinRequest_Supplier = 8,
-    SupplierAwaitingApproval_Core = 9
+    BucketLiked =1,
 }
 
 export enum PushNotificationType{
@@ -36,7 +35,6 @@ export enum PushNotificationType{
 }
 
 export enum OwnershipType{
-    supplier=1,
     organization=2,
     user=3
 }

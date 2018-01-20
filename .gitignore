@@ -70,3 +70,4 @@ o-ri/launchy.bat
 *.bat
 o-ri/travis
 img-uploads/
+.DS_Store

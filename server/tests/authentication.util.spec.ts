@@ -37,30 +37,30 @@ export class AuthUtil {
 
             // Now we have the system credentials.  it's time to clear out anything that we might want to.
             // first up lets delete users that we might have created.
-           await new IdentityApiService(CONST.ep.USERS).deleteSingle({
-                "email": CONST.testing.PRODUCT_ADMIN_EMAIL
-            });
+        //    await new IdentityApiService(CONST.ep.USERS).deleteSingle({
+        //         "email": CONST.testing.PRODUCT_ADMIN_EMAIL
+        //     });
 
-           await new IdentityApiService(CONST.ep.USERS).deleteSingle({
-                "email": CONST.testing.PRODUCT_EDITOR_EMAIL
-            });
+        //    await new IdentityApiService(CONST.ep.USERS).deleteSingle({
+        //         "email": CONST.testing.PRODUCT_EDITOR_EMAIL
+        //     });
 
-            await new IdentityApiService(CONST.ep.USERS).deleteSingle({
-                "email": CONST.testing.SUPPLIER_EDITOR_EMAIL
-            });
+        //     await new IdentityApiService(CONST.ep.USERS).deleteSingle({
+        //         "email": CONST.testing.SUPPLIER_EDITOR_EMAIL
+        //     });
 
-            await new IdentityApiService(CONST.ep.USERS).deleteSingle({
-                "email": CONST.testing.SUPPLIER_ADMIN_EMAIL
-            });
+        //     await new IdentityApiService(CONST.ep.USERS).deleteSingle({
+        //         "email": CONST.testing.SUPPLIER_ADMIN_EMAIL
+        //     });
 
-            await new IdentityApiService(CONST.ep.USERS).deleteSingle({
-                "email": CONST.testing.UPGRADE_USER_EMAIL
-            });
+        //     await new IdentityApiService(CONST.ep.USERS).deleteSingle({
+        //         "email": CONST.testing.UPGRADE_USER_EMAIL
+        //     });
 
-            // Now let's delete the organization we created for testing.
-            await new IdentityApiService(CONST.ep.ORGANIZATIONS).deleteSingle({
-                "name": CONST.testing.ORGANIZATION_NAME
-            });
+        //     // Now let's delete the organization we created for testing.
+        //     await new IdentityApiService(CONST.ep.ORGANIZATIONS).deleteSingle({
+        //         "name": CONST.testing.ORGANIZATION_NAME
+        //     });
         }
         catch (err) {
             this.handleTestError(err);
@@ -78,24 +78,24 @@ export class AuthUtil {
             const supEditorId = await this.registerUser(CONST.testing.SUPPLIER_EDITOR_EMAIL);
 
             // Create the organization we'll use for testing
-            let orgResponse = await new IdentityApiService(CONST.ep.ORGANIZATIONS).createRaw({
-                "name": CONST.testing.ORGANIZATION_NAME,
-                "isSystem": false,
-                "type": 3,
-                "users": [
-                    productAdminId,
-                    productEditorId,
-                    supAdminId,
-                    supEditorId
-                ]
-            });
+            // let orgResponse = await new IdentityApiService(CONST.ep.ORGANIZATIONS).createRaw({
+            //     "name": CONST.testing.ORGANIZATION_NAME,
+            //     "isSystem": false,
+            //     "type": 3,
+            //     "users": [
+            //         productAdminId,
+            //         productEditorId,
+            //         supAdminId,
+            //         supEditorId
+            //     ]
+            // });
 
             // So we're going to issue a patch request to update the roles array on our new users
             // find me 2 different roles.  I want one role that was the 'product:owner', and one that was 'product:editor'
-            await this.addRolesToUser(CONST.PRODUCT_ADMIN_ROLE, productAdminId);
-            await this.addRolesToUser(CONST.PRODUCT_EDITOR_ROLE, productEditorId);
-            await this.addRolesToUser(CONST.SUPPLIER_ADMIN_ROLE, supAdminId);
-            await this.addRolesToUser(CONST.SUPPLIER_EDITOR_ROLE, supEditorId);
+            // await this.addRolesToUser(CONST.PRODUCT_ADMIN_ROLE, productAdminId);
+            // await this.addRolesToUser(CONST.PRODUCT_EDITOR_ROLE, productEditorId);
+            // await this.addRolesToUser(CONST.SUPPLIER_ADMIN_ROLE, supAdminId);
+            // await this.addRolesToUser(CONST.SUPPLIER_EDITOR_ROLE, supEditorId);
 
             // Now we can use these tokens when we call back out to the product api during testing.
             this.productAdminToken = await new IdentityApiService(CONST.ep.USERS).authenticateUser(CONST.testing.PRODUCT_ADMIN_EMAIL, "test354435");
@@ -120,15 +120,15 @@ export class AuthUtil {
     }
 
     private static async addRolesToUser(role: string, userId: string) {
-        let roleResponse = await new IdentityApiService(CONST.ep.ROLES).query(
-            {
-                "name": role
-            });
+        // let roleResponse = await new IdentityApiService(CONST.ep.ROLES).query(
+        //     {
+        //         "name": role
+        //     });
 
-        const adminResponse = await new IdentityApiService(CONST.ep.USERS).update(
-            {
-                "roles": roleResponse.body
-            }, userId);
+        // const adminResponse = await new IdentityApiService(CONST.ep.USERS).update(
+        //     {
+        //         "roles": roleResponse.body
+        //     }, userId);
     }
 
     private static handleTestError(err: any): void {

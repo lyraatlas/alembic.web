@@ -4,14 +4,11 @@ import mongoose = require('mongoose');
 import { Schema, Model, Document } from 'mongoose';
 import { BaseController } from './base/base.controller';
 import { CONST } from '../constants';
-import { IOwnership } from "../models/ownership.interface";
 import { AmazonS3Service } from '../services/index';
 import * as log from 'winston';
-import { INotificationRepository, NotificationRepository } from '../repositories/index';
+import { NotificationRepository } from '../repositories/index';
 import { ApiErrorHandler } from '../api-error-handler';
 import * as enums from '../enumerations';
-import { FirebaseService } from '../services/firebase.service';
-import { OrderNotification } from '../notifications/order.notification';
 
 export class NotificationController extends BaseController {
 
@@ -20,7 +17,7 @@ export class NotificationController extends BaseController {
   public rolesRequiringOwnership = [];
   public isOwnershipRequired = false;
 
-  protected repository: INotificationRepository = new NotificationRepository();
+  protected repository = new NotificationRepository();
 
    // This will add ownerships whenever a document is created.
   // Here we can later add order ID, and also check that order ID in the checking logic.
@@ -36,5 +33,4 @@ export class NotificationController extends BaseController {
   constructor() {
     super();
   }
-
 }

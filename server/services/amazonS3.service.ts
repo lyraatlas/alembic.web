@@ -3,7 +3,7 @@ import { Router, Request, Response, RequestParamHandler, NextFunction, RequestHa
 import mongoose = require('mongoose');
 import { Schema, Model, Document } from 'mongoose';
 import { Config } from '../config/config';
-import { ITokenPayload, IBaseModelDoc, IProduct, MulterFile } from '../models/';
+import { ITokenPayload, IBaseModelDoc, MulterFile } from '../models/';
 import { CONST } from "../constants";
 import { ApiErrorHandler } from "../api-error-handler";
 import * as rimraf from 'rimraf';

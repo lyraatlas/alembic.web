@@ -2,7 +2,7 @@ import { Router, Request, Response, RequestParamHandler, NextFunction, RequestHa
 import mongoose = require('mongoose');
 import { Schema, Model, Document } from 'mongoose';
 import { Config } from '../config/config';
-import { ITokenPayload, IBaseModelDoc, IProduct } from '../models/';
+import { ITokenPayload, IBaseModelDoc } from '../models/';
 import { CONST } from "../constants";
 import { ApiErrorHandler } from "../api-error-handler";
 import * as rimraf from 'rimraf';
@@ -12,7 +12,6 @@ import * as sharp from 'sharp';
 import log = require('winston');
 import * as enums from '../enumerations';
 import * as AWS from 'aws-sdk';
-import { ProductRepository } from '../repositories/index';
 import * as fs from 'async-file';
 import { MulterFile } from '../models';
 import { AmazonS3Service } from '../services/index';
@@ -36,45 +35,45 @@ export class ImageUploadController {
             // Grab the multer file off the request.  
             const rawImageFile = request.files[0] as MulterFile;
             try {
-                //Now we go get the product
-                const product = await new ProductRepository().single(request.params['id']);
+                // //Now we go get the product
+                // const product = await new ProductRepository().single(request.params['id']);
 
-                // Create image variations
-                const raw = await this.generateVariation(enums.ImageType.raw, rawImageFile, response);
-                const thumb = await this.generateVariation(enums.ImageType.thumbnail, rawImageFile, response, 150, 150);
-                const icon = await this.generateVariation(enums.ImageType.icon, rawImageFile, response, 50, 50, 50);
-                const small = await this.generateVariation(enums.ImageType.small, rawImageFile, response, 300);
-                const medium = await this.generateVariation(enums.ImageType.medium, rawImageFile, response, 500);
-                const large = await this.generateVariation(enums.ImageType.large, rawImageFile, response, 1024);
+                // // Create image variations
+                // const raw = await this.generateVariation(enums.ImageType.raw, rawImageFile, response);
+                // const thumb = await this.generateVariation(enums.ImageType.thumbnail, rawImageFile, response, 150, 150);
+                // const icon = await this.generateVariation(enums.ImageType.icon, rawImageFile, response, 50, 50, 50);
+                // const small = await this.generateVariation(enums.ImageType.small, rawImageFile, response, 300);
+                // const medium = await this.generateVariation(enums.ImageType.medium, rawImageFile, response, 500);
+                // const large = await this.generateVariation(enums.ImageType.large, rawImageFile, response, 1024);
 
-                // figure out what the maximum product image order number is, and add one to it. 
-                const nextOrderNum = this.getNextOrderNumber(product) + 10;
+                // // figure out what the maximum product image order number is, and add one to it. 
+                // const nextOrderNum = this.getNextOrderNumber(product) + 10;
 
-                let image: IImage = {
-                    isActive: true,
-                    order: nextOrderNum,
-                    variations: new Array<IImageVariation>()
-                }
+                // let image: IImage = {
+                //     isActive: true,
+                //     order: nextOrderNum,
+                //     variations: new Array<IImageVariation>()
+                // }
 
-                // Add the product images.
-                this.addVariation(image, rawImageFile, raw, enums.ImageType.raw, nextOrderNum);
-                this.addVariation(image, rawImageFile, thumb, enums.ImageType.thumbnail, nextOrderNum);
-                this.addVariation(image, rawImageFile, icon, enums.ImageType.icon, nextOrderNum);
-                this.addVariation(image, rawImageFile, small, enums.ImageType.small, nextOrderNum);
-                this.addVariation(image, rawImageFile, medium, enums.ImageType.medium, nextOrderNum);
-                this.addVariation(image, rawImageFile, large, enums.ImageType.large, nextOrderNum);
+                // // Add the product images.
+                // this.addVariation(image, rawImageFile, raw, enums.ImageType.raw, nextOrderNum);
+                // this.addVariation(image, rawImageFile, thumb, enums.ImageType.thumbnail, nextOrderNum);
+                // this.addVariation(image, rawImageFile, icon, enums.ImageType.icon, nextOrderNum);
+                // this.addVariation(image, rawImageFile, small, enums.ImageType.small, nextOrderNum);
+                // this.addVariation(image, rawImageFile, medium, enums.ImageType.medium, nextOrderNum);
+                // this.addVariation(image, rawImageFile, large, enums.ImageType.large, nextOrderNum);
 
-                // If this is the first image, we're going to create a new array.
-                if(!product.images){
-                    product.images = new Array<IImage>();
-                }
+                // // If this is the first image, we're going to create a new array.
+                // if(!product.images){
+                //     product.images = new Array<IImage>();
+                // }
 
-                product.images.push(image);
+                // product.images.push(image);
 
-                // Save the updated product.
-                const updatedProduct = await new ProductRepository().save(product);
+                // // Save the updated product.
+                // const updatedProduct = await new ProductRepository().save(product);
 
-                response.status(200).json(updatedProduct);
+                // response.status(200).json(updatedProduct);
             } catch (err) {
                 this.rollbackProductImages(rawImageFile, true);
                 ApiErrorHandler.sendError(`Error during image processing. ${err}`, 500, response, null, err);
@@ -88,16 +87,16 @@ export class ImageUploadController {
         }
     }
 
-    public getNextOrderNumber(product: IProduct): number {
-        if (product && product.images && product.images.length > 0) {
-            let max = 0;
-            product.images.forEach(image => {
-                max = Math.max(max, image.order);
-            });
-            return ++max;
-        }
-        return 0;
-    }
+    // public getNextOrderNumber(product: IProduct): number {
+    //     if (product && product.images && product.images.length > 0) {
+    //         let max = 0;
+    //         product.images.forEach(image => {
+    //             max = Math.max(max, image.order);
+    //         });
+    //         return ++max;
+    //     }
+    //     return 0;
+    // }
 
     public addVariation(image: IImage, file: MulterFile, sharpInfo: sharp.OutputInfo, type: enums.ImageType, order: number): IImage {
         image.variations.push({

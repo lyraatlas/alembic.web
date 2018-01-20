@@ -4,8 +4,6 @@ import { Config } from '../config';
 import { HealthStatus } from '../../health-status';
 import log = require('winston');
 mongoose.Promise = require('bluebird'); 
-//import autoIncrement = require('mongoose-auto-increment');
-import { OrderSchema } from '../../models/order.interface';
 
 export class Database {
 

@@ -1,4 +1,3 @@
-import { IProduct, Product } from "../models";
 import { Config } from "./config";
 import { CONST } from "../constants";
 import { OrganizationType } from "../enumerations";

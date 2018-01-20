@@ -1,19 +1,18 @@
 import { NextFunction, Request, RequestHandler, RequestParamHandler, Response, Router } from 'express';
 import { Document, DocumentQuery, Model, Schema } from 'mongoose';
 import * as log from 'winston';
-import { IValidationError, SearchCriteria, IBaseModel, IBaseModelDoc, ITokenPayload } from '../../models/';
+import { IValidationError, SearchCriteria, IBaseModel, IBaseModelDoc, ITokenPayload, IOwned } from '../../models/';
 import { ObjectId } from 'bson';
-import { BaseRepository, IBaseRepository } from "../../repositories/";
+import { BaseRepository } from "../../repositories/";
 import { CONST } from "../../constants";
 import { OwnershipType } from "../../enumerations";
 import { Authz } from "../authorization";
-import { IOwnership } from "../../models/ownership.interface";
 import { ApiErrorHandler } from "../../api-error-handler";
 import { IQueryResponse } from '../../models/query-response.interface';
 
 export abstract class BaseController {
 
-    protected abstract repository: IBaseRepository<IBaseModelDoc>;
+    protected abstract repository: BaseRepository<IBaseModelDoc>;
     public abstract defaultPopulationArgument: object;
 
     // Determines whether the base class will test ownership
@@ -28,10 +27,10 @@ export abstract class BaseController {
     // The child classes implementation of ownership testing.  Allows for child classes to test various data points.
     public abstract isOwner(request: Request, response: Response, next: NextFunction, document: IBaseModelDoc): boolean;
 
-    protected isOwnerInOwnership(document: IBaseModel, ownerId: string, ownershipType: OwnershipType): boolean {
+    protected isOwnerInOwnership(document: IOwned, ownerId: string, ownershipType: OwnershipType): boolean {
         let isOwner: boolean = false;
 
-        document.ownerships.forEach(documentOwnershipElement => {
+        document.owners.forEach(documentOwnershipElement => {
             if (documentOwnershipElement.ownershipType === ownershipType
                 // One of these is a bson id on the document, the other is a string, so don't use triple equal
                 && documentOwnershipElement.ownerId == ownerId) {

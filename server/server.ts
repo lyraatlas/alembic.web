@@ -216,8 +216,8 @@ class Application {
     // Now we lock up the rest.
     this.express.use('/api/*', new AuthenticationController().authMiddleware);    
 
-    this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.PRODUCTS}${CONST.ep.UPLOAD_IMAGES}/:id`,
-      Authz.permit(CONST.PRODUCT_ADMIN_ROLE, CONST.ADMIN_ROLE, CONST.PRODUCT_EDITOR_ROLE),
+    this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKETS}${CONST.ep.UPLOAD_IMAGES}/:id`,
+      Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE),
       new MulterConfiguration().uploader.array('file'),
       new ImageUploadController().imageUploadMiddleware
     );

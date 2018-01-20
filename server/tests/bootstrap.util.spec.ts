@@ -1,6 +1,6 @@
 import { Database } from '../config/database/database';
 import { App, server } from '../server-entry';
-import { Supplier, ISupplier, ITokenPayload } from '../models';
+import { ITokenPayload } from '../models';
 import { Config } from '../config/config';
 import { CONST } from "../constants";
 import { AuthUtil} from "./authentication.util.spec";
