@@ -5,9 +5,9 @@ module.exports = {
    */
   apps: [
 
-    // Spawn 2 instances of the alembic rest api
+    // Spawn 1 instance
     {
-      name: 'prdct.api',
+      name: 'albc.web',
       script: './dist/server.js',
       instances: 1,
       max_memory_restart: '500M',
