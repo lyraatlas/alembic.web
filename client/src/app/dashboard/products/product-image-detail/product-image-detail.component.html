@@ -1,0 +1,36 @@
+<div class="col-sm-10">
+<form *ngIf="image" #f="ngForm" novalidate (ngSubmit)="saveImage(f.value, f.valid)" class="form-horizontal">
+  <fieldset>
+    <legend>Image Details</legend>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Image ID</label>
+      <div class="col-sm-10">
+        <p class="form-control-static">{{image._id}}</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Image Order</label>
+      <div class="col-sm-10">
+        <input type="text" name="imageOrder" required #imageOrder="ngModel" (ngModelChange)="image.order=$event" required class="form-control" [ngModel]="image?.order">
+        <span class="help-block">Order is used to tell what order various sales images should be shown in.</span>
+        <small [hidden]="imageOrder.valid || (imageOrder.pristine && !f.submitted)" class="text-warning">
+           Order is required.
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Is Active?</label>
+        <div class="col-sm-10">
+          <div class="checkbox">
+            <input id="chkTemplate" name="imageActive"  [ngModel]="image?.isActive" type="checkbox" #imageIsActive="ngModel"  [checked]="image?.isActive" (ngModelChange)="image.isActive=$event">
+            <label for="chkTemplate">Is this product image active?</label>
+          </div>
+        </div>
+      </div>
+  </fieldset>
+  <button type="submit" class="btn btn-fill btn-wd ">Save</button>
+  <button type="button" (click)="cancel()" class="btn btn-fill btn-wd ">Cancel</button>
+</form>
+</div>

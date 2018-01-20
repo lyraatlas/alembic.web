@@ -1,0 +1,64 @@
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-12">
+              <h4 class="title">Orders</h4>
+              <p class="category">Edit and update all the orders in the system</p>
+              <br>
+              <div class="card">
+                  <div class="card-content">
+                      <h4 class="card-title">Orders</h4>
+                      <div class="toolbar" style="margin-bottom:15px;">
+                              <button class="btn btn-primary" (click)="createOrder()">New</button>
+                              <button class="btn btn-primary btn-icon" (click)="refreshOrders()"><i class="ti-exchange-vertical"></i>&nbsp;Refresh</button>
+                      </div>
+                      <ngx-datatable
+                      class="bootstrap"
+                      [rows]="orders"
+                      [columnMode]="'force'"
+                      [headerHeight]="50"
+                      [footerHeight]="50"
+                      [rowHeight]="'auto'"
+                      [limit]="10">
+                      <ngx-datatable-column name="Id" prop="_id" [width]="200">
+                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <a style="cursor:pointer" (click)="edit(value)">
+                                            {{value}}
+                                      </a>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Number" prop="orderNumber" [width]="150"></ngx-datatable-column>
+                        <ngx-datatable-column name="Code" [width]="150"></ngx-datatable-column>
+                        <ngx-datatable-column name="Status" prop="statusName" [width]="150"></ngx-datatable-column>
+                        <ngx-datatable-column name="Notes" ></ngx-datatable-column>
+                        <ngx-datatable-column name="Supplier Name" prop="supplier">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <a style="cursor:pointer" (click)="editSupplier(value._id)">
+                                                {{value.name}}
+                                          </a>
+                                </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Total">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                        {{value | currency:'USD':'symbol':'1.2-2'}}
+                                </ng-template>
+                        </ngx-datatable-column>
+                    <ngx-datatable-column name="Actions" prop="_id" >
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                <button class="btn btn-simple btn-info btn-icon edit" title="Edit a order" (click)="edit(value)"><i class="ti-pencil-alt"></i></button>
+                                <button class="btn btn-simple btn-danger btn-icon remove" title="Delete a order" (click)="delete(value)"><i class="ti-close"></i></button>
+                                <button class="btn btn-simple btn-warning btn-icon" title="Approve/Unaprove a order" (click)="approveOrder(value)"><i></i></button>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    </ngx-datatable>
+
+                  </div>
+                  <!-- end content-->
+              </div>
+              <!--  end card  -->
+          </div>
+          <!-- end col-md-12 -->
+      </div>
+      <!-- end row -->
+  </div>
+</div>

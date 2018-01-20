@@ -1,0 +1,238 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Edit Product</h2>
+          </div>
+          <div class="card-content">
+            <form #f="ngForm" novalidate (ngSubmit)="saveProduct(f.value, f.valid)" class="form-horizontal">
+              <fieldset>
+                <legend>Important Details</legend>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Product Id</label>
+                  <div class="col-sm-10">
+                    <p class="form-control-static">{{cProd?._id}}</p>
+                  </div>
+                </div>
+
+                <div [hidden]="!cProd?.isTemplate" class="form-group">
+                  <label class="col-sm-2 control-label">Product Type</label>
+                  <div class="col-sm-10">
+                    <div class="dropdown" style="width:200px;">
+                        <select class="selectpicker" name="productType" [ngModel]="cProd?.type" (ngModelChange)="cProd.type=$event" #currProductType="ngModel" data-style="btn btn-info btn-block" title="Product Type" data-size="7">
+                            <option  *ngFor="let productType of productTypes" [value]="productType.value" [selected]="cProd?.type == productType.value">
+                                {{productType.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                </div>
+
+                <div [hidden]="cProd?.isTemplate" class="form-group">
+                    <label class="col-sm-2 control-label">Supplier</label>
+                    <div class="col-sm-10">
+                        <ng2-completer 
+                            #supplierDDL
+                            inputClass="form-control dropdown" 
+                            name="supplier" 
+                            [(ngModel)]="searchStr" 
+                            [datasource]="dataService" 
+                            [minSearchLength]="0"
+                            (selected)="onSupplierSelected($event)"
+                            
+                        ></ng2-completer>
+                    </div>
+                  </div>
+
+                <div class="form-group" [ngClass]="{ 'has-error': displayName.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Display Name</label>
+                  <div class="col-sm-10">
+                    <input [disabled]="!cProd?.isTemplate" type="text" name="displayName" required #displayName="ngModel" (ngModelChange)="cProd.displayName=$event" required class="form-control" [ngModel]="cProd?.displayName">
+                    <span class="help-block">This is the name that a supplier might supply, ie. Magic Midnight Rose.</span>
+                    <small [hidden]="displayName.valid || (displayName.pristine && !f.submitted)" class="text-warning">
+                                  Display name is required for products.
+                                </small>
+                  </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{ 'has-error': commonName.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Common Name</label>
+                  <div class="col-sm-10">
+                    <input [disabled]="!cProd?.isTemplate" type="text" name="commonName" placeholder="ie. Rose" required #commonName="ngModel" (ngModelChange)="cProd.commonName=$event" required class="form-control"
+                      [ngModel]="cProd?.commonName">
+                    <span class="help-block">This is the alembic standard name ie. Rose</span>
+                    <small [hidden]="commonName.valid || (commonName.pristine && !f.submitted)" class="text-warning">
+                                    Common Name is required for products.
+                                  </small>
+                  </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{ 'has-error': shortDescription.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Short Description</label>
+                  <div class="col-sm-10">
+                    <textarea [disabled]="!cProd?.isTemplate" class="form-control" placeholder="Short Description" rows="2" name="shortDescription"  #shortDescription="ngModel"
+                      required class="form-control" [ngModel]="cProd?.shortDescription"  (ngModelChange)="cProd.shortDescription=$event">
+                    </textarea>
+                    <span class="help-block">A short 1-2 sentence description</span>
+                    <small [hidden]="shortDescription.valid || (shortDescription.pristine && !f.submitted)" class="text-warning">
+                                      Short Description is required for products.
+                                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{ 'has-error': longDescription.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Long Description</label>
+                  <div class="col-sm-10">
+                    <textarea [disabled]="!cProd?.isTemplate" class="form-control" placeholder="Long Description" rows="4" name="longDescription" 
+                     #longDescription="ngModel" required class="form-control" [ngModel]="cProd?.longDescription" (ngModelChange)="cProd.longDescription=$event">
+                    </textarea>
+                    <small [hidden]="longDescription.valid || (longDescription.pristine && !f.submitted)" class="text-warning">
+                                        Long Description is required for products.
+                                      </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Thumbnail Description</label>
+                  <div class="col-sm-10">
+                    <textarea [disabled]="!cProd?.isTemplate" class="form-control" placeholder="The best rose you can buy!" rows="1" name="thumbnailDescription" #thumbnailDescription="ngModel"
+                      class="form-control" [ngModel]="cProd?.thumbnailDescription"  (ngModelChange)="cProd.thumbnailDescription=$event">
+                      </textarea>
+                    <span class="help-block">On small screens or in small grids this is the description that will be used.</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Template?</label>
+                  <div class="col-sm-10">
+                    <div class="checkbox">
+                      <input id="chkTemplate" type="checkbox" disabled [checked]="cProd?.isTemplate" (ngModelChange)="cProd.isTemplate=$event">
+                      <label for="chkTemplate">Is this product a template? If you want to create a product from this template go back to the grid.</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Add Tags</label>
+                  <div class="col-sm-2">
+                    <input [disabled]="!cProd?.isTemplate" type="text" name="tagAdd" placeholder="gift" (keyup.enter)="addTags()" class="form-control" [(ngModel)]="tagsToAdd">
+                  </div>
+                  <div class="col-sm-5">
+                    <button [disabled]="!cProd?.isTemplate" type="button" class="btn btn-fill btn-wd" (click)="addTags()">Add</button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Current Tags</label>
+                  <div class="col-sm-10 bootstrap-tagsinput" >
+                    <span class="tag label label-info" style="font-size:20px;" *ngFor="let tag of cProd?.tags">
+                          {{tag}}
+                          <span [hidden]="!cProd?.isTemplate" data-role="remove" style="margin-left:5px;" (click)="removeTag(tag)"></span>
+                    </span>
+                  </div>
+                </div>
+              </fieldset> 
+              <fieldset ngModelGroup="images">
+                <legend>Product Images</legend>
+                <div class="form-group" [hidden]="!cProd?.isTemplate" >
+                  <label class="col-sm-2 control-label">Uploader</label>
+                  <app-image-uploader class="col-sm-10" [relatedId]="cProd?._id"></app-image-uploader>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Current Images</label>
+                  <app-product-image-grid [product]="cProd"></app-product-image-grid>
+                </div>
+              
+                <div class="form-group" [hidden]="!cProd?.isTemplate">
+                  <label class="col-sm-2 control-label">Edit Images</label>
+                  <app-product-image-detail></app-product-image-detail>
+                </div>
+              </fieldset>
+              <fieldset ngModelGroup="pricing">
+                <legend>Pricing</legend>
+
+                <div class="form-group" [ngClass]="{ 'has-error': supPerStem.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Supplier Per Stem Pricing</label>
+                  <div class="col-sm-10">
+                    <input [disabled]="cProd?.isTemplate == true" type="text" name="supPerStem" placeholder="2.50, no dollar signs" #supPerStem="ngModel"
+                      class="form-control" [ngModel]="cProd?.pricing?.supplier?.perStem" pattern="^[0-9]+(\.[0-9]{1,2})?$"
+                      (ngModelChange)="cProd.pricing.supplier.perStem=$event">
+                    <span class="help-block">The suppliers price.  Does not apply for templates.</span>
+                    <small [hidden]="supPerStem.disabled ||  supPerStem.valid || supPerStem.isEmpty" class="text-warning">
+                                If entered, it must be a number. No dollar signs. 2.30, 2, 14, etc.
+                        </small>
+                  </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{ 'has-error': stemPerBundle.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Supplier Stems Per Bundle</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="stemPerBundle" placeholder="25" [disabled]="cProd?.isTemplate == true" #stemPerBundle="ngModel"
+                      class="form-control" [ngModel]="cProd?.pricing?.supplier?.stemsPerBundle" 
+                      (ngModelChange)="cProd.pricing.supplier.stemsPerBundle=$event"
+                      pattern="^[0-9]+$">
+                    <small [hidden]="stemPerBundle.disabled ||  stemPerBundle.valid || stemPerBundle.isEmpty" class="text-warning">
+                                  If entered, it must be a whole number, no decimals.
+                          </small>
+                  </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{ 'has-error': industryPrice.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Industry Price</label>
+                  <div class="col-sm-10">
+                    <input type="text" [disabled]="cProd?.isTemplate == false" name="industryPrice" placeholder="2.50, no dollar signs" #industryPrice="ngModel"
+                      class="form-control" [ngModel]="cProd?.pricing?.industryPrice" (ngModelChange)="cProd.pricing.industryPrice=$event"
+                      pattern="^[0-9]+(\.[0-9]{1,2})?$">
+                    <span class="help-block">Industry price set by alembic.</span>
+                    <small [hidden]="industryPrice.valid || industryPrice.isEmpty" class="text-warning">
+                                    If entered, it must be a number. No dollar signs. 2.30, 2, 14, etc.
+                            </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Mean Price</label>
+                    <div class="col-sm-10">
+                      <p class="form-control-static">{{cProd?.pricing?.meanPrice}}</p>
+                    </div>
+                  </div>
+
+              </fieldset>
+
+              <fieldset>
+                <legend>Technical Details</legend>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Master Product Id</label>
+                  <div class="col-sm-10">
+                    <p class="form-control-static">{{cProd?.masterProductId}}</p>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">API Location</label>
+                  <div class="col-sm-10">
+                    <p class="form-control-static">{{cProd?.href}}</p>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Version</label>
+                  <div class="col-sm-10">
+                    <p class="form-control-static">{{cProd?.__v}}</p>
+                  </div>
+                </div>
+              </fieldset>
+              <button type="submit" class="btn btn-fill btn-wd ">Save</button>
+            </form>
+          </div>
+        </div>
+        <!-- end card -->
+      </div>
+      <!-- end col-md-12 -->
+    </div>
+    <!-- end row -->
+  </div>
+</div>

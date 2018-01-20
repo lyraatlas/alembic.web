@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../node_modules/@swimlane/ngx-datatable/release/index.css';
+@import '../node_modules/@swimlane/ngx-datatable/release/assets/icons.css';
+@import '../node_modules/@swimlane/ngx-datatable/release/themes/bootstrap.css';
+
+.ngx-datatable.bootstrap .datatable-footer .datatable-pager a{
+    background-color: #424242;
+}

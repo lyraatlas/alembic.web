@@ -1,0 +1,34 @@
+<div class="col-sm-10 fresh-table">
+  <table datatable id="imagesTable" [dtOptions]="dtOptions" [(dtTrigger)]="dtTrigger" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+      <thead>
+          <tr>
+              <th>{{ imageHeaders[0] }}</th>
+              <th>{{ imageHeaders[1] }}</th>
+              <th>{{ imageHeaders[2] }}</th>
+              <th>{{ imageHeaders[3] }}</th>
+              <th class="disabled-sorting">{{ imageHeaders[4] }}</th>
+          </tr>
+      </thead>
+      <tfoot>
+          <tr>
+              <th>{{ imageHeaders[0] }}</th>
+              <th>{{ imageHeaders[1] }}</th>
+              <th>{{ imageHeaders[2] }}</th>
+              <th>{{ imageHeaders[3] }}</th>
+              <th>{{ imageHeaders[4] }}</th>
+          </tr>
+      </tfoot>
+      <tbody>
+          <tr *ngFor="let image of product?.images | callbackFilter: filterImages">
+              <td><img [src]="image?.url"/></td>
+              <td width="300px"><a [href]="image.url" target="_blank">{{image?.url}}</a></td>
+              <td>{{image.order}}</td>
+              <td>{{image.isActive}}</td>
+              <td>
+                  <button type="button" [disabled]="!product?.isTemplate" class="btn btn-simple btn-info btn-icon edit" title="Edit a image" (click)="editImage(image._id)"><i class="ti-pencil-alt"></i></button>
+                  <button type="button" [disabled]="!product?.isTemplate" class="btn btn-simple btn-danger btn-icon remove" title="Delete a image" (click)="deleteImage(image._id)"><i class="ti-close"></i></button>
+              </td>
+          </tr>
+      </tbody>
+  </table>
+</div>

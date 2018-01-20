@@ -1,0 +1,78 @@
+<nav class="navbar navbar-transparent navbar-absolute">
+    <div class="container">
+        <div class="navbar-header">
+            <span class="navbar-brand">Taki Dashboard</span>
+        </div>
+    </div>
+</nav>
+
+<div class="wrapper wrapper-full-page">
+    <div class="full-page login-page" data-color="" data-image="../../../assets/img/background/background-5.png">
+        <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+                        <!-- #f is syntax that says export the form as an object (variable) named 'f' that we can later use.  Here it's called 'f' so 
+                            I can call things like f.submitted, and test values on the form.  Also notice that on submit, we're sending the form.value.
+                            helpful post: https://toddmotto.com/angular-2-forms-template-driven
+                             !-->
+                            <form #f="ngForm" novalidate (ngSubmit)="login(f.value, f.valid)">
+                            <div class="card" data-background="color" data-color="blue">
+                                <div class="card-header">
+                                    <h3 class="card-title">Login</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="form-group">
+                                        <!-- name attributes are required for all form fields -->
+                                        <!-- this syntax is one way data binding.  [ngModel]="user.email"  -->
+                                        <!-- just like up there where I was exporting the form variable,  here I'm exporting another 
+                                            form variable this time called 'email' using this syntax:  #email="ngModel"
+                                            which I can use later in my validators to say things like email.valid and email.pristine -->
+                                        <input type="email" 
+                                        name="email"
+                                        required 
+                                        #email="ngModel" 
+                                        [ngModel]="user.email" 
+                                        pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
+                                        placeholder="Enter email" 
+                                        class="form-control input-no-border">
+                                        <small [hidden]="email.valid || (email.pristine && !f.submitted) || !f.submitted" class="text-warning">
+                                            Email is required and format should be <i>something@alembic.com</i>.
+                                    </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <input 
+                                        required 
+                                        name="password"
+                                        #password="ngModel"
+                                        [ngModel]="user.password"
+                                        type="password" 
+                                        class="form-control" 
+                                        name="password" 
+                                        placeholder="Enter password"
+                                        >
+                                        <small [hidden]="password.valid || (password.pristine && !f.submitted)" class="text-warning">
+                                              Password is required
+                                            </small>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button type="submit" class="btn btn-fill btn-wd ">Login</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer footer-transparent">
+            <div class="container">
+                <div class="copyright">
+                    &copy; {{test | date: 'yyyy'}}, made with <i class="fa fa-heart heart"></i> by <a href="https://alembic.com">alembic Inc.</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>

@@ -1,0 +1,229 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Edit Supplier Details</h2>
+          </div>
+          <div class="card-content">
+            <form #f="ngForm" novalidate (ngSubmit)="saveSupplier(f.value, f.valid)" class="form-horizontal">
+              <fieldset>
+                <legend>Important Details</legend>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Supplier Id</label>
+                  <div class="col-sm-10">
+                    <p class="form-control-static">{{supplier?._id}}</p>
+                  </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{ 'has-error': name.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Name</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="name" required #name="ngModel" (ngModelChange)="supplier.name=$event" required class="form-control"
+                      [ngModel]="supplier?.name">
+                    <span class="help-block">Business Name for the supplier</span>
+                    <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
+                                  Name is required for suppliers.
+                                </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Is Approved?</label>
+                  <div class="col-sm-10">
+                    <div class="checkbox">
+                      <input name="chkIsApproved" type="checkbox" [checked]="supplier?.isApproved" [ngModel]="supplier?.isApproved" (ngModelChange)="supplier.isApproved=$event">
+                      <label for="chkIsApproved">Is the supplier approved?</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Is Active?</label>
+                  <div class="col-sm-10">
+                    <div class="checkbox">
+                      <input name="chkIsActive" type="checkbox" [checked]="supplier?.isActive"  [ngModel]="supplier?.isActive" (ngModelChange)="supplier.isActive=$event">
+                      <label for="chkIsActive">Is the supplier active?</label>
+                    </div>
+                  </div>
+                </div>
+
+              </fieldset>
+
+              <fieldset>
+                <legend>Company Information</legend>
+                <div class="form-group" [ngClass]="{ 'has-error': slug.invalid && f.submitted}">
+                    <label class="col-sm-2 control-label">Company Slug</label>
+                    <div class="col-sm-10">
+                      <input type="text" pattern="^[a-zA-Z0-9]+$" name="slug" required #slug="ngModel"
+                        (ngModelChange)="supplier.slug=$event" required class="form-control" [ngModel]="supplier?.slug">
+                      <span class="help-block">Company team slug.  Can only be letters and numbers no spaces, or punctuation.</span>
+                      <small [hidden]="slug.valid || (slug.pristine && !f.submitted)" class="text-warning">
+                                   Slug is required for suppliers, and should be only letters, or numbers.  no spaces, or punctuation.
+                                  </small>
+                    </div>
+                  </div>
+
+
+                <div class="form-group" [ngClass]="{ 'has-error': companyEmail.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Company Email</label>
+                  <div class="col-sm-10">
+                    <input type="text" pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" name="companyEmail" required #companyEmail="ngModel"
+                      (ngModelChange)="supplier.companyEmail=$event" required class="form-control" [ngModel]="supplier?.companyEmail">
+                    <span class="help-block">Company contact email for the supplier.  ie info@massiveflowers.com</span>
+                    <small [hidden]="companyEmail.valid || (companyEmail.pristine && !f.submitted)" class="text-warning">
+                                 Company Email is required for suppliers, and format should be <i>something@alembic.com</i>
+                                </small>
+                  </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{ 'has-error': companyPhone.invalid && f.submitted}">
+                  <label class="col-sm-2 control-label">Company Phone</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="companyPhone" pattern="^[1-9]\d{2}-\d{3}-\d{4}$" required placeholder="917-747-8666" #companyPhone="ngModel"
+                      (ngModelChange)="supplier.companyPhone=$event" required class="form-control" [ngModel]="supplier?.companyPhone">
+                    <span class="help-block">Company contact phone for the company.  ie 917-747-8666</span>
+                    <small [hidden]="companyPhone.valid || (companyPhone.pristine && !f.submitted)" class="text-warning">
+                                 Company Phone is required for suppliers, and format should be <i>917-747-8666</i>
+                                </small>
+                  </div>
+                </div>
+
+                <div class="form-group colum-sizing">
+                  <label class="col-sm-2 control-label">Company Address</label>
+                  <div class="col-sm-10">
+                    <div class="col-sm-12" >
+                      <label></label>
+                      <input type="text" class="form-control border-input" placeholder="Street 1" name="companyAddress1" #companyAddress1="ngModel"
+                      (ngModelChange)="supplier.companyAddress.street1=$event" class="form-control" [ngModel]="supplier?.companyAddress?.street1">
+                    </div>
+                    <div class="col-sm-12">
+                        <label></label>
+                        <input type="text" class="form-control border-input" placeholder="Street 2" name="companyAddress2" #companyAddress2="ngModel"
+                        (ngModelChange)="supplier.companyAddress.street2=$event" class="form-control" [ngModel]="supplier?.companyAddress?.street2">
+                    </div>
+                    <div class="col-sm-4">
+                        <label></label>
+                        <input type="text" class="form-control border-input" placeholder="City" name="companyCity" #companyCity="ngModel"
+                        (ngModelChange)="supplier.companyAddress.city=$event" class="form-control" [ngModel]="supplier?.companyAddress?.city">
+                    </div>
+                    <div class="col-sm-4">
+                        <label></label>
+                        <input type="text" class="form-control border-input" placeholder="State" name="companyState" #companyState="ngModel"
+                        (ngModelChange)="supplier.companyAddress.state=$event" class="form-control" [ngModel]="supplier?.companyAddress?.state">
+                    </div>
+                    <div class="col-sm-4">
+                        <label></label>
+                        <input type="text" class="form-control border-input" placeholder="Zip" name="companyZip" #companyZip="ngModel"
+                        pattern="^\d{5}$|^\d{5}-\d{4}$"
+                        (ngModelChange)="supplier.companyAddress.zip=$event" class="form-control" [ngModel]="supplier?.companyAddress?.zip">
+                    </div>
+                  </div>
+                </div>
+
+              </fieldset>
+
+              <fieldset>
+                  <legend>Pickup Information</legend>
+                  <div class="form-group" [ngClass]="{ 'has-error': pickupName.invalid && f.submitted}">
+                      <label class="col-sm-2 control-label">Name</label>
+                      <div class="col-sm-10">
+                        <input type="text" name="pickupName" required #pickupName="ngModel" (ngModelChange)="supplier.pickupName=$event" required class="form-control"
+                          [ngModel]="supplier?.pickupName">
+                        <span class="help-block">Name of the person we're working with to pickup.</span>
+                        <small [hidden]="pickupName.valid || (pickupName.pristine && !f.submitted)" class="text-warning">
+                                      Pickup Name is required for suppliers.
+                                    </small>
+                      </div>
+                    </div>
+
+                  <div class="form-group" [ngClass]="{ 'has-error': pickupEmail.invalid && f.submitted}">
+                    <label class="col-sm-2 control-label">Pickup Email</label>
+                    <div class="col-sm-10">
+                      <input type="text" pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$" name="pickupEmail" required #pickupEmail="ngModel"
+                        (ngModelChange)="supplier.pickupEmail=$event" required class="form-control" [ngModel]="supplier?.pickupEmail">
+                      <span class="help-block">Pickup contact email for the supplier.  ie info@massiveflowers.com</span>
+                      <small [hidden]="pickupEmail.valid || (pickupEmail.pristine && !f.submitted)" class="text-warning">
+                                   Pickup Email is required for suppliers, and format should be <i>something@alembic.com</i>
+                                  </small>
+                    </div>
+                  </div>
+  
+                  <div class="form-group" [ngClass]="{ 'has-error': pickupPhone.invalid && f.submitted}">
+                    <label class="col-sm-2 control-label">Pickup Phone</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="pickupPhone" pattern="^[1-9]\d{2}-\d{3}-\d{4}$" required placeholder="917-747-8666" #pickupPhone="ngModel"
+                        (ngModelChange)="supplier.pickupPhone=$event" required class="form-control" [ngModel]="supplier?.pickupPhone">
+                      <span class="help-block">Pickup contact phone for the pickup.  ie 917-747-8666</span>
+                      <small [hidden]="pickupPhone.valid || (pickupPhone.pristine && !f.submitted)" class="text-warning">
+                                   Pickup Phone is required for suppliers, and format should be <i>917-747-8666</i>
+                                  </small>
+                    </div>
+                  </div>
+  
+                  <div class="form-group colum-sizing">
+                    <label class="col-sm-2 control-label">Pickup Address</label>
+                    <div class="col-sm-10">
+                      <div class="col-sm-12" >
+                        <label></label>
+                        <input type="text" class="form-control border-input" placeholder="Street 1" name="pickupAddress1" #pickupAddress1="ngModel"
+                        (ngModelChange)="supplier.pickupAddress.street1=$event" class="form-control" [ngModel]="supplier?.pickupAddress?.street1">
+                      </div>
+                      <div class="col-sm-12">
+                          <label></label>
+                          <input type="text" class="form-control border-input" placeholder="Street 2" name="pickupAddress2" #pickupAddress2="ngModel"
+                          (ngModelChange)="supplier.pickupAddress.street2=$event" class="form-control" [ngModel]="supplier?.pickupAddress?.street2">
+                      </div>
+                      <div class="col-sm-4">
+                          <label></label>
+                          <input type="text" class="form-control border-input" placeholder="City" name="pickupCity" #pickupCity="ngModel"
+                          (ngModelChange)="supplier.pickupAddress.city=$event"  class="form-control" [ngModel]="supplier?.pickupAddress?.city">
+                      </div>
+                      <div class="col-sm-4">
+                          <label></label>
+                          <input type="text" class="form-control border-input" placeholder="State" name="pickupState" #pickupState="ngModel"
+                          (ngModelChange)="supplier.pickupAddress.state=$event"  class="form-control" [ngModel]="supplier?.pickupAddress?.state">
+                      </div>
+                      <div class="col-sm-4" [ngClass]="{ 'has-error': pickupZip.invalid && f.submitted}">
+                          <label></label>
+                          <input type="text" class="form-control border-input" placeholder="Zip" name="pickupZip" #pickupZip="ngModel"
+                          pattern="^\d{5}$|^\d{5}-\d{4}$"
+                          (ngModelChange)="supplier.pickupAddress.zip=$event"  class="form-control" [ngModel]="supplier?.pickupAddress?.zip">
+                          <small [hidden]="pickupZip.valid || (pickupZip.pristine && !f.submitted)" class="text-warning">
+                              Zip code can either be 55555 or zip + 4 55555-1234
+                             </small>
+                      </div>
+                    </div>
+                  </div>
+  
+                </fieldset>
+
+              <fieldset>
+                <legend>Technical Details</legend>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">API Location</label>
+                  <div class="col-sm-10">
+                    <p class="form-control-static">{{supplier?.href}}</p>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Version</label>
+                  <div class="col-sm-10">
+                    <p class="form-control-static">{{supplier?.__v}}</p>
+                  </div>
+                </div>
+              </fieldset>
+              <button type="submit" class="btn btn-fill btn-wd ">Save</button>
+            </form>
+          </div>
+        </div>
+        <!-- end card -->
+      </div>
+      <!-- end col-md-12 -->
+    </div>
+    <!-- end row -->
+  </div>
+</div>

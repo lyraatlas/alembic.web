@@ -1,0 +1,69 @@
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-12">
+              <h4 class="title">Suppliers</h4>
+              <p class="category">Edit and update all the suppliers in the system</p>
+
+              <br>
+              <div class="card">
+                  <div class="card-content">
+                      <h4 class="card-title">Suppliers</h4>
+                      <div class="toolbar" style="margin-bottom:15px;">
+                              <button class="btn btn-primary" (click)="createSupplier()">New</button>
+                              <button class="btn btn-primary btn-icon" (click)="refreshSuppliers()"><i class="ti-exchange-vertical"></i>&nbsp;Refresh</button>
+                      </div>
+                      <div class="fresh-table">
+                          <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="productTable" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                              <thead>
+                                  <tr>
+                                      <th>{{ headers[0] }}</th>
+                                      <th>{{ headers[1] }}</th>
+                                      <th>{{ headers[2] }}</th>
+                                      <th>{{ headers[3] }}</th>
+                                      <th>{{ headers[4] }}</th>
+                                      <th>{{ headers[5] }}</th>
+                                      <th>{{ headers[6] }}</th>
+                                      <th class="disabled-sorting">{{ headers[7] }}</th>
+                                  </tr>
+                              </thead>
+                              <tfoot>
+                                  <tr>
+                                      <th>{{ headers[0] }}</th>
+                                      <th>{{ headers[1] }}</th>
+                                      <th>{{ headers[2] }}</th>
+                                      <th>{{ headers[3] }}</th>
+                                      <th>{{ headers[4] }}</th>
+                                      <th>{{ headers[5] }}</th>
+                                      <th>{{ headers[6] }}</th>
+                                      <th>{{ headers[7] }}</th>
+                                  </tr>
+                              </tfoot>
+                              <tbody>
+                                  <tr *ngFor="let supplier of suppliers">
+                                      <td><a style="cursor:pointer" (click)="edit(supplier._id)">{{supplier._id}}</a></td>
+                                      <td>{{supplier.name}}</td>
+                                      <td>{{supplier.isApproved}}</td>
+                                      <td>{{supplier.isActive}}</td>
+                                      <td>{{supplier.slug}}</td>
+                                      <td>{{supplier.companyPhone}}</td>
+                                      <td>{{supplier.pickupPhone}}</td>
+                                      <td>
+                                          <button class="btn btn-simple btn-info btn-icon edit" title="Edit a supplier" (click)="edit(supplier._id)"><i class="ti-pencil-alt"></i></button>
+                                          <button class="btn btn-simple btn-danger btn-icon remove" title="Delete a supplier" (click)="delete(supplier._id)"><i class="ti-close"></i></button>
+                                          <button class="btn btn-simple btn-warning btn-icon" title="Approve/Unaprove a supplier" (click)="approveSupplier(supplier)"><i [class.ti-check]="!supplier.isApproved" [class.ti-flag]="supplier.isApproved" ></i></button>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+                  <!-- end content-->
+              </div>
+              <!--  end card  -->
+          </div>
+          <!-- end col-md-12 -->
+      </div>
+      <!-- end row -->
+  </div>
+</div>
