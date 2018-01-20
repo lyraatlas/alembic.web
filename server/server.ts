@@ -70,8 +70,9 @@ class Application {
 
   // At startup, we're going to automatically authenticate the system user, so we can use that token
   private async authenticateSystemUser(): Promise<void> {
-    const token = await IdentityApiService.getSysToken();
-    log.info(`System user has been authenticated.`);
+    // we're not going to auth the system user, there is no system user.
+    //const token = await IdentityApiService.getSysToken();
+    //log.info(`System user has been authenticated.`);
   }
 
   // Here we're going to make sure that the environment is setup.  
@@ -213,19 +214,8 @@ class Application {
     log.info('Initializing Routers');
 
     // Now we lock up the rest.
-    this.express.use('/api/*', new AuthenticationController().authMiddleware);
+    this.express.use('/api/*', new AuthenticationController().authMiddleware);    
 
-    this.express.use(CONST.ep.API + CONST.ep.V1, new routers.SupplierRegistrationRouter().getRouter());
-    this.express.use(CONST.ep.API + CONST.ep.V1, new routers.ProductRouter().getRouter());
-    this.express.use(CONST.ep.API + CONST.ep.V1, new routers.SupplierRouter().getRouter());
-    
-
-    // This isn't quite right, the security here is bad.  This is basically saying all suppliers, can access all orders.  
-    // really when a supplier is sent an order, we need to update their ownership, and then we can check security against their ownership of their order.
-    // TODO: cleanup security around orders and suppliers.
-    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.SUPPLIER_EDITOR_ROLE, CONST.SUPPLIER_ADMIN_ROLE ),  new routers.OrderRouter().getRouter());
-    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.SUPPLIER_EDITOR_ROLE, CONST.SUPPLIER_ADMIN_ROLE ),  new routers.NotificationRouter().getRouter());
-    
     this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.PRODUCTS}${CONST.ep.UPLOAD_IMAGES}/:id`,
       Authz.permit(CONST.PRODUCT_ADMIN_ROLE, CONST.ADMIN_ROLE, CONST.PRODUCT_EDITOR_ROLE),
       new MulterConfiguration().uploader.array('file'),
@@ -240,7 +230,7 @@ class Application {
     this.express.get('/api', (request: express.Request, response: express.Response) => {
       response.json({
         name: Config.active.get('name'),
-        description: 'An product api for the alembic services',
+        description: 'Alembic Web Application',
         APIVersion: CONST.ep.V1,
         DocumentationLocation: `${request.protocol}://${request.get('host')}${CONST.ep.API_DOCS}`,
         APILocation: `${request.protocol}://${request.get('host')}${CONST.ep.API}${CONST.ep.V1}`,

@@ -17,46 +17,21 @@ public static convictSchema: convict.Config = convict({
     name: {
       doc: 'The current app name could be useful for debugging',
       format: String,
-      default: 'alembic unamed app',
+      default: 'alembic.web',
       env: 'APP_NAME'
     },
-    database: {
-      mongoConnectionString: {
-        doc: 'Mongo Connection string',
-        format: '*',
-        default: '',
-        env: 'MONGO_CONNECTION_STRING',
-        sensitive: true,
-      },
-    },
-    identityApiEndpoint:{
-      doc: 'The location of the identity api',
-      format: String,
-      default: 'dev.identity.alembic.io',
-      env: 'IDENTITY_API_ENDPOINT',
-      sensitive: false
-    },
-    ampq:{
-      ampqConnectionString:{
-        doc: 'AMPQ Connection string for rabbit',
-        format: '*',
-        default: 'amqp://wkaxkarj:NAsD1ISNCESHMmVlK9Mch6IcBjapIBYn@puma.rmq.cloudamqp.com/wkaxkarj',
-        env: 'AMPQ_CONNECTION_STRING',
-        sensitive: true
-      }
+    mongoConnectionString: {
+      doc: 'Mongo Connection string',
+      format: '*',
+      default: '',
+      env: 'MONGO_CONNECTION_STRING',
+      sensitive: true,
     },
     jwtSecretToken: {
       doc: 'The secrect token were signing jwts with',
       format: String,
       default: 'asdf97a9s8d7baodfbhoda8f7g9adf8asj',
       env: 'JWT_SECRET_TOKEN',
-      sensitive: true
-    },
-    systemUserPassword:{
-      doc:'This is the password for the system user',
-      format: String,
-      default: 'ads9f8a8s7df6adfiug87daf6gsudifyiasd7',
-      env: 'SYSTEM_USER_PASS',
       sensitive: true
     },
     returnCallStackOnError: {
@@ -98,32 +73,18 @@ public static convictSchema: convict.Config = convict({
       env: 'AWS_S3_SECRET',
       sensitive: true
     },
-    ProductImageBucketName:{
+    AlembicS3Bucket:{
       doc:'Bucket where were uploading product images',
       format: String,
-      default: 'dev-product-api-images',
-      env: 'PRODUCT_IMAGE_BUCKET_NAME',
+      default: 'dev-alembic-app-images',
+      env: 'ALEMBIC_S3_BUCKET_NAME',
       sensitive: true
     },
-    ProductImageURLLocationRoot:{
+    AlembicS3BucketRootUrl:{
       doc:'This is the root of the url that well use whenever a product image is added.',
       format: String,
       default: 'https://s3.us-east-2.amazonaws.com/',
-      env: 'PRODUCT_IMAGE_URL_LOCATION_ROOT',
-      sensitive: true
-    },
-    SupplierImageBucketName:{
-      doc:'Bucket where were uploading supplier images/logos etc...',
-      format: String,
-      default: 'dev-supplier-api-images',
-      env: 'SUPPLIER_IMAGE_BUCKET_NAME',
-      sensitive: true
-    },
-    SupplierImageURLLocationRoot:{
-      doc:'This is the root of the url that well use whenever a supplier image is added.',
-      format: String,
-      default: 'https://s3.us-east-2.amazonaws.com/',
-      env: 'SUPPLIER_IMAGE_URL_LOCATION_ROOT',
+      env: 'ALEMBIC_S3_BUCKET_ROOT_URL',
       sensitive: true
     },
     clientDistFolder:{

@@ -16,7 +16,7 @@ export class Database {
         }
         if(!HealthStatus.isDatabaseConnected){
             try{
-                await mongoose.connect(Config.active.get('database.mongoConnectionString'), connectionOptions);
+                await mongoose.connect(Config.active.get('mongoConnectionString'), connectionOptions);
                 this.databaseName = mongoose.connection.db.databaseName;
 
                 log.info(`Connected To Mongo Database: ${mongoose.connection.db.databaseName}`);

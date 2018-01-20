@@ -16,7 +16,8 @@
     "test:auto": "gulp build && mocha --opts mocha.config --watch",
     "postinstall": "gulp build",
     "nm": "nodemon --config nodemon.json dist/server.js",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "simple": "gulp build && nodemon --config nodemon.json dist/server.js" 
   },
   "engines": {
     "node": "8.x.x",
