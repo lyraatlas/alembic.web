@@ -214,7 +214,11 @@ class Application {
     log.info('Initializing Routers');
 
     // Now we lock up the rest.
-    this.express.use('/api/*', new AuthenticationController().authMiddleware);    
+    //this.express.use('/api/*', new AuthenticationController().authMiddleware);
+    
+    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.BucketRouter().getRouter());
+    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.BucketItemRouter().getRouter());
+    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.UserRouter().getRouter());
 
     this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKETS}${CONST.ep.UPLOAD_IMAGES}/:id`,
       Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE),

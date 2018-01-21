@@ -12,7 +12,7 @@ export class BucketController extends BaseController {
   public defaultPopulationArgument = {
     path: "bucketItems"
   };
-  public rolesRequiringOwnership = null;
+  public rolesRequiringOwnership = [CONST.GUEST_ROLE,CONST.USER_ROLE];
   public isOwnershipRequired = true;
 
   protected repository = new BucketRepository();

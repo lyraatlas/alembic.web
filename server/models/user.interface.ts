@@ -16,6 +16,24 @@ export interface IUser extends IBaseModel, IOwned{
     isActive: boolean;
     createdAt?: Date; //Automatically created by mongoose.
     modifiedAt?: Date; //Automatically created by mongoose.
+    facebookAuth?: {
+        id: string,
+        token: string,
+        email: string,
+        name: string,
+    }
+    twitterAuth?:{
+        id           : string,
+        token        : string,
+        displayName  : string,
+        username     : string
+    }
+    instagramAuth?:{
+        id           : string,
+        token        : string,
+        displayName  : string,
+        username     : string
+    }
 }
 
 export interface IUserDoc extends IUser, IBaseModelDoc {
@@ -31,6 +49,24 @@ const UserSchema = new Schema({
     isEmailVerified: {type : Boolean, required: true, default: false},
     href: {type:String},
     isActive: {type: Boolean, required: true, default: true},
+    facebookAuth         : {
+        id           : String,
+        token        : String,
+        email        : String,
+        name         : String
+    },
+    twitterAuth          : {
+        id           : String,
+        token        : String,
+        displayName  : String,
+        username     : String
+    },
+    googleAuth           : {
+        id           : String,
+        token        : String,
+        email        : String,
+        name         : String
+    }
 },{timestamps:true});
 
 //If you do any pre save methods, and you use fat arrow syntax 'this' doesn't refer to the document.

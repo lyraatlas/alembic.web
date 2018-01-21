@@ -10,7 +10,7 @@ import { OwnershipType } from "../enumerations";
 export class BucketItemController extends BaseController {
 
   public defaultPopulationArgument = {};
-  public rolesRequiringOwnership = null;
+  public rolesRequiringOwnership = [CONST.GUEST_ROLE,CONST.USER_ROLE];
   public isOwnershipRequired = true;
 
   protected repository = new BucketItemRepository();
