@@ -7,10 +7,12 @@ import * as fs from 'fs';
 import * as helmet from 'helmet';
 import * as routers from './routers';
 
+import * as passport from 'passport'; 
+import { Strategy as local } from 'passport-local';
 
 import { ObjectId } from 'bson';
 import { join } from 'path';
-import { json, urlencoded } from 'body-parser';
+import { json, urlencoded, raw } from 'body-parser';
 import { mongoose, Database } from './config/database/database';
 import { DatabaseBootstrap } from './config/database/database-bootstrap';
 import { CONST } from './constants';
@@ -29,8 +31,10 @@ import path = require('path');
 import cors = require('cors')
 import { AuthenticationController } from './controllers/authentication.controller';
 import { MulterConfiguration } from './config/multer.configuration';
-import { ImageUploadController } from './controllers/index';
+import { ImageUploadController, BucketController } from './controllers/index';
 import { IdentityApiService } from './services/identity.api.service';
+import { User } from './models/index';
+import { BucketRouter } from './routers';
 
 // Creates and configures an ExpressJS web server.
 class Application {
@@ -53,19 +57,48 @@ class Application {
     this.loggingClientEndpoint();
     this.authenticateSystemUser();
     this.middleware();   // Setup the middleware - compression, etc...
-    this.secure();       // Turn on security measures
+    //this.secure();       // Turn on security measures
     this.swagger();      // Serve up swagger, this is before authentication, as swagger is open
-    this.middleware();   // Setup the middleware
     this.routes();       // Setup routers for all the controllers
+    this.initPassport(); // here's where we're going to setup all our passport handlers.
     this.client();       // This will serve the client angular application, will serve all static files.
     this.handlers();     // Any additional handlers, home page, etc.
     this.initErrorHandler(); // This global error handler, will handle 404s for us, and any other errors.  It has to be LAST in the stack.
+    
+
 
     this.server = this.express.listen(Config.active.get('port'), () => {
       log.info(`Listening on port: ${Config.active.get('port')}`);
       log.info(`Current version ${process.env.npm_package_version}`);
       log.info(`App Name ${process.env.npm_package_name}`);
     });
+  }
+
+  private async initPassport(){
+    this.express.use(passport.initialize());
+
+    this.express.post('/login', passport.authenticate('local', { failureRedirect: '/login', successRedirect: '/home', session: false }));
+    this.express.get('/login', (req, res) => res.send('Login Failed'));
+    this.express.get('/home', (req, res) => res.send('Login Succeeded'));
+    
+    passport.use(new local({usernameField: 'username', passwordField:'password'},
+      (username, password, done) => {
+        console.log('This is calling the method');
+        return done(null, {});
+        User.findOne({ email: username }, function (err, user) {
+          if (err) { 
+            console.log(err);
+            return done(err); 
+          }
+          if (!user) { 
+            console.log('no user found');
+            return done(null, false); 
+          }
+          return done(null, user);
+        });
+      }
+    ));
+
   }
 
   // At startup, we're going to automatically authenticate the system user, so we can use that token
@@ -213,12 +246,14 @@ class Application {
   private routes(): void {
     log.info('Initializing Routers');
 
+    //this.express.use(CONST.ep.API + CONST.ep.V1, new routers.AuthenticationRouter().getRestrictedRouter());
+
     // Now we lock up the rest.
     //this.express.use('/api/*', new AuthenticationController().authMiddleware);
-    
-    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.BucketRouter().getRouter());
-    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.BucketItemRouter().getRouter());
-    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.UserRouter().getRouter());
+    // Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE),
+    this.express.use(CONST.ep.API + CONST.ep.V1, new routers.BucketRouter().getRouter());
+    this.express.use(CONST.ep.API + CONST.ep.V1, new routers.BucketItemRouter().getRouter());
+    this.express.use(CONST.ep.API + CONST.ep.V1, new routers.UserRouter().getRouter());
 
     this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKETS}${CONST.ep.UPLOAD_IMAGES}/:id`,
       Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE),

@@ -30,21 +30,28 @@ export abstract class BaseController {
     protected isOwnerInOwnership(document: IOwned, ownerId: string, ownershipType: OwnershipType): boolean {
         let isOwner: boolean = false;
 
-        document.owners.forEach(documentOwnershipElement => {
-            if (documentOwnershipElement.ownershipType === ownershipType
-                // One of these is a bson id on the document, the other is a string, so don't use triple equal
-                && documentOwnershipElement.ownerId == ownerId) {
-                isOwner = true;
-            }
-        });
+        if(document && document.owners){
+            document.owners.forEach(documentOwnershipElement => {
+                if (documentOwnershipElement.ownershipType === ownershipType
+                    // One of these is a bson id on the document, the other is a string, so don't use triple equal
+                    && documentOwnershipElement.ownerId == ownerId) {
+                    isOwner = true;
+                }
+            });
+        }
+
         return isOwner;
     }
 
     public async isModificationAllowed(request: Request, response: Response, next: NextFunction): Promise<boolean> {
         // If ownership is required we need to make sure the user has the rights to CRUD this item.
-        if (this.isOwnershipRequired && this.rolesRequiringOwnership.length > 0 &&
+        if (this.isOwnershipRequired 
+            && this.rolesRequiringOwnership 
+            && this.rolesRequiringOwnership.length > 0 
+            && (request[CONST.REQUEST_TOKEN_LOCATION] as ITokenPayload)
+            && (request[CONST.REQUEST_TOKEN_LOCATION] as ITokenPayload).roles
             // Is the user a role, that exists in the roles array that requires an ownership test.
-            Authz.isMatchBetweenRoleLists(this.rolesRequiringOwnership, (request[CONST.REQUEST_TOKEN_LOCATION] as ITokenPayload).roles)
+            && Authz.isMatchBetweenRoleLists(this.rolesRequiringOwnership, (request[CONST.REQUEST_TOKEN_LOCATION] as ITokenPayload).roles)
         ) {
             // We need to get the document before we can CRUD it
             let document = await this.repository.single(this.getId(request));

@@ -2,18 +2,49 @@ import { Router, Request, Response, RequestParamHandler, NextFunction, RequestHa
 import mongoose = require('mongoose');
 import { Schema, Model, Document } from 'mongoose';
 import { Config } from '../config/config';
-import { ITokenPayload, IBaseModelDoc } from '../models/';
+import { ITokenPayload, IBaseModelDoc, IUserDoc, User } from '../models/';
 import { CONST } from "../constants";
 import { ApiErrorHandler } from "../api-error-handler";
 import * as log from 'winston';
+import { BaseController } from './base/base.controller';
+import { IUser } from '../../client/src/models/index';
+import { BaseRepository } from '../repositories/index';
+import * as passport from "passport";
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-export class AuthenticationController {
+export class AuthenticationController extends BaseController{
+    protected repository: BaseRepository<IUserDoc>;
+    public defaultPopulationArgument: object;
+    public isOwnershipRequired: boolean = true;
+    public rolesRequiringOwnership: string[] = [''];
+
+    public addOwnerships(request: Request, response: Response, next: NextFunction, modelDoc: IBaseModelDoc): void {
+        return;
+    }
+    public isOwner(request: Request, response: Response, next: NextFunction, document: IBaseModelDoc): boolean {
+        return false;
+    }
 
     private saltRounds: Number = 5;
     private tokenExpiration: string = '24h';
+
+    public login(request: Request, response: Response, next: NextFunction) {
+        response.redirect('/users/' + request['user'].username);
+        next();
+    }
+
+    public async validateUser(username: string, password: string, done){
+        console.dir('about to try and find user', username);
+        done(null, {});
+        return;
+            var user = await User.findOne({ email: username });
+            if(!user){
+                return done(null, false);
+            }
+            return done(null, user);
+    }
 
     public authMiddleware(request: Request, response: Response, next: NextFunction): Response {
         try {

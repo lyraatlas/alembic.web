@@ -9,6 +9,7 @@ export interface IUser extends IBaseModel, IOwned{
     password: string;
     email: string;
     href?: string;
+    roles: string[];
     // This will be set to true whenever a user changes their password / or we require them to login again
     // This is used by the authentication controller to revoke the renewal of a token.  
     isTokenExpired: boolean; 
@@ -47,6 +48,7 @@ const UserSchema = new Schema({
     password: {type: String, required: true, select: false},
     isTokenExpired: {type : Boolean, required: true, default: false},
     isEmailVerified: {type : Boolean, required: true, default: false},
+    roles: [{type: String}],
     href: {type:String},
     isActive: {type: Boolean, required: true, default: true},
     facebookAuth         : {

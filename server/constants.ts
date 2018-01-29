@@ -11,6 +11,7 @@ export const CONST = {
         API_SWAGGER_DEF: '/swagger-definition',
         NOTIFICATIONS: '/notifications',
         UPLOAD_IMAGES: '/upload-images',
+        LOGIN: '/login',
         client: {
         },
         common:{

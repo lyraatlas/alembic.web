@@ -25,10 +25,10 @@ export class BucketController extends BaseController {
   // Here we can later add supplier ID, and also check that supplier ID in the checking logic.
   public addOwnerships(request: Request, response: Response, next: NextFunction, bucketDocument: IBucketDoc): void {
     let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
-    bucketDocument.owners = [{
-      ownerId: currentToken.userId,
-      ownershipType: OwnershipType.user
-    }];
+    // bucketDocument.owners = [{
+    //   ownerId: currentToken.userId,
+    //   ownershipType: OwnershipType.user
+    // }];
   }
 
   // For bucket documents we're going to test ownership based on organization id,

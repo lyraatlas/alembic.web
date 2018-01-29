@@ -10,7 +10,7 @@ import log = require('winston');
 import { IdentityApiService } from "../services/identity.api.service";
 
 const api = supertest.agent(App.server);
-const identityApi = supertest(Config.active.get('identityApiEndpoint'));
+const identityApi = null // supertest(Config.active.get('identityApiEndpoint'));
 
 const mongoose = require("mongoose");
 const expect = chai.expect;
@@ -19,11 +19,11 @@ const should = chai.should();
 // We need to rename this so it doesn't collide with the authentication utility in the controllers folder.
 export class AuthUtil {
 
-    static systemAuthToken: string;
-    static productAdminToken: string;
-    static productEditorToken: string;
-    static supplierAdminToken: string;
-    static supplierEditorToken: string;
+    static systemAuthToken: string ='';
+    static productAdminToken: string  ='';
+    static productEditorToken: string  ='';
+    static supplierAdminToken: string  ='';
+    static supplierEditorToken: string ='';
 
     // We want to make sure we're cleaning up any test accounts that we create on the identity api.
     public static async cleanupIdentityApi() {
