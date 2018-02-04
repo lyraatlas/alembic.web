@@ -1,8 +1,8 @@
 import * as enums from "../enumerations";
 
-export interface IOwned{
+export interface IOwned {
     owners?: {
-                ownerId: string,
-                ownershipType: enums.OwnershipType
-            }[]
+        ownerId: string,
+        ownershipType: enums.OwnershipType
+    }[]
 }

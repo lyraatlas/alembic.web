@@ -8,7 +8,7 @@ import * as helmet from 'helmet';
 import * as routers from './routers';
 
 import * as passport from 'passport'; 
-import { Strategy as local } from 'passport-local';
+import { Strategy as local, IStrategyOptions } from 'passport-local';
 
 import { ObjectId } from 'bson';
 import { join } from 'path';
@@ -34,7 +34,7 @@ import { MulterConfiguration } from './config/multer.configuration';
 import { ImageUploadController, BucketController } from './controllers/index';
 import { IdentityApiService } from './services/identity.api.service';
 import { User } from './models/index';
-import { BucketRouter } from './routers';
+import { BucketRouter, AuthenticationRouter } from './routers';
 
 // Creates and configures an ExpressJS web server.
 class Application {
@@ -55,9 +55,9 @@ class Application {
     this.connectDatabase(); // Setup database connection
     this.seedSupportingServices();  // We want to make sure that anything this service needs exists in other services.
     this.loggingClientEndpoint();
-    this.authenticateSystemUser();
+    //this.authenticateSystemUser(); // This will speed up situations where 
     this.middleware();   // Setup the middleware - compression, etc...
-    //this.secure();       // Turn on security measures
+    this.secure();       // Turn on security measures
     this.swagger();      // Serve up swagger, this is before authentication, as swagger is open
     this.routes();       // Setup routers for all the controllers
     this.initPassport(); // here's where we're going to setup all our passport handlers.
@@ -76,36 +76,14 @@ class Application {
 
   private async initPassport(){
     this.express.use(passport.initialize());
-
-    this.express.post('/login', passport.authenticate('local', { failureRedirect: '/login', successRedirect: '/home', session: false }));
-    this.express.get('/login', (req, res) => res.send('Login Failed'));
-    this.express.get('/home', (req, res) => res.send('Login Succeeded'));
-    
-    passport.use(new local({usernameField: 'username', passwordField:'password'},
-      (username, password, done) => {
-        console.log('This is calling the method');
-        return done(null, {});
-        User.findOne({ email: username }, function (err, user) {
-          if (err) { 
-            console.log(err);
-            return done(err); 
-          }
-          if (!user) { 
-            console.log('no user found');
-            return done(null, false); 
-          }
-          return done(null, user);
-        });
-      }
-    ));
-
+    // Here we should also configure all of our middleware strategies for passport.  Facebook, instagram, twitter, gmail, etc.
   }
 
   // At startup, we're going to automatically authenticate the system user, so we can use that token
   private async authenticateSystemUser(): Promise<void> {
     // we're not going to auth the system user, there is no system user.
-    //const token = await IdentityApiService.getSysToken();
-    //log.info(`System user has been authenticated.`);
+    await IdentityApiService.getSysToken();
+    log.info(`System user has been authenticated.`);
   }
 
   // Here we're going to make sure that the environment is setup.  
@@ -246,7 +224,7 @@ class Application {
   private routes(): void {
     log.info('Initializing Routers');
 
-    //this.express.use(CONST.ep.API + CONST.ep.V1, new routers.AuthenticationRouter().getRestrictedRouter());
+    this.express.use(CONST.ep.API + CONST.ep.V1, new routers.AuthenticationRouter().getRestrictedRouter());
 
     // Now we lock up the rest.
     //this.express.use('/api/*', new AuthenticationController().authMiddleware);

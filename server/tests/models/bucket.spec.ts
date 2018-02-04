@@ -21,7 +21,7 @@ class BucketTest {
 
     // First we need to get some users to work with from the identity service
     public static before(done) {
-        console.log('Testing products');
+        console.log('Testing buckets');
         // This code should only be called if this test is run as a single test.  When run in the suite along with
         // bootstrap.util.spec this code is run by the bootstrap spec.
         // App.server.on('dbConnected', async () => {
@@ -54,7 +54,7 @@ class BucketTest {
 
         let response = await api
             .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}`)
-            .set(CONST.TOKEN_HEADER_KEY, AuthUtil.systemAuthToken)
+            .set(CONST.TOKEN_HEADER_KEY, AuthUtil.userToken)
             .send(bucket);
 
         expect(response.status).to.equal(201);
@@ -69,7 +69,7 @@ class BucketTest {
     public async bucketList() {
         let response = await api
             .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep. BUCKETS}`)
-            .set("x-access-token", AuthUtil.systemAuthToken);
+            .set("x-access-token", AuthUtil.userToken);
 
         expect(response.status).to.equal(200);
         expect(response.body).to.be.an('array');
@@ -79,11 +79,11 @@ class BucketTest {
 
     @test('making sure get bucket by id works')
     public async getByIdWorking() {
-        let createdId = await this.createBucket(AuthUtil.productAdminToken);
+        let createdId = await this.createBucket(AuthUtil.userToken);
 
         let response = await api
             .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdId}`)
-            .set("x-access-token", AuthUtil.productAdminToken);
+            .set("x-access-token", AuthUtil.userToken);
 
         expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
@@ -93,7 +93,7 @@ class BucketTest {
 
     @test('it should update a bucket')
     public async updateABucket() {
-        let createdId = await this.createBucket(AuthUtil.productAdminToken);
+        let createdId = await this.createBucket(AuthUtil.userToken);
 
         let bucketUpdate = {
             _id: `${createdId}`,
@@ -102,7 +102,7 @@ class BucketTest {
 
         let response = await api
             .put(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdId}`)
-            .set("x-access-token", AuthUtil.productAdminToken)
+            .set("x-access-token", AuthUtil.userToken)
             .send(bucketUpdate);
 
         expect(response.status).to.equal(202);
@@ -113,11 +113,11 @@ class BucketTest {
 
     @test('it should delete a product')
     public async deleteABucket() {
-        let createdId = await this.createBucket(AuthUtil.productAdminToken);
+        let createdId = await this.createBucket(AuthUtil.userToken);
 
         let response = await api
             .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdId}`)
-            .set("x-access-token", AuthUtil.productAdminToken);
+            .set("x-access-token", AuthUtil.userToken);
 
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property('ItemRemoved');
@@ -131,7 +131,7 @@ class BucketTest {
     public async onDeleteWithoutID404() {
         let response = await api
             .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/58f8c8caedf7292be80a90e4`)
-            .set("x-access-token", AuthUtil.productAdminToken);
+            .set("x-access-token", AuthUtil.userToken);
 
         expect(response.status).to.equal(404);
         return;
@@ -141,7 +141,7 @@ class BucketTest {
     public async onUpdateWithoutID404() {
         let response = await api
             .put(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/58f8c8caedf7292be80a90e4`)
-            .set("x-access-token", AuthUtil.systemAuthToken);
+            .set("x-access-token", AuthUtil.userToken);
 
         expect(response.status).to.equal(404);
         return;

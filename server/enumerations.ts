@@ -35,7 +35,6 @@ export enum PushNotificationType{
 }
 
 export enum OwnershipType{
-    organization=2,
     user=3
 }
 

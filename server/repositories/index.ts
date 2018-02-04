@@ -6,5 +6,5 @@ export * from './notification.repo';
 export * from './bucket.repo';
 export * from './bucket-item.repo';
 export * from './user.repo';
-
+export * from './email-verification.repo';
 

@@ -1,23 +1,16 @@
 import { mongoose } from '../config/database/database';
 import { Schema, Model, Document, model } from 'mongoose';
-import { IBaseModel, IBaseModelDoc } from "./index";
+import { IBaseModel, IBaseModelDoc, ILikeable, IOwned, ITimeStamped, IBucketItem } from "./index";
 import * as enums from "../enumerations";
 import { IImage } from './image.interface';
-import { ILikeable } from './likeable.interface';
-import { IOwned } from './owned.interface';
-import { IBucketItem } from './bucket-item.interface';
 
 
-export interface IBucket extends IBaseModel, ILikeable, IOwned {
+export interface IBucket extends IBaseModel, ILikeable, IOwned, ITimeStamped {
     name?: string,
     description?: string,
     bucketItems?: IBucketItem[],
     type?: enums.BucketType,
     href?: string,
-    createdBy?: string;
-    modifiedBy?: string;
-    createdAt?: Date,
-    modifiedAt?: Date,
 }
 
 export interface IBucketDoc extends IBucket, IBaseModelDoc {

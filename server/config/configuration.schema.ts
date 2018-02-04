@@ -14,6 +14,11 @@ public static convictSchema: convict.Config = convict({
       default: 9000,
       env: 'PORT'
     },
+    systemUserPassword:{
+      format: String,
+      default: '',
+      env: 'AB_SYSTEM_PASSWORD',
+    },
     name: {
       doc: 'The current app name could be useful for debugging',
       format: String,

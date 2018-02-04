@@ -37,10 +37,11 @@ export class BucketController extends BaseController {
   public isOwner(request: Request, response: Response, next: NextFunction, bucketDocument: IBucketDoc): boolean {
     // We'll assume this is only for CRUD
     // Get the current token, so we can get the ownerId in this case organization id off of here.
-    let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
+    // let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
 
-    // For now we're just going to check that the ownership is around organization.
-    return super.isOwnerInOwnership(bucketDocument, currentToken.userId, OwnershipType.user);
+    // // For now we're just going to check that the ownership is around organization.
+    // return super.isOwnerInOwnership(bucketDocument, currentToken.userId, OwnershipType.user);
+    return true;
   }
 
   public async preCreateHook(Bucket: IBucketDoc): Promise<IBucketDoc> {

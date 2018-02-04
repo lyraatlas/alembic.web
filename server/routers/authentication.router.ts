@@ -14,23 +14,18 @@ export class AuthenticationRouter extends BaseRouter {
 
     public constructor(){
         super();
-        this.resource = '';
+        this.resource = CONST.ep.AUTHENTICATE;
     }
 
     public getRestrictedRouter(): Router {
         return this.router
             // Get Single Operation
-            .post(`${CONST.ep.LOGIN}`, 
-            passport.authenticate(
-                'local', 
-                { 
-                    successRedirect: '/home', // should be something like /home
-                    failureRedirect: '/api/v1/buckets', // should be something like /login
-                    failureFlash: false,
-                    session: false,
-                }),
+            .post(`${this.resource}${CONST.ep.LOCAL}${CONST.ep.LOGIN}`, 
                 async (request: Request, response: Response, next: NextFunction) => {
-                await this.controller.login(request, response, next);
-            });
+                await this.controller.authenticateLocal(request, response, next);
+            })
+            .post(`${this.resource}${CONST.ep.LOCAL}${CONST.ep.REGISTER}`, async (request: Request, response: Response, next: NextFunction) => {
+                await this.controller.register(request, response, next);
+            })
     }
 }

@@ -1,9 +1,9 @@
 import { mongoose } from '../config/database/database';
 import { Schema, Model, Document, model } from 'mongoose';
-import { IBaseModel, IBaseModelDoc, IOwned } from "./index";
+import { IBaseModel, IBaseModelDoc, IOwned, ITimeStamped } from "./index";
 import * as enums from '../enumerations';
 
-export interface IUser extends IBaseModel, IOwned{
+export interface IUser extends IBaseModel, IOwned, ITimeStamped {
     firstName?: string,
     lastName?: string,
     password: string;
@@ -20,7 +20,6 @@ export interface IUser extends IBaseModel, IOwned{
     facebookAuth?: {
         id: string,
         token: string,
-        email: string,
         name: string,
     }
     twitterAuth?:{
@@ -29,10 +28,15 @@ export interface IUser extends IBaseModel, IOwned{
         displayName  : string,
         username     : string
     }
+    googleAuth?:{
+        id           : string,
+        token        : string,
+        name         : string
+    }
     instagramAuth?:{
         id           : string,
         token        : string,
-        displayName  : string,
+        name         : string,
         username     : string
     }
 }
@@ -52,22 +56,26 @@ const UserSchema = new Schema({
     href: {type:String},
     isActive: {type: Boolean, required: true, default: true},
     facebookAuth         : {
-        id           : String,
-        token        : String,
-        email        : String,
-        name         : String
+        id           : {type:String},
+        token        : {type:String},
+        name         : {type:String}
     },
     twitterAuth          : {
-        id           : String,
-        token        : String,
-        displayName  : String,
-        username     : String
+        id           : {type:String},
+        token        : {type:String},
+        displayName  : {type:String},
+        username     : {type:String}
     },
     googleAuth           : {
-        id           : String,
-        token        : String,
-        email        : String,
-        name         : String
+        id           : {type:String},
+        token        : {type:String},
+        name         : {type:String}
+    },
+    instagramAuth           : {
+        id           : {type:String},
+        token        : {type:String},
+        name         : {type:String},
+        username     : {type:String}
     }
 },{timestamps:true});
 

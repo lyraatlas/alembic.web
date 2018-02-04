@@ -5,11 +5,15 @@ import * as enums from "../../enumerations";
 import { BijectionEncoder } from '../../utils/bijection-encoder';
 import * as log from 'winston';
 import { IBucketLikedNotification } from './bucket-related/bucket-liked.notification.interface';
+import { IOwned } from '../owned.interface';
+import { IBucketItemLikedNotification } from './bucket-item-related/bucket-item-liked.notification.interface';
 
-export interface INotification extends IBaseModel {
+export interface INotification extends IBaseModel, IOwned {
     type: enums.NotificationType
     bucketLikedNotification: IBucketLikedNotification,
-    // This field makes it easier to build our notification list.  in the supplier mobile app, and taki dashboard.
+    bucketItemLikedNotification: IBucketItemLikedNotification
+    // This field makes it easier to build our notification list.  Some things are going to be related
+    // to buckets, bucket items, comments, etc.
     relatedTo?: string,
     isRead?: boolean;
     readAt?: string;
@@ -25,6 +29,10 @@ export interface INotificationDoc extends INotification, IBaseModelDoc {
 export const NotificationSchema = new Schema({
     bucketLikedNotification: {
         bucket: { type: Schema.Types.ObjectId, ref: 'bucket' },
+        likedBy: {type: Schema.Types.ObjectId, ref: 'user'},
+    },
+    bucketItemLikedNotification: {
+        bucketItem: { type: Schema.Types.ObjectId, ref: 'bucketItem' },
         likedBy: {type: Schema.Types.ObjectId, ref: 'user'},
     },
     // This could be supplier, courier, particular team member, or user.  We're going to keep this generic for now.
