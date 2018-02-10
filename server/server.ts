@@ -56,11 +56,11 @@ class Application {
     this.seedSupportingServices();  // We want to make sure that anything this service needs exists in other services.
     this.loggingClientEndpoint();
     //this.authenticateSystemUser(); // This will speed up situations where 
+    this.initPassport(); // here's where we're going to setup all our passport handlers.
     this.middleware();   // Setup the middleware - compression, etc...
     this.secure();       // Turn on security measures
     this.swagger();      // Serve up swagger, this is before authentication, as swagger is open
     this.routes();       // Setup routers for all the controllers
-    this.initPassport(); // here's where we're going to setup all our passport handlers.
     this.client();       // This will serve the client angular application, will serve all static files.
     this.handlers();     // Any additional handlers, home page, etc.
     this.initErrorHandler(); // This global error handler, will handle 404s for us, and any other errors.  It has to be LAST in the stack.

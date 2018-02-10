@@ -186,6 +186,7 @@ gulp watch
 npm run nm
 ```
 docker cloud push
+
 # Text indexes in mongodb
 
 At some point we're going to want to index various fields on the product table, so that we can allow searching, and that searching doesn't hurt 
@@ -200,3 +201,7 @@ Or you can create a text index over all string fields in a collection:
 db.collection.createIndex( { "$**": "text" } )
 
 Obviously when the time comes we'll want to put a text index just on the fields that we want to search over, and not all fields.
+
+# Long running TODO list
+
+Clean up email verification emails to actually be sent out.

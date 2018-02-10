@@ -27,6 +27,7 @@
             "type": "node",
             "request": "attach",
             "stopOnEntry": false,
+            "protocol": "inspector",
             "name": "Attach to Server",
             "processId": "${command:PickProcess}",
             "outFiles": [

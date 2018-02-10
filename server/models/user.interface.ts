@@ -6,8 +6,8 @@ import * as enums from '../enumerations';
 export interface IUser extends IBaseModel, IOwned, ITimeStamped {
     firstName?: string,
     lastName?: string,
-    password: string;
-    email: string;
+    password?: string;
+    email?: string;
     href?: string;
     roles: string[];
     // This will be set to true whenever a user changes their password / or we require them to login again
@@ -18,26 +18,26 @@ export interface IUser extends IBaseModel, IOwned, ITimeStamped {
     createdAt?: Date; //Automatically created by mongoose.
     modifiedAt?: Date; //Automatically created by mongoose.
     facebookAuth?: {
-        id: string,
-        token: string,
-        name: string,
+        id?: string,
+        token?: string,
+        name?: string,
     }
     twitterAuth?:{
-        id           : string,
-        token        : string,
-        displayName  : string,
-        username     : string
+        id?           : string,
+        token?        : string,
+        displayName?  : string,
+        username?     : string
     }
     googleAuth?:{
-        id           : string,
-        token        : string,
-        name         : string
+        id?           : string,
+        token?        : string,
+        name?         : string
     }
     instagramAuth?:{
         id           : string,
-        token        : string,
-        name         : string,
-        username     : string
+        token?        : string,
+        name?         : string,
+        username?     : string
     }
 }
 
@@ -48,8 +48,8 @@ export interface IUserDoc extends IUser, IBaseModelDoc {
 const UserSchema = new Schema({
     firstName: {type: String, required: false},
     lastName: {type: String, required: false},
-    email: {type:String, unique:true},
-    password: {type: String, required: true, select: false},
+    email: {type:String},
+    password: {type: String, required: false, select: false},
     isTokenExpired: {type : Boolean, required: true, default: false},
     isEmailVerified: {type : Boolean, required: true, default: false},
     roles: [{type: String}],

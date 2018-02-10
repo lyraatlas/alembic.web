@@ -5,6 +5,7 @@ export class SearchCriteria {
     public skip: number;
     public criteria: string;
     public sort: string;
+
     constructor(request: Request, next: NextFunction) {
         this.limit = parseInt(request.query.limit, 10) || 25;
         this.skip = parseInt(request.query.skip, 10) || 0;

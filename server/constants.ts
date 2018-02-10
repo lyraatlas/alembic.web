@@ -18,6 +18,7 @@ export const CONST = {
         NOTIFICATIONS: '/notifications',
         UPLOAD_IMAGES: '/upload-images',
         LOGIN: '/login',
+        CALLBACK: '/callback',
         EMAIL_VERIFICATIONS: '/email-verifications',
         PASSWORD_RESET: '/password-reset',
         PASSWORD_RESET_TOKENS: '/password-reset-tokens',

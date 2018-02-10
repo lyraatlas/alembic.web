@@ -1,13 +1,13 @@
 import { Router, Request, Response, RequestParamHandler, NextFunction, RequestHandler, Application } from 'express';
+import * as express from 'express';
 import mongoose = require('mongoose');
 import { Schema, Model, Document } from 'mongoose';
 import { Config } from '../config/config';
-import { ITokenPayload, IBaseModelDoc, IUserDoc, User, IEmailVerification } from '../models/';
+import { ITokenPayload, IBaseModelDoc, IUserDoc, User, IEmailVerification, SearchCriteria, IUser } from '../models/';
 import { CONST } from "../constants";
 import { ApiErrorHandler } from "../api-error-handler";
 import * as log from 'winston';
 import { BaseController } from './base/base.controller';
-import { IUser } from '../../client/src/models/index';
 import { BaseRepository, UserRepository, EmailVerificationRepository } from '../repositories/index';
 import * as moment from 'moment';
 import { OwnershipType } from '../enumerations';
@@ -66,6 +66,38 @@ export class AuthenticationController extends BaseController{
                 decoded: tokenPayload
             });
         } catch (err) { ApiErrorHandler.sendAuthFailure(response, 401, err); }
+    }
+
+    public async FindOrCreateInstagram(accessToken, refreshToken, profile, done){
+        var usersFromDB = await this.repository.query({ instagramAuth: {id: profile.id} }, null, null);
+
+        if(usersFromDB.length > 1){
+           var err = 'More than one user has that instagram profile, this shouldnt happen';
+           return done(err, null);
+        }
+        // This means we found our single user, by profile id, and we can return that user.
+        if(usersFromDB.length == 1)
+        {
+            return done(null, usersFromDB[0]);
+        }
+        else{
+            // Notice here the email is not being set. in the case of instagram the email doesn't come back from the auth call. 
+            const newUser : IUser = {
+                instagramAuth: {
+                     id: profile.id
+                },
+                roles : [CONST.USER_ROLE],
+                isTokenExpired : false,
+                isEmailVerified : false,
+                isActive : true,
+                // "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg", this should come back in the raw response.
+            };
+
+            const userDoc = this.repository.createFromInterface(newUser);
+
+            const savedUser = await this.repository.create(userDoc);
+            return done(null, savedUser);
+        }
     }
 
     public async register(request: Request, response: Response, next: NextFunction): Promise<any> {
