@@ -53,6 +53,20 @@ public static convictSchema: convict.Config = convict({
       env: 'INSTAGRAM_SECRET',
       sensitive: true
     },
+    facebookClientId: {
+      doc: 'Instagram Client ID',
+      format: String,
+      default: '',
+      env: 'INSTAGRAM_CLIENT_ID',
+      sensitive: true
+    },
+    facebookClientSecret: {
+      doc: 'Instagram Secret',
+      format: String,
+      default: '',
+      env: 'INSTAGRAM_SECRET',
+      sensitive: true
+    },
     returnCallStackOnError: {
       doc: 'When the api encounters an error do we return a call stack',
       format: Boolean,

@@ -4,21 +4,11 @@ export enum BucketType{
     continent =3,
 }
 
-
-export enum OrganizationType{
-    system = 1,
-    guest = 2,
-    supplier = 3
-}
-
-export enum OrderStatus{
-    entered = 1,
-    sent = 2,
-    accepted = 3,
-    rejected = 4,
-    pickedUp = 5,
-    delivered = 6,
-    completed = 7
+export enum LoginStrategy{
+    Local = 1,
+    Facebook = 2,
+    Instagram = 3,
+    Google = 4
 }
 
 export enum NotificationType{

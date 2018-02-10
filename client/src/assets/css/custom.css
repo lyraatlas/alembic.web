@@ -1,0 +1,36 @@
+/****** PLACE YOUR CUSTOM STYLES HERE ******/
+
+.gold{
+   color: rgb(190, 150, 86);
+}
+
+div.pagination {
+    margin: 0;
+  }
+  div.pagination a,
+  div.pagination span {
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    text-align: center;
+    padding-top: 6px;
+    margin: 0 4px;
+    color: #292929;
+    font-weight: 400;
+    display: inline-block;
+    border: 1px solid lightgrey;
+  }
+  div.pagination a:hover,
+  div.pagination .active a,
+  div.pagination span.current,
+  div.pagination .active:hover a {
+    background: #333347;
+    color: #fff;
+    border-color: #333347;
+  }
+
+  .lyralogo{
+      max-height: 100px;
+      max-width: 350px;
+  }

@@ -63,13 +63,13 @@ export class ProductImageGridComponent {
   }
 
   deleteImage(id: string) {
-    this.productService.deleteProductImage(this.product._id, id).subscribe(response => {
-      this.alertService.send({ text: `Product Images removed: ${this.product.displayName}`, notificationType: enums.AlertType.success }, true);
+    // this.productService.deleteProductImage(this.product._id, id).subscribe(response => {
+    //   this.alertService.send({ text: `Product Images removed: ${this.product.displayName}`, notificationType: enums.AlertType.success }, true);
 
-      let remainingImages = this.product.images.filter((image) => {
-        return image._id != id;
-      });
-      this.product.images = remainingImages;
-    });
+    //   let remainingImages = this.product.images.filter((image) => {
+    //     return image._id != id;
+    //   });
+    //   this.product.images = remainingImages;
+    // });
   }
 }

@@ -7,7 +7,6 @@ import * as superagent from "superagent";
 import * as log from 'winston';
 import { BaseService } from "./base/base.service";
 import { ITokenPayload} from '../models/index';
-import { OrganizationType } from '../enumerations';
 const jwt = require('jsonwebtoken');
 
 export class IdentityApiService extends BaseService {

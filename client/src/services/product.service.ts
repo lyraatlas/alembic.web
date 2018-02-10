@@ -19,18 +19,18 @@ export class ProductService extends BaseService<IProduct>{
      createActiveProductFromTemplate(productId: string): Observable<IProduct>{
         console.log(`About to create a product from a template`);
         return this.http
-        .post(`${this.serviceConfig.rootApiUrl}/${this.serviceConfig.urlSuffix}${CONST.ep.CREATE_FROM_TEMPLATE}/${productId}`, null, this.requestOptions)
+        .post(`${this.serviceConfig.rootApiUrl}/${this.serviceConfig.urlSuffix}${CONST.ep.ACCEPT}/${productId}`, null, this.requestOptions)
         .map((res: Response) => {
             return res.json();
         }).catch(this.handleError);
      }
 
-     deleteProductImage(productId:string, imageId: string): Observable<Response> {
-        console.log(`About to delete image: ${imageId}`);
-        return this.http
-        .delete(`${this.serviceConfig.rootApiUrl}/${this.serviceConfig.urlSuffix}${CONST.ep.DELETE_IMAGE}/${productId}/${imageId}`, this.requestOptions)
-        .map((res: Response) => {
-            return res.json();
-        }).catch(this.handleError);
-    }
+    //  deleteProductImage(productId:string, imageId: string): Observable<Response> {
+    //     console.log(`About to delete image: ${imageId}`);
+    //     return this.http
+    //     .delete(`${this.serviceConfig.rootApiUrl}/${this.serviceConfig.urlSuffix}${CONST.ep.DELETE_IMAGE}/${productId}/${imageId}`, this.requestOptions)
+    //     .map((res: Response) => {
+    //         return res.json();
+    //     }).catch(this.handleError);
+    // }
 }

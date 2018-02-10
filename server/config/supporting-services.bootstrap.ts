@@ -1,6 +1,6 @@
 import { Config } from "./config";
 import { CONST } from "../constants";
-import { OrganizationType } from "../enumerations";
+import * as enums from '../enumerations';
 
 import * as superagent from "superagent";
 

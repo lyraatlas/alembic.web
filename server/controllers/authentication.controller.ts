@@ -10,12 +10,17 @@ import * as log from 'winston';
 import { BaseController } from './base/base.controller';
 import { BaseRepository, UserRepository, EmailVerificationRepository } from '../repositories/index';
 import * as moment from 'moment';
-import { OwnershipType } from '../enumerations';
+import * as enums from '../enumerations';
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+export interface IConfigureUser{
+    (profile: any) : IUser
+}
+
 export class AuthenticationController extends BaseController{
+
     protected repository: UserRepository = new UserRepository();
     public defaultPopulationArgument: object;
     public isOwnershipRequired: boolean = true;
@@ -42,6 +47,44 @@ export class AuthenticationController extends BaseController{
                 ApiErrorHandler.sendAuthFailure(response, 401, 'Password does not match');
                 return;
             }
+            request.user = user;
+
+            await this.sendTokenResponse(request,response,next);
+
+        } catch (err) { ApiErrorHandler.sendAuthFailure(response, 401, err); }
+    }
+
+    public async upsertSocialAuth(accessToken, refreshToken, profile, done, loginStrategy: enums.LoginStrategy, query : IUser, configureUser: IConfigureUser){
+        var usersFromDB = await this.repository.query(query, null, null);
+
+        if(usersFromDB.length > 1){
+           var err = 'More than one user has that social profile, this shouldnt happen';
+           return done(err, null);
+        }
+        // This means we found our single user, by profile id, and we can return that user.
+        if(usersFromDB.length == 1)
+        {
+            usersFromDB[0].lastLoginStrategy = loginStrategy;
+            return done(null, usersFromDB[0]);
+        }
+        else{
+            // Notice here the email is not being set. in the case of instagram the email doesn't come back from the auth call. 
+            const newUser : IUser = configureUser(profile);
+            newUser.roles = [CONST.USER_ROLE];
+            newUser.isTokenExpired = false;
+            newUser.isActive = true;
+
+            const userDoc = this.repository.createFromInterface(newUser);
+
+            const savedUser = await this.repository.create(userDoc);
+            return done(null, savedUser);
+        }
+    }
+
+    public async sendTokenResponse(request: Request, response: Response, next: NextFunction): Promise<any> {
+        try {
+            const user = request.user;
+            // notice how we're not doing a password check in this case. 
 
             // There's basically a soft expiration time on this token, which is set with moment,
             // and a hard expiration time set on this token with jwt sign.  
@@ -66,38 +109,6 @@ export class AuthenticationController extends BaseController{
                 decoded: tokenPayload
             });
         } catch (err) { ApiErrorHandler.sendAuthFailure(response, 401, err); }
-    }
-
-    public async FindOrCreateInstagram(accessToken, refreshToken, profile, done){
-        var usersFromDB = await this.repository.query({ instagramAuth: {id: profile.id} }, null, null);
-
-        if(usersFromDB.length > 1){
-           var err = 'More than one user has that instagram profile, this shouldnt happen';
-           return done(err, null);
-        }
-        // This means we found our single user, by profile id, and we can return that user.
-        if(usersFromDB.length == 1)
-        {
-            return done(null, usersFromDB[0]);
-        }
-        else{
-            // Notice here the email is not being set. in the case of instagram the email doesn't come back from the auth call. 
-            const newUser : IUser = {
-                instagramAuth: {
-                     id: profile.id
-                },
-                roles : [CONST.USER_ROLE],
-                isTokenExpired : false,
-                isEmailVerified : false,
-                isActive : true,
-                // "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg", this should come back in the raw response.
-            };
-
-            const userDoc = this.repository.createFromInterface(newUser);
-
-            const savedUser = await this.repository.create(userDoc);
-            return done(null, savedUser);
-        }
     }
 
     public async register(request: Request, response: Response, next: NextFunction): Promise<any> {
@@ -127,7 +138,7 @@ export class AuthenticationController extends BaseController{
             //Now that we have an id, we're going to update the user again, with their ownership of themselves.
             user.owners = [{
                 ownerId: user._id,
-                ownershipType: OwnershipType.user
+                ownershipType: enums.OwnershipType.user
               }];
             
             user = await user.save();

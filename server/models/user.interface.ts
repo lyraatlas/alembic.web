@@ -9,12 +9,13 @@ export interface IUser extends IBaseModel, IOwned, ITimeStamped {
     password?: string;
     email?: string;
     href?: string;
-    roles: string[];
+    roles?: string[];
+    lastLoginStrategy?: enums.LoginStrategy
     // This will be set to true whenever a user changes their password / or we require them to login again
     // This is used by the authentication controller to revoke the renewal of a token.  
-    isTokenExpired: boolean; 
-    isEmailVerified: boolean;
-    isActive: boolean;
+    isTokenExpired?: boolean; 
+    isEmailVerified?: boolean;
+    isActive?: boolean;
     createdAt?: Date; //Automatically created by mongoose.
     modifiedAt?: Date; //Automatically created by mongoose.
     facebookAuth?: {
@@ -55,6 +56,7 @@ const UserSchema = new Schema({
     roles: [{type: String}],
     href: {type:String},
     isActive: {type: Boolean, required: true, default: true},
+    lastLoginStrategy: { type: Number, enum: [enums.EnumHelper.getValuesFromEnum(enums.LoginStrategy)] },
     facebookAuth         : {
         id           : {type:String},
         token        : {type:String},
