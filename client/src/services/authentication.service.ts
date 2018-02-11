@@ -13,13 +13,13 @@ import { MimeType } from '../enumerations';
 export class AuthenticationService extends BaseService<IUser>{
     constructor(public http: Http) {
         super(http, {
-            rootApiUrl: `${environment.IdentityAPIBase}${environment.V1}`,
+            rootApiUrl: `${environment.apiEndpoint}${environment.V1}`,
             urlSuffix: 'users'
         });
     }
 
-    login(email: string, password: string): Observable<Response> {
-        return this.post(CONST.ep.AUTHENTICATE, { email: email, password: password }).map((response: Response) => {
+    loginLocal(email: string, password: string): Observable<Response> {
+        return this.post(`${CONST.ep.AUTHENTICATE}${CONST.ep.LOCAL}${CONST.ep.LOGIN}`, { email: email, password: password }).map((response: Response) => {
             // login successful if there's a jwt token in the response
             let user = response.json();
             if (user && user.token) {

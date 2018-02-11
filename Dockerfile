@@ -46,8 +46,6 @@ COPY . .
 
 # now we need to build the client
 RUN cd /usr/app/client && npm run prodbuild
-RUN cd /usr/app/client && npm run stagebuild
-RUN cd /usr/app/client && npm run testbuild
 RUN cd /usr/app/client && npm run devbuild
 
 # build the server

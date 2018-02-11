@@ -15,11 +15,11 @@ export class AuthGuard implements CanActivate {
         if (localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)) {
             let token: ITokenPayload = JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION));
 
-            if(this.isAdmin(token) && this.isTokenStilValid(token)){
+            if(this.isTokenStilValid(token)){
                 return true;
             }
 
-            this.alertService.send({text: "Only admins are allowed in", notificationType: AlertType.danger}, true);
+            this.alertService.send({text: "Token expired", notificationType: AlertType.danger}, true);
             this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
             return false;
         }

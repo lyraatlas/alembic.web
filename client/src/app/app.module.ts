@@ -20,8 +20,11 @@ import { AlertComponent } from './directives/alert/alert.component';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ErrorEventBus, ProductImageEventBus, OrderItemEventBus } from '../event-buses/';
-import { WooCommerceService } from '../services/woocommerce.service';
 import { NotificationService } from '../services/notification.service';
+import { NavbarComponent } from './shared/navbar/navbar.component';
+import { FooterComponent } from './shared/footer/footer.component';
+import { NavigatorComponent } from './shared/navigator/navigator.component';
+import { NavigatorModule } from './shared/navigator/navigator.module';
 
 @NgModule({
     imports:      [
@@ -31,6 +34,7 @@ import { NotificationService } from '../services/notification.service';
         HttpModule,
         SidebarModule,
         NavbarModule,
+        NavigatorModule,
         FooterModule,
         AuthenticationModule,
         DashboardModule,
@@ -51,7 +55,6 @@ import { NotificationService } from '../services/notification.service';
         ErrorEventBus,
         OrderService,
         ProductImageEventBus,
-        WooCommerceService,
         OrderItemEventBus,
         NotificationService
     ],

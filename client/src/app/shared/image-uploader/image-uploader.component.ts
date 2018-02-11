@@ -77,7 +77,7 @@ export class ImageUploaderComponent implements OnInit {
     }else{
       const event: UploadInput = {
         type: 'uploadAll',
-        url: `${environment.ProductAPIBase}${environment.V1}${CONST.ep.BUCKETS}/upload-images/${this.relatedId}`,
+        url: `${environment.apiEndpoint}${environment.V1}${CONST.ep.BUCKETS}/upload-images/${this.relatedId}`,
         method: 'POST',
         concurrency: this.formData.concurrency,
         headers: {

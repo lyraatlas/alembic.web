@@ -2,6 +2,7 @@
 @import '../node_modules/@swimlane/ngx-datatable/release/index.css';
 @import '../node_modules/@swimlane/ngx-datatable/release/assets/icons.css';
 @import '../node_modules/@swimlane/ngx-datatable/release/themes/bootstrap.css';
+@import './assets/scss/global.scss';
 
 .ngx-datatable.bootstrap .datatable-footer .datatable-pager a{
     background-color: #424242;

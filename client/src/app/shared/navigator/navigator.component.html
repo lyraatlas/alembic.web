@@ -1,0 +1,62 @@
+<div class="nav-container">
+  <a id="top"></a>
+  <nav class="nav-centered">
+      <div class="container text-center logo logo-dark" style="margin:0px 0px 0px 0px;width:100%;padding: 0px; 0px; 0px; 0px;">
+          <div class="row">
+              <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm">
+                  <a href="/">
+                      <div style="font-family: Playfair Display; font-size: 50px;margin-top:16px; margin-bottom:8px; font-weight:100; font-style:normal;">
+                          <img src="assets/img/toplogo.png" alt="Lyra Atlas" class="logo lyralogo">
+                      </div>
+                  </a>
+              </div>
+          </div>
+      </div>
+    <div class="nav-bar text-center">
+      <div class="module widget-handle mobile-toggle left visible-sm visible-xs">
+        <i class="ti-menu"></i>
+        <div class="text-right" style="padding-left:10px; padding-top:2px; float:right; font-family: Playfair Display; font-size: 50px; font-weight:100; font-style:normal;">
+            <img src="assets/img/toplogo.png" alt="Lyra Atlas" width="100px" class="logo lyralogo">
+        </div>
+      </div>
+      <div class="module-group text-left">
+        <div class="module left">
+          <ul class="menu">
+            <li>
+              <a href="/">
+                My List
+              </a>
+            </li>
+            <li>
+              <a href="/about">
+                Explore
+              </a>
+            </li>
+            <li>
+              <a href="https://app.lyraatlas.com/login">
+                Logout
+              </a>
+            </li>
+            <li>
+              <a href="/blog">
+                Blog
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-toggle btn-magnify" data-toggle="dropdown" href="#">
+                  <i class="ti-user"></i>
+                  <span>Logged in as: {{email}}</span>
+              </a>
+            </li>
+            <li>
+                <a class="dropdown-toggle btn-magnify" data-toggle="dropdown" href="#" (click)="logout()">
+                    <i class="ti-power-off"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+  </div>

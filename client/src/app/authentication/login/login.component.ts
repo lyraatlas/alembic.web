@@ -58,19 +58,23 @@ export class LoginComponent implements OnInit {
         if(isValid){
             console.log(model, isValid);
             this.loading = true;
-            this.authenticationService.login(model.email, model.password)
+            this.authenticationService.loginLocal(model.email, model.password)
                 .subscribe(
                 data => {
                     if(this.returnUrl && this.returnUrl.length > 3){
                         this.router.navigate([this.returnUrl]);
                     }
-                    this.router.navigate(['dashboard/overview']);
+                    this.router.navigate(['dashboard/home']);
                 },
                 error => {
                     this.alertService.send({text : error, notificationType : AlertType.danger}, false);
                     this.loading = false;
                 }); 
         }
+    }
+
+    loginWithFacebook(){
+        this.loading = true;
     }
 
     checkFullPageBackgroundImage() {

@@ -4,14 +4,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { AuthGuard } from './guards/index';
-import { OverviewComponent } from './dashboard/overview/overview.component';
 
 export const AppRoutes: Routes = [
   // This is the default route, which if a user is logged in and goes to 'home' which is basically an emtpy
   // path, we'll automatically redirect to dashboard/overview
   {
       path: '',
-      redirectTo: 'dashboard/overview',
+      redirectTo: 'dashboard/home',
       pathMatch: 'full',
       canActivate: [AuthGuard],
   },

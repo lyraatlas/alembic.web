@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 export class OrderService extends BaseService<IOrder>{
     constructor(public http: Http) {
         super(http, {
-            rootApiUrl: `${environment.ProductAPIBase}${environment.V1}`,
+            rootApiUrl: `${environment.apiEndpoint}${environment.V1}`,
             urlSuffix: 'orders'
         });
      }

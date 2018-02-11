@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --output-path=/dist/dev --env=local",
+    "start": "ng serve --output-path=dist/dev --env=local",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -13,7 +13,7 @@
     "devbuild": "ng build --aot --extract-css=true --output-hashing=all --sourcemaps=true --output-path=dist/dev --env=dev --no-progress",
     "testbuild": "ng build --aot --extract-css=true --output-hashing=all --sourcemaps=true --output-path=dist/test --env=test --no-progress",
     "stagebuild": "ng build --aot --extract-css=true --output-hashing=all --sourcemaps=true --output-path=dist/stage --env=stage --no-progress",
-    "localbuild": "ng build --output-path=dist --env=local"
+    "localbuild": "ng build --output-path=dist/dev  --env=local"
   },
   "private": true,
   "dependencies": {

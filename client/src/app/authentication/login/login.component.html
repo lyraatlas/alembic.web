@@ -1,17 +1,10 @@
-<nav class="navbar navbar-transparent navbar-absolute">
-    <div class="container">
-        <div class="navbar-header">
-            <span class="navbar-brand">Lyra Atlas</span>
-        </div>
-    </div>
-</nav>
-
+<section class="container">
 <div class="wrapper wrapper-full-page">
     <div class="full-page login-page" data-color="" data-image="../../../assets/img/background/background-5.png">
         <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
         <div class="content">
             <div class="container">
-                <div class="row">
+                <div class="row" style="min-height:300px;">
                     <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
                         <!-- #f is syntax that says export the form as an object (variable) named 'f' that we can later use.  Here it's called 'f' so 
                             I can call things like f.submitted, and test values on the form.  Also notice that on submit, we're sending the form.value.
@@ -32,13 +25,14 @@
                                         <input type="email" 
                                         name="email"
                                         required 
+                                        type="text"
                                         #email="ngModel" 
                                         [ngModel]="user.email" 
                                         pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
                                         placeholder="Enter email" 
                                         class="form-control input-no-border">
                                         <small [hidden]="email.valid || (email.pristine && !f.submitted) || !f.submitted" class="text-warning">
-                                            Email is required and format should be <i>something@alembic.com</i>.
+                                            Email is required and format should be <i>something@lyraatlas.com</i>.
                                     </small>
                                     </div>
                                     <div class="form-group">
@@ -48,17 +42,32 @@
                                         #password="ngModel"
                                         [ngModel]="user.password"
                                         type="password" 
-                                        class="form-control" 
+                                        class="form-control input-no-border" 
                                         name="password" 
-                                        placeholder="Enter password"
-                                        >
+                                        placeholder="Enter password">
                                         <small [hidden]="password.valid || (password.pristine && !f.submitted)" class="text-warning">
                                               Password is required
                                             </small>
                                     </div>
                                 </div>
-                                <div class="card-footer text-center">
+                                <div class="text-center">
                                     <button type="submit" class="btn btn-fill btn-wd ">Login</button>
+                                </div>
+                                <div class="text-center mb-24">
+                                    <hr />
+                                    <h4 class="card-title">Or</h4>
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" (click)="loginWithFacebook()"  class="btn btn-fill btn-wd" style="width:100%; height:50px;"> 
+                                        <div class="row">
+                                            <div class="col-xs-2">
+                                                    <i class="et-line-facebook" style="font-size:30px;line-height:30px;margin-top:10px;" ></i>
+                                            </div>
+                                            <div class="col-xs-10 mt8" >
+                                                    Login With Facebook
+                                            </div>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -66,13 +75,6 @@
                 </div>
             </div>
         </div>
-
-        <footer class="footer footer-transparent">
-            <div class="container">
-                <div class="copyright">
-                    &copy; {{test | date: 'yyyy'}}, made with <i class="fa fa-heart heart"></i> by <a href="https://www.lyraatlas.com">Lyra Atlas</a>
-                </div>
-            </div>
-        </footer>
     </div>
 </div>
+</section>
