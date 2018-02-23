@@ -6,6 +6,7 @@ import { AlertType } from '../../../enumerations';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { IUser } from '../../../models/index';
 declare var $: any;
+declare const FB:any;
 
 @Component({
     selector: 'app-login',
@@ -75,6 +76,23 @@ export class LoginComponent implements OnInit {
 
     loginWithFacebook(){
         this.loading = true;
+        this.authenticationService.fbLogin().then(() =>{
+            if(this.returnUrl && this.returnUrl.length > 3){
+                this.router.navigate([this.returnUrl]);
+            }
+            this.router.navigate(['dashboard/home']);
+        });
+        // .subscribe(
+        // data => {
+        //     if(this.returnUrl && this.returnUrl.length > 3){
+        //         this.router.navigate([this.returnUrl]);
+        //     }
+        //     this.router.navigate(['dashboard/home']);
+        // },
+        // error => {
+        //     this.alertService.send({text : error, notificationType : AlertType.danger}, false);
+        //     this.loading = false;
+        // }); 
     }
 
     checkFullPageBackgroundImage() {

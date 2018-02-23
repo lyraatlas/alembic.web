@@ -92,6 +92,7 @@ export class AuthenticationController extends BaseController{
                 userId: user.id,
                 // We're just going to put the name of the role on the token.
                 roles: user.roles,
+                email: user.email,
                 expiresAt: moment().add(moment.duration(1, 'day')).format(CONST.MOMENT_DATE_FORMAT)
             };
 

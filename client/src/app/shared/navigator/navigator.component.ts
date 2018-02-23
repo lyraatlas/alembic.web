@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AuthenticationService } from '../../../services';
 import { Router } from '@angular/router';
+import { CONST } from '../../../constants';
 declare var $: any;
 @Component({
   selector: 'navigator-cmp',
@@ -9,6 +10,7 @@ declare var $: any;
 })
 export class NavigatorComponent implements OnInit, AfterViewInit {
 
+  public email: string;
   private mr_nav;
   private mr_fixedAt;
   private mr_navOuterHeight;
@@ -18,7 +20,10 @@ export class NavigatorComponent implements OnInit, AfterViewInit {
   constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
   ngOnInit() {
-
+    if (localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)) {
+      console.log(`Here's the email for menu: ${JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)).email}`)
+      this.email = JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)).email;
+    }
   }
 
   logout() {

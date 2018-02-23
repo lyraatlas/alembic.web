@@ -65,8 +65,6 @@ class Application {
     this.handlers();     // Any additional handlers, home page, etc.
     this.initErrorHandler(); // This global error handler, will handle 404s for us, and any other errors.  It has to be LAST in the stack.
     
-
-
     this.server = this.express.listen(Config.active.get('port'), () => {
       log.info(`Listening on port: ${Config.active.get('port')}`);
       log.info(`Current version ${process.env.npm_package_version}`);
@@ -218,7 +216,13 @@ class Application {
     }));
     // compress all requests
     this.express.use(compression());
-    this.express.use(cors());
+    // enable cors
+    let corsOption = {
+      origin: false,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      credentials: true,
+    };
+    //this.express.use(cors(corsOption));
   }
 
   private routes(): void {

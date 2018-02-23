@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  apiEndpoint: 'http://localhost:9000/api',
+  apiEndpoint: 'http://dev.lyraatlas.com:9000/api',
   V1: '/v1',
 };

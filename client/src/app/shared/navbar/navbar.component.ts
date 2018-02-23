@@ -59,7 +59,9 @@ export class NavbarComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log(`Here's the email for menu: ${JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)).email}`)
         if(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)){
+            console.log(`Here's the email for menu: ${JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)).email}`)
             this.email = JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)).email;
         }
 
