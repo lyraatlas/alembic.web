@@ -33,7 +33,7 @@ export class AuthenticationRouter extends BaseRouter {
         passport.use(new InstagramStrategy({
             clientID: Config.active.get('instagramClientId'),
             clientSecret: Config.active.get('instagramClientSecret'),
-            callbackURL: `http://localhost:9000${CONST.ep.API}${CONST.ep.V1}${this.resource}${CONST.ep.INSTAGRAM}${CONST.ep.CALLBACK}`
+            callbackURL: `${Config.active.get('APILocation')}${CONST.ep.API}${CONST.ep.V1}${this.resource}${CONST.ep.INSTAGRAM}${CONST.ep.CALLBACK}`
         },
             (accessToken, refreshToken, profile, done) => {
                 // here what will come in is a profile.id
@@ -65,7 +65,7 @@ export class AuthenticationRouter extends BaseRouter {
         passport.use(new FacebookStrategy.Strategy({
             clientID: Config.active.get('facebookClientId'),
             clientSecret: Config.active.get('facebookClientSecret'),
-            callbackURL: `${}${CONST.ep.API}${CONST.ep.V1}${this.resource}${CONST.ep.FACEBOOK}${CONST.ep.CALLBACK}`,
+            callbackURL: `${Config.active.get('APILocation')}${CONST.ep.API}${CONST.ep.V1}${this.resource}${CONST.ep.FACEBOOK}${CONST.ep.CALLBACK}`,
             profileFields: ['id', 'displayName', 'email'] //notice here I'm telling passport what fields I want back from facebook.
         },
             (accessToken, refreshToken, profile, done) => {

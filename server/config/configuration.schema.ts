@@ -68,7 +68,7 @@ public static convictSchema: convict.Config = convict({
       sensitive: true
     },
     APILocation: {
-      doc: 'Instagram Secret',
+      doc: 'API Location',
       format: String,
       default: 'http://localhost:9000',
       env: 'API_LOCATION',
