@@ -74,14 +74,21 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    loginWithFacebook(){
+    public loginWithFacebook(){
         this.loading = true;
-        this.authenticationService.fbLogin().then(() =>{
-            if(this.returnUrl && this.returnUrl.length > 3){
-                this.router.navigate([this.returnUrl]);
-            }
-            this.router.navigate(['dashboard/home']);
-        });
+        this.authenticationService.loginFacebook()
+            .then((userResponse) =>{
+                console.log(`About to navigate the user after facebook login`)
+                if(this.returnUrl && this.returnUrl.length > 3){
+                    this.router.navigate([this.returnUrl]);
+                }
+                this.router.navigate(['dashboard/home']);
+            })
+            .catch((error) =>{
+                this.alertService.send({text : error, notificationType : AlertType.danger}, false);
+                this.loading = false;
+            });
+
         // .subscribe(
         // data => {
         //     if(this.returnUrl && this.returnUrl.length > 3){

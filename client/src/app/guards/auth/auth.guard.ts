@@ -33,6 +33,10 @@ export class AuthGuard implements CanActivate {
         return token && token.roles && token.roles.indexOf('admin') >= 0;
     }
 
+    public isUser(token:ITokenPayload): boolean{
+        return token && token.roles && token.roles.indexOf('user') >= 0;
+    }
+
     public isTokenStilValid(token:ITokenPayload): boolean{
         return moment(token.expiresAt, CONST.MOMENT_DATE_FORMAT).isAfter(moment())
     }

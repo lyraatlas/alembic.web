@@ -67,6 +67,13 @@ public static convictSchema: convict.Config = convict({
       env: 'INSTAGRAM_SECRET',
       sensitive: true
     },
+    APILocation: {
+      doc: 'Instagram Secret',
+      format: String,
+      default: 'http://localhost:9000',
+      env: 'API_LOCATION',
+      sensitive: false
+    },
     returnCallStackOnError: {
       doc: 'When the api encounters an error do we return a call stack',
       format: Boolean,

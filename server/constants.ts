@@ -5,6 +5,7 @@ export const CONST = {
         AUTHENTICATE: '/authenticate',
         LOCAL: '/local',
         FACEBOOK: '/facebook',
+        CB: '/cb',
         TWITTER: '/twitter',
         GOOGLE: '/google',
         INSTAGRAM: '/instagram',

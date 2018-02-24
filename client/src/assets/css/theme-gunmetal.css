@@ -750,6 +750,11 @@ footer.bg-dark li,
   background: #333347;
   color: #fff;
 }
+.btn:focus {
+  background: #333347;
+  color: #fff;
+  outline:0;
+}
 .btn-icon {
   width: 40px;
   height: 40px;
@@ -953,7 +958,7 @@ nav.bg-dark .logo-dark {
   font-weight: 600;
   letter-spacing: 1px;
   color: #292929;
-  color: rgb(114, 114, 114)
+  color: rgb(114, 114, 114);
   opacity: 0.5;
   transition: all 0.3s ease;
   -webkit-transition: all 0.3s ease;
