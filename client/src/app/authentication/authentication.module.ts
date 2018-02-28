@@ -10,6 +10,7 @@ import { FooterComponent } from '../shared/footer/footer.component';
 import { NavbarModule } from '../shared/navbar/navbar.module';
 import { FooterModule } from '../shared/footer/footer.module';
 import { NavigatorModule } from '../shared/navigator/navigator.module';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import { NavigatorModule } from '../shared/navigator/navigator.module';
     ],
     declarations: [
         LoginComponent,
+        RegisterComponent,
     ]
 })
 

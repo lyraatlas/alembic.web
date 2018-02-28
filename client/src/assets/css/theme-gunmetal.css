@@ -1695,6 +1695,7 @@ textarea {
   font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 input[type="text"],
+input[type="email"],
 button,
 textarea,
 select,
@@ -1724,7 +1725,9 @@ input[type="password"] {
   display: block;
   cursor: default;
 }
+
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   background: #f5f5f5;
   border: none;
@@ -1732,7 +1735,7 @@ input[type="password"] {
   height: 50px;
   padding-left: 20px;
   font-weight: 500;
-  margin-bottom: 24px;
+  margin-bottom:8px;
   border-radius: 0;
 }
 .image-bg input[type="text"],
@@ -1989,6 +1992,14 @@ select:hover {
     margin-left: 1%;
   }
 }
+
+.form-group{
+    -webkit-transition: all 0.10s cubic-bezier(0.685, 0.0473, 0.346, 1);
+    -moz-transition: all 0.10s cubic-bezier(0.685, 0.0473, 0.346, 1);
+    -o-transition: all 0.10s cubic-bezier(0.685, 0.0473, 0.346, 1);
+    -ms-transition: all 0.10s cubic-bezier(0.685, 0.0473, 0.346, 1);
+    transition: all 0.10s cubic-bezier(0.685, 0.0473, 0.346, 1);  
+}
 form.thirds input,
 form.thirds button {
   width: 32%;
@@ -2011,20 +2022,11 @@ form.thirds span {
 }
 .form-error,
 .form-success {
-  background: #58ce38;
-  padding: 12px;
-  width: 80%;
-  color: #fff;
-  clear: both;
-  display: block;
-  max-width: 700px;
-  position: relative;
-  top: 16px;
-  margin: 0 auto;
-  word-break: break-word;
+  padding: 8px;
+  background: none;
 }
 .form-error {
-  background: #ce3838;
+  background: #e650101f;
 }
 .form-error a,
 .form-success a {

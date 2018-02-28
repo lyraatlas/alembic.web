@@ -80,6 +80,15 @@ export class AuthenticationService extends BaseService<IUser>{
         });
     }
 
+
+    registerLocal(user: IUser): Observable<Response> {
+        return this.post(`${CONST.ep.AUTHENTICATE}${CONST.ep.LOCAL}${CONST.ep.REGISTER}`, user).map((response: Response) => {
+            // login successful if there's a jwt token in the response
+            let user = response.json();
+            return user;
+        });
+    }
+
     protected post(endpoint: string, object: any): Observable<Response> {
         return this.http
             .post(`${this.serviceConfig.rootApiUrl}${endpoint}`, object, new RequestOptions({

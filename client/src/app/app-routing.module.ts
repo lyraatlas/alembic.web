@@ -14,22 +14,28 @@ export const AppRoutes: Routes = [
       pathMatch: 'full',
       canActivate: [AuthGuard],
   },
-  { path: '', component: AdminLayoutComponent, 
+  { 
+    path: '', 
+    component: AdminLayoutComponent, 
     children: [{
         path: 'dashboard',
         loadChildren: './dashboard/dashboard.module#DashboardModule'
       }],
-     canActivate: [AuthGuard] },
-  { path: 'login', component: AuthLayoutComponent, 
+     canActivate: [AuthGuard] 
+  },
+  { path: '', 
+    component: AuthLayoutComponent, 
      children: [{
-         path: '',
+         path: 'auth',
          loadChildren: './authentication/authentication.module#AuthenticationModule'
-       }]},
+       }]
+  },
   // otherwise redirect to home
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: 'auth' }
 ];
 
 @NgModule({
+  // To enable tracing: imports: [RouterModule.forRoot(AppRoutes, { enableTracing: true })],
   imports: [RouterModule.forRoot(AppRoutes)],
   exports: [RouterModule]
 })

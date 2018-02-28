@@ -1,0 +1,149 @@
+<!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
+<div class="container mt24">
+    <div class="row">
+
+        <div class="col-md-offset-2 col-md-5">
+            <a href="https://www.lyraatlas.com">
+                <h2 style="font-family: Playfair Display; font-weight:700; font-size: 50px;">Lyra Atlas</h2>
+            </a>
+        </div>
+
+        <div class="col-md-3 hidden-sm hidden-xs">
+            <a routerLinkActive="active" [routerLink]="['/auth/login']" style="width:100%" class="btn">
+                Looking to login?
+            </a>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8 ">
+            <h4>Register to start building your bucket list.</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8 ">
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <div class="media">
+                <div class="media-left">
+                    <div class="icon icon-danger">
+                        <i class="et-line-profile-male"></i>
+                    </div>
+                </div>
+                <div class="media-body">
+                    <h5>Free Account</h5>
+                    Completely free to create an account, and start building your bucket list.
+                </div>
+            </div>
+            <div class="media">
+                <div class="media-body">
+                </div>
+            </div>
+            <div class="media">
+                <div class="media-body">
+                    <button type="button" (click)="loginWithFacebook()" class="btn btn-fill btn-wd" style="width:100%; height:50px;">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <i class="et-line-facebook" style="font-size:3em;line-height:1.3em;"></i>
+                            </div>
+                            <div class="col-xs-10 mt8">
+                                Register with Facebook
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class=" col-md-8 visible-sm visible-xs">
+            <div class="text-center mb-24">
+                <hr />
+                <h4 class="card-title">Or</h4>
+                <p>Put in your details to sign up</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+                <form #f="ngForm" novalidate (ngSubmit)="registerUser(f.value, f.valid)" class="form-horizontal">
+                <div class="card card-plain">
+                    <div class="content">
+                        <div class="form-group" [ngClass]="{ 'form-error': (firstName.invalid && f.submitted) }">
+                                <input  type="text" 
+                                        name="firstName" 
+                                        placeholder="First Name"
+                                        #firstName="ngModel" 
+                                        (ngModelChange)="user.firstName=$event" 
+                                        required 
+                                        class="form-control"
+                                        [ngModel]="user?.firstName"
+                                        >
+                                <small [hidden]="firstName.valid || (firstName.pristine && !f.submitted)" class="text-warning">
+                                    First Name is required.
+                                </small>
+                        </div>
+                        <div class="form-group" [ngClass]="{ 'form-error': (lastName.invalid && f.submitted) }">
+                                <input  type="text" 
+                                        name="lastName" 
+                                        placeholder="Last Name"
+                                        #lastName="ngModel" 
+                                        (ngModelChange)="user.lastName=$event" 
+                                        required 
+                                        class="form-control"
+                                        [ngModel]="user?.lastName"
+                                        >
+                                <small [hidden]="lastName.valid || (lastName.pristine && !f.submitted)" class="text-warning">
+                                    Last Name is required.
+                                </small>
+                        </div>
+                        <div class="form-group" [ngClass]="{ 'form-error': (email.invalid && f.submitted) }">
+                                <input  type="email" 
+                                        name="lastName" 
+                                        placeholder="Email"
+                                        #email="ngModel" 
+                                        (ngModelChange)="user.email=$event" 
+                                        required 
+                                        class="form-control"
+                                        [ngModel]="user?.email"
+                                        pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
+                                        >
+                                <small [hidden]="email.valid || (email.pristine && !f.submitted)" class="text-warning">
+                                    Email is required.
+                                </small>
+                        </div>
+                        <div class="form-group" [ngClass]="{ 'form-error': (password.invalid && f.submitted) }">
+                                <input  type="password" 
+                                        name="password" 
+                                        placeholder="Password"
+                                        #password="ngModel" 
+                                        (ngModelChange)="user.password=$event" 
+                                        required 
+                                        class="form-control"
+                                        [ngModel]="user?.password"
+                                        >
+                                <small [hidden]="password.valid || (password.pristine && !f.submitted)" class="text-warning">
+                                    Password is Required.
+                                </small>
+                        </div>
+                        <div class="form-group" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) }">
+                                <input  type="password" 
+                                        name="password2" 
+                                        placeholder="Confirm Password"
+                                        [(ngModel)]="password2"
+                                        #password2Form="ngModel"
+                                        required 
+                                        class="form-control"
+                                        >
+                                <small [hidden]="password2Form.valid || (password2Form.pristine && !f.submitted)" class="text-warning">
+                                    Password Confirmation is required.
+                                </small>
+                        </div>
+                    </div>
+                    <div class="footer text-center">
+                        <button type="submit" class="btn btn-fill btn-wd">Create Free Account</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
