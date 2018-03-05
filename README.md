@@ -234,3 +234,8 @@ Then you can run it in a way where it will set those varibles for the current sh
 ```. dev.lyraatlas.sh```
 
 Notice that period there.  that's the difference between running the script in a child process, and a parent process.
+
+after you can run something like 
+`echo $LA_ENV`
+
+which should show you what the environment variable that has been set.
