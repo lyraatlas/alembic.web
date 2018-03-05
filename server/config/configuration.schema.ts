@@ -64,7 +64,7 @@ public static convictSchema: convict.Config = convict({
       doc: 'Instagram Secret',
       format: String,
       default: '',
-      env: 'INSTAGRAM_SECRET',
+      env: 'FACEBOOK_CLIENT_SECRET',
       sensitive: true
     },
     APILocation: {

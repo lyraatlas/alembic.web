@@ -205,3 +205,32 @@ Obviously when the time comes we'll want to put a text index just on the fields 
 # Long running TODO list
 
 Clean up email verification emails to actually be sent out.
+
+
+```
+#!/bin/sh
+export MONGO_CONNECTION_STRING=mongodb://asdfasdf:stupidpasshere@asdfasdf.mlab.com:2323423/alembic-development
+export FACEBOOK_CLIENT_SECRET=therealsecret
+export NODE_ENV=dev
+export LA_ENV=dev.lyraatlas
+```
+
+# How to create shell scripts for setting environment variables.
+
+First up you can see the shell script I wrote here: https://gist.github.com/davidbfrogman/1c85032911a6d45f12df7e3896860a26
+
+These files are stored in `/usr/local/bin`
+
+so you can use nano to create the environment variables scripts.
+
+```nano dev.lyraatlas.sh```
+
+Then you need to change the script to actually be executable.
+
+```chmod u+x dev.lyraatlas.config```
+
+Then you can run it in a way where it will set those varibles for the current shell
+
+```. dev.lyraatlas.sh```
+
+Notice that period there.  that's the difference between running the script in a child process, and a parent process.
