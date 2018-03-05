@@ -227,7 +227,7 @@ so you can use nano to create the environment variables scripts.
 
 Then you need to change the script to actually be executable.
 
-```chmod u+x dev.lyraatlas.config```
+```chmod u+x dev.lyraatlas.sh```
 
 Then you can run it in a way where it will set those varibles for the current shell
 
