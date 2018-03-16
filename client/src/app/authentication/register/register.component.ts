@@ -14,14 +14,16 @@ declare const FB:any;
     styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-    user: IUser;
-    loading = false;
-    returnUrl: string;
-    test: Date = new Date();
-    toggleButton;
-    sidebarVisible: boolean;
-    nativeElement: Node;
+    public user: IUser;
+    public loading = false;
+    public returnUrl: string;
+    public test: Date = new Date();
+    public toggleButton;
+    public sidebarVisible: boolean;
+    public nativeElement: Node;
     public password2: string = '';
+    public showPasswordWarning: boolean = false;
+    public passwordWarningMessage: string = '';
 
     constructor(
         private route: ActivatedRoute,
@@ -67,14 +69,13 @@ export class RegisterComponent implements OnInit {
         }
     }
 
-    registerUser(model: IUser, isValid: boolean) {
-        if(isValid){
-            console.log(model, isValid);
+    registerUser(isValid: boolean) {
+        if(isValid && this.isPasswordValid()){
             this.loading = true;
-            this.authenticationService.registerLocal(model)
+            this.authenticationService.registerLocal(this.user)
                 .subscribe(
                 data => {
-                    this.authenticationService.loginLocal(model.email,model.password)
+                    this.authenticationService.loginLocal(this.user.email, this.user.password)
                         .subscribe(response =>{
                             if(this.returnUrl && this.returnUrl.length > 3){
                                 this.router.navigate([this.returnUrl]);
@@ -91,25 +92,25 @@ export class RegisterComponent implements OnInit {
 
     public isPasswordValid(): boolean{
         if(this.user.password.length === 0 || this.password2.length === 0){
-          //this.showWarning = true;
-          //this.warningMessage = "You must enter a new password in both fields."
+          this.showPasswordWarning = true;
+          this.passwordWarningMessage = "You must enter a new password in both fields."
           return false;
         }
     
         // Now first we need to compare the 2 passwords.
         if(this.user.password !== this.password2){
-          //this.showWarning = true;
-          //this.warningMessage = "The two passwords don't match."
+          this.showPasswordWarning = true;
+          this.passwordWarningMessage = "The two passwords don't match."
           return false;
         }
     
         // Now first we need to compare the 2 passwords.
         if(this.user.password.length < 6){
-          //this.showWarning = true;
-          //this.warningMessage = "Password must be 6 characters."
+          this.showPasswordWarning = true;
+          this.passwordWarningMessage = "Password must be 6 characters."
           return false;
         }
-        //this.showWarning = false;
+        this.showPasswordWarning = false;
         return true;
       }
 

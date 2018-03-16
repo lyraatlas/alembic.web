@@ -217,12 +217,7 @@ class Application {
     // compress all requests
     this.express.use(compression());
     // enable cors
-    let corsOption = {
-      origin: false,
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      credentials: true,
-    };
-    //this.express.use(cors(corsOption));
+    this.express.use(cors());
   }
 
   private routes(): void {

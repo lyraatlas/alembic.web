@@ -1,5 +1,6 @@
 export * from './base/base-model.interface';
 export * from './user.interface';
+export * from './token-payload.interface';
 export * from './product.interface';
 export * from './supplier.interface';
 export * from './contact.interface';

@@ -12,7 +12,6 @@ import * as FacebookTokenStrategy from 'passport-facebook-token';
 import { Config } from '../config/config';
 import { IUser } from '../models';
 import { LoginStrategy } from '../enumerations';
-import { App } from '../server';
 
 export class AuthenticationRouter extends BaseRouter {
 

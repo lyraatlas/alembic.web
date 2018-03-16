@@ -111,7 +111,7 @@
                                     Email is required.
                                 </small>
                         </div>
-                        <div class="form-group" [ngClass]="{ 'form-error': (password.invalid && f.submitted) }">
+                        <div class="form-group" [ngClass]="{ 'form-error': (password.invalid && f.submitted) || showPasswordWarning}">
                                 <input  type="password" 
                                         name="password" 
                                         placeholder="Password"
@@ -125,7 +125,7 @@
                                     Password is Required.
                                 </small>
                         </div>
-                        <div class="form-group" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) }">
+                        <div class="form-group" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) || showPasswordWarning }">
                                 <input  type="password" 
                                         name="password2" 
                                         placeholder="Confirm Password"
@@ -135,12 +135,15 @@
                                         class="form-control"
                                         >
                                 <small [hidden]="password2Form.valid || (password2Form.pristine && !f.submitted)" class="text-warning">
-                                    Password Confirmation is required.
+                                    Password Confirmation is required, and should match the first password.
+                                </small>
+                                <small [hidden]="!showPasswordWarning" class="text-warning">
+                                    {{passwordWarningMessage}}
                                 </small>
                         </div>
                     </div>
                     <div class="footer text-center">
-                        <button type="submit" class="btn btn-fill btn-wd">Create Free Account</button>
+                        <button type="submit" class="btn btn-fill btn-wd" (click)="registerUser(f.valid)">Create Free Account</button>
                     </div>
                 </div>
             </form>
