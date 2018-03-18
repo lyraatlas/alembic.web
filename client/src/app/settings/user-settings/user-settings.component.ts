@@ -8,16 +8,19 @@ import { IUser, ITokenPayload } from '../../../models/index';
 import { CONST } from '../../../constants';
 import { ErrorEventBus } from '../../../event-buses';
 declare var $: any;
-declare const FB:any;
+declare const FB: any;
 
 @Component({
     selector: 'app-user-settings',
     templateUrl: './user-settings.component.html',
     styleUrls: ['./user-settings.component.scss']
-  })
+})
 export class UserSettingsComponent implements OnInit {
-    public user: IUser;
+    public user: IUser  = {};
     public loading = false;
+    public passwordNewValue: string;
+    public password2Value: string;
+    public currentEmail: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -32,19 +35,23 @@ export class UserSettingsComponent implements OnInit {
 
     ngOnInit() {
         // go grab this user.
-        const decodedToken: ITokenPayload = JSON.parse(localStorage.getItem(CONST.CLIENT_TOKEN_LOCATION));
-        this.userService.get<IUser>(decodedToken.userId).subscribe(user =>{
+        const decodedToken: ITokenPayload = JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION))  as ITokenPayload;
+        this.userService.get<IUser>(decodedToken.userId).subscribe(user => {
             this.user = user;
+            this.currentEmail = user.email;
         }, error => {
             this.errorEventBus.throw(error);
-          });
+        });
     }
 
-    saveUser(){
-        this.userService.update<IUser>(this.user,this.user.id).subscribe((user)=>{
-            this.user = user;
-        }, error => {
-            this.errorEventBus.throw(error);
-          });
+    saveUser(isValid: boolean) {
+        if (isValid) {
+            this.userService.update<IUser>(this.user, this.user.id).subscribe((user) => {
+                this.user = user;
+                this.currentEmail = user.email;
+            }, error => {
+                this.errorEventBus.throw(error);
+            });
+        }
     }
 }

@@ -25,6 +25,7 @@ export const CONST = {
         PASSWORD_RESET_TOKENS: '/password-reset-tokens',
         VALIDATE_EMAIL: '/validate-email',
         PASSWORD_RESET_REQUEST: '/password-reset-request',
+        INLINE_PASSWORD_CHANGE: '/update-password-inline',
         client: {
         },
         common:{

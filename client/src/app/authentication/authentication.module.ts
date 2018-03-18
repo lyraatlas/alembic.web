@@ -11,6 +11,7 @@ import { NavbarModule } from '../shared/navbar/navbar.module';
 import { FooterModule } from '../shared/footer/footer.module';
 import { NavigatorModule } from '../shared/navigator/navigator.module';
 import { RegisterComponent } from './register/register.component';
+import { UserService } from '../../services';
 
 @NgModule({
     imports: [
@@ -19,7 +20,7 @@ import { RegisterComponent } from './register/register.component';
         FormsModule,
         NavbarModule,
         NavigatorModule,
-        FooterModule
+        FooterModule,
     ],
     declarations: [
         LoginComponent,

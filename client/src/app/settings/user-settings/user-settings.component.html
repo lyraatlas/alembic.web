@@ -1,52 +1,145 @@
-<form #f="ngForm" novalidate (ngSubmit)="registerUser(f.value, f.valid)" class="form-horizontal">
-        <div class="card card-plain">
-            <div class="content">
-                <div class="form-group" [ngClass]="{ 'form-error': (firstName.invalid && f.submitted) }">
-                        <input  type="text" 
-                                name="firstName" 
-                                placeholder="First Name"
-                                #firstName="ngModel" 
-                                (ngModelChange)="user.firstName=$event" 
-                                required 
-                                class="form-control"
-                                [ngModel]="user?.firstName"
-                                >
-                        <small [hidden]="firstName.valid || (firstName.pristine && !f.submitted)" class="text-warning">
-                            First Name is required.
-                        </small>
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row mt16">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Your Account</h2>
+                    </div>
+                    <div class="card-content">
+                        <form #f="ngForm" novalidate (ngSubmit)="saveUser(f.valid)" class="form-horizontal">
+                            <fieldset>
+
+                                <legend>Important Details</legend>
+
+                                <div class="form-group" >
+                                    <label class="col-sm-2 control-label">First Name</label>
+
+                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (!firstName.valid && f.submitted) }">
+                                        <input 
+                                            type="text" 
+                                            name="firstName"
+                                            placeholder="First Name" 
+                                            #firstName="ngModel" 
+                                            required 
+                                            class="form-control" 
+                                            [(ngModel)]="user.firstName">
+                                        <small [hidden]="firstName.valid || (firstName.pristine && !f.submitted)" class="text-warning">
+                                            First Name is required.
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" [ngClass]="{ 'has-error': lastName.invalid && f.submitted}">
+                                    <label class="col-sm-2 control-label">Last Name</label>
+                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (lastName.invalid && f.submitted) }">
+                                        <input type="text" name="lastName" placeholder="Last Name" #lastName="ngModel" required class="form-control" [(ngModel)]="user.lastName">
+                                        <small [hidden]="lastName.valid || (lastName.pristine && !f.submitted)" class="text-warning">
+                                            Last Name is required.
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" [ngClass]="{ 'has-error': email.invalid && f.submitted}">
+                                    <label class="col-sm-2 control-label">Email</label>
+                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (email.invalid && f.submitted) }">
+                                        <input type="email" name="email" placeholder="Email" #email="ngModel" required class="form-control" [(ngModel)]="user.email"
+                                            pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$">
+                                        <small [hidden]="email.valid || (email.pristine && !f.submitted)" class="text-warning">
+                                            Email is required, and should be in email format. yourname@email.com
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Email Verified?</label>
+                                    <label [hidden]="!user.isEmailVerified">You have verified your email.</label>
+                                    <div class="col-sm-4 mt8">
+                                        <label [hidden]="user.isEmailVerified">You haven't verified your email yet. Click here to send another verification email.</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                        <label class="col-sm-2 control-label"></label>
+                                        <div class="col-sm-4">
+                                                <button type="submit" class="btn btn-fill btn-wd col-sm-4 ">Save Changes</button>
+                                        </div>   
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>Password</legend>
+
+                                <div class="form-group" [ngClass]="{ 'has-error': passwordOld.invalid && f.submitted}">
+                                    <label class="col-sm-2 control-label">Old Password</label>
+                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (passwordOld.invalid && f.submitted) }">
+                                        <input 
+                                            type="text" 
+                                            name="passwordOld" 
+                                            placeholder="Old Password" 
+                                            #passwordOld="ngModel" 
+                                            required 
+                                            class="form-control" 
+                                            [(ngModel)]="user.password"
+                                            >
+                                        <small [hidden]="passwordOld.valid || (passwordOld.pristine && !f.submitted)" class="text-warning">
+                                            Please enter a valid existing password.
+                                        </small>
+                                    </div>
+                                </div>
+
+                                 <div class="form-group" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) || showPasswordWarning }">
+                                    <label class="col-sm-2 control-label">New Password</label>    
+                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (passwordNew.invalid && f.submitted) }">
+                                        <input  type="password" 
+                                                name="passwordNew" 
+                                                placeholder="Password"
+                                                #passwordNew="ngModel" 
+                                                class="form-control"
+                                                [(ngModel)]="passwordNewValue"
+                                                >
+                                        <small [hidden]="passwordNew.valid || (passwordNew.pristine && !f.submitted)" class="text-warning">
+                                            Password is Required.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) || showPasswordWarning }">
+                                    <label class="col-sm-2 control-label">Confirm Password</label>   
+                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) }">
+                                        <input  type="password" 
+                                                name="password2" 
+                                                placeholder="Confirm Password"
+                                                [(ngModel)]="password2Value"
+                                                #password2Form="ngModel"
+                                                class="form-control"
+                                                >
+                                        <small [hidden]="password2Form.valid || (password2Form.pristine && !f.submitted)" class="text-warning">
+                                            Password Confirmation is required, and should match the first password.
+                                        </small>
+                                        <small [hidden]="!showPasswordWarning" class="text-warning">
+                                            {{passwordWarningMessage}}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                        <label class="col-sm-2 control-label"></label>
+                                        <div class="col-sm-4">
+                                                <button type="submit" [disabled]="currentEmail != user.email" class="btn btn-fill btn-wd col-sm-4 ">Update Password</button>
+                                                <small [hidden]="currentEmail == user.email" class="text-warning">
+                                                        Save your changes to email address before updating your password.
+                                                </small>  
+                                        </div> 
+
+                                </div>
+                            </fieldset>
+
+                        </form>
+                        </div>
+                    </div>
+                    <!-- end card -->
                 </div>
-                <div class="form-group" [ngClass]="{ 'form-error': (lastName.invalid && f.submitted) }">
-                        <input  type="text" 
-                                name="lastName" 
-                                placeholder="Last Name"
-                                #lastName="ngModel" 
-                                (ngModelChange)="user.lastName=$event" 
-                                required 
-                                class="form-control"
-                                [ngModel]="user?.lastName"
-                                >
-                        <small [hidden]="lastName.valid || (lastName.pristine && !f.submitted)" class="text-warning">
-                            Last Name is required.
-                        </small>
-                </div>
-                <div class="form-group" [ngClass]="{ 'form-error': (email.invalid && f.submitted) }">
-                        <input  type="email" 
-                                name="email" 
-                                placeholder="Email"
-                                #email="ngModel" 
-                                (ngModelChange)="user.email=$event" 
-                                required 
-                                class="form-control"
-                                [ngModel]="user?.email"
-                                pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
-                                >
-                        <small [hidden]="email.valid || (email.pristine && !f.submitted)" class="text-warning">
-                            Email is required.
-                        </small>
-                </div>
+                <!-- end col-md-12 -->
             </div>
-            <div class="footer text-center">
-                <button type="submit" class="btn btn-fill btn-wd" (click)="updateUser(f.valid)">Create Free Account</button>
-            </div>
+            <!-- end row -->
         </div>
-    </form>
+    </div>

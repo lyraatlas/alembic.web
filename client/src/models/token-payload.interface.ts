@@ -1,5 +1,5 @@
 export interface ITokenPayload {
-    userId: string,
-    roles: string[],
-    expiresAt: string
+    userId?: string,
+    roles?: string[],
+    expiresAt?: string
 }

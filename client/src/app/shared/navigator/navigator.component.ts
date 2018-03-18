@@ -66,7 +66,7 @@ export class NavigatorComponent implements OnInit, AfterViewInit {
 
     this.mr_nav = $('.nav-container nav:first') || 0;
 
-    if (window.pageYOffset <= 200) {
+    if (window.pageYOffset <= 0) {
       if (this.mr_navFixed) {
         this.mr_navFixed = false;
         this.mr_nav.removeClass('fixed');

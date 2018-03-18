@@ -14,4 +14,11 @@ export class UserRouter extends BaseRouter {
         super();
         this.resource = CONST.ep.USERS;
     }
+
+    public getRouter(): Router{
+        return super.getRouter()
+        .patch(`${this.resource}${CONST.ep.INLINE_PASSWORD_CHANGE}/:id`, async (request: Request, response: Response, next: NextFunction) => {
+            await this.controller.updatePassword(request, response, next);
+        })
+    }
 }

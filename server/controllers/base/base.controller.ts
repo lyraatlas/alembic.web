@@ -56,7 +56,7 @@ export abstract class BaseController {
             // We need to get the document before we can CRUD it
             let document = await this.repository.single(this.getId(request));
             if (!this.isOwner(request, response, next, document)) {
-                ApiErrorHandler.sendAuthFailure(response, 403, 'You are not allowed to CRUD this resource.');
+                ApiErrorHandler.sendAuthFailure(response, 403, 'You are not allowed to CRUD this resource. Ownership Check failed.');
                 return false;
             }
         }

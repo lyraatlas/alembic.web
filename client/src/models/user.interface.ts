@@ -4,4 +4,5 @@ export interface IUser{
     password?: string,
     firstName?: string,
     lastName?   : string,
+    isEmailVerified?: boolean,
 }
