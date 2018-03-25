@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, RequestParamHandler, Response, Router } from 'express';
 import { Document, DocumentQuery, Model, Schema } from 'mongoose';
 import * as log from 'winston';
-import { IValidationError, SearchCriteria, IBaseModel, IBaseModelDoc, ITokenPayload, IOwned } from '../../models/';
+import { IValidationError, SearchCriteria, IBaseModel, IBaseModelDoc, ITokenPayload, IOwned, ILikeable } from '../../models/';
 import { ObjectId } from 'bson';
 import { BaseRepository } from "../../repositories/";
 import { CONST } from "../../constants";
@@ -12,7 +12,7 @@ import { IQueryResponse } from '../../models/query-response.interface';
 
 export abstract class BaseController {
 
-    protected abstract repository: BaseRepository<IBaseModelDoc>;
+    public abstract repository: BaseRepository<IBaseModelDoc>;
     public abstract defaultPopulationArgument: object;
 
     // Determines whether the base class will test ownership
@@ -27,7 +27,7 @@ export abstract class BaseController {
     // The child classes implementation of ownership testing.  Allows for child classes to test various data points.
     public abstract isOwner(request: Request, response: Response, next: NextFunction, document: IBaseModelDoc): boolean;
 
-    protected isOwnerInOwnership(document: IOwned, ownerId: string, ownershipType: OwnershipType): boolean {
+    public isOwnerInOwnership(document: IOwned, ownerId: string, ownershipType: OwnershipType): boolean {
         let isOwner: boolean = false;
 
         if(document && document.owners){
@@ -55,6 +55,11 @@ export abstract class BaseController {
         ) {
             // We need to get the document before we can CRUD it
             let document = await this.repository.single(this.getId(request));
+
+            // The first thing we usually do whenever we're trying to update, edit, etc, is check ownership. 
+            // we need to throw a 404 if we didn't find the document when we're checking ownership.
+            if (!document) { throw { message: 'Item Not found', status: 404 }; }
+
             if (!this.isOwner(request, response, next, document)) {
                 ApiErrorHandler.sendAuthFailure(response, 403, 'You are not allowed to CRUD this resource. Ownership Check failed.');
                 return false;
@@ -79,7 +84,7 @@ export abstract class BaseController {
         return true;
     }
 
-    protected getId(request: Request): string {
+    public getId(request: Request): string {
         return request && request.params ? request.params['id'] : null;
     }
 
@@ -169,7 +174,7 @@ export abstract class BaseController {
         return this.update(request, response, next, false);
     }
 
-    private async update(request: Request, response: Response, next: NextFunction, isFull: boolean): Promise<IBaseModelDoc> {
+    public async update(request: Request, response: Response, next: NextFunction, isFull: boolean): Promise<IBaseModelDoc> {
         try {
             if (await this.isModificationAllowed(request, response, next)) {
 

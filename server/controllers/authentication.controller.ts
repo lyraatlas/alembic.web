@@ -21,9 +21,9 @@ export interface IConfigureUser{
 
 export class AuthenticationController extends BaseController{
 
-    protected repository: UserRepository = new UserRepository();
+    public repository: UserRepository = new UserRepository();
     public defaultPopulationArgument: object;
-    public isOwnershipRequired: boolean = true;
+    public isOwnershipRequired: boolean = true;  
     public rolesRequiringOwnership: string[] = [''];
 
     public AuthenticationController(){

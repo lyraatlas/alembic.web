@@ -16,7 +16,7 @@ export class UserController extends BaseController {
   public rolesRequiringOwnership = [CONST.GUEST_ROLE,CONST.USER_ROLE];
   public isOwnershipRequired = true;
 
-  protected repository = new UserRepository();
+  public repository = new UserRepository();
 
   constructor() {
     super();

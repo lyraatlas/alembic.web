@@ -22,7 +22,7 @@ export class AuthUtil {
 
     static userToken: string = '';
 
-    public static async AuthUtil(): Promise<string> {
+    public static async Initialize(): Promise<string> {
         if(this.userToken == ''){
             try {
                 await this.registerUser('testUser@lyraatlas.com');

@@ -6,47 +6,52 @@ import { BaseController } from './base/base.controller';
 import { CONST } from '../constants';
 import { BucketItemRepository } from "../repositories";
 import { OwnershipType } from "../enumerations";
+import { Likeable } from './base/likeable.mixin';
+import { Commentable } from './base/commentable.mixin';
 
-export class BucketItemController extends BaseController {
+export class BucketItemControllerBase extends BaseController {
 
-  public defaultPopulationArgument = {};
-  public rolesRequiringOwnership = [CONST.GUEST_ROLE,CONST.USER_ROLE];
-  public isOwnershipRequired = true;
+    public defaultPopulationArgument = {};
+    public rolesRequiringOwnership = [CONST.GUEST_ROLE, CONST.USER_ROLE];
+    public isOwnershipRequired = true;
 
-  protected repository = new BucketItemRepository();
+    public repository = new BucketItemRepository();
 
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  // This will add ownerships whenever a document is created.
-  // Here we can later add supplier ID, and also check that supplier ID in the checking logic.
-  public addOwnerships(request: Request, response: Response, next: NextFunction, bucketItemDocument: IBucketItemDoc): void {
-    let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
-    bucketItemDocument.owners = [{
-      ownerId: currentToken.userId,
-      ownershipType: OwnershipType.user
-    }];
-  }
+    // This will add ownerships whenever a document is created.
+    // Here we can later add supplier ID, and also check that supplier ID in the checking logic.
+    public addOwnerships(request: Request, response: Response, next: NextFunction, bucketItemDocument: IBucketItemDoc): void {
+        let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
+        bucketItemDocument.owners.push({
+            ownerId: currentToken.userId,
+            ownershipType: OwnershipType.user
+        });
+    }
 
-  // For bucketItem documents we're going to test ownership based on organization id,
-  // although we need to be testing based on supplier id as well.
-  // TODO check ownership on supplier ID.
-  public isOwner(request: Request, response: Response, next: NextFunction, bucketItemDocument: IBucketItemDoc): boolean {
-    // We'll assume this is only for CRUD
-    // Get the current token, so we can get the ownerId in this case organization id off of here.
-    let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
+    // For bucketItem documents we're going to test ownership based on organization id,
+    // although we need to be testing based on supplier id as well.
+    // TODO check ownership on supplier ID.
+    public isOwner(request: Request, response: Response, next: NextFunction, bucketItemDocument: IBucketItemDoc): boolean {
+        // We'll assume this is only for CRUD
+        // Get the current token, so we can get the ownerId in this case organization id off of here.
+        let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
 
-    // For now we're just going to check that the ownership is around organization.
-    return super.isOwnerInOwnership(bucketItemDocument, currentToken.userId, OwnershipType.user);
-  }
+        // For now we're just going to check that the ownership is around organization.
+        return super.isOwnerInOwnership(bucketItemDocument, currentToken.userId, OwnershipType.user);
+    }
 
-  public async preCreateHook(BucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
-    BucketItem.href = `${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}/${BucketItem._id}`;
-    return BucketItem;
-  }
+    public async preCreateHook(BucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
+        BucketItem.href = `${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}/${BucketItem._id}`;
+        return BucketItem;
+    }
 
-  public async preSendResponseHook(BucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
-    return BucketItem;
-  }
+    public async preSendResponseHook(BucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
+        return BucketItem;
+    }
 }
+
+// All of our mixin controllers.
+export const BucketItemController = Commentable(Likeable(BucketItemControllerBase));

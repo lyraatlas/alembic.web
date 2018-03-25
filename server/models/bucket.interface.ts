@@ -3,9 +3,10 @@ import { Schema, Model, Document, model } from 'mongoose';
 import { IBaseModel, IBaseModelDoc, ILikeable, IOwned, ITimeStamped, IBucketItem } from "./index";
 import * as enums from "../enumerations";
 import { IImage } from './image.interface';
+import { ICommentable } from './commentable.interface';
 
 
-export interface IBucket extends IBaseModel, ILikeable, IOwned, ITimeStamped {
+export interface IBucket extends IBaseModel, ILikeable, IOwned, ITimeStamped, ICommentable {
     name?: string,
     description?: string,
     bucketItems?: IBucketItem[],
@@ -18,12 +19,17 @@ export interface IBucketDoc extends IBucket, IBaseModelDoc {
 }
 
 const BucketSchema = new Schema({
-    ownerships: [{
+    owners: [{
         _id: { auto: false },
         ownerId:  { type: Schema.Types.ObjectId },
         ownershipType: { type: Number, enum: [enums.EnumHelper.getValuesFromEnum(enums.OwnershipType)] },
     }],
-    likeBy: [{type: Schema.Types.ObjectId, ref: 'user'}],
+    likedBy: [{type: Schema.Types.ObjectId, ref: 'user'}],
+    comments: [new Schema({
+        commentBy: {type: Schema.Types.ObjectId, ref: 'user'},
+        comment: { type: String },
+    })],
+    totalComments: {type: Number},
     totalCount: {type: Number},
     name: { type: String },
     description: { type: String },

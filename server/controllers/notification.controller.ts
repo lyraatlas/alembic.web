@@ -17,16 +17,16 @@ export class NotificationController extends BaseController {
   public rolesRequiringOwnership = [CONST.USER_ROLE, CONST.GUEST_ROLE];
   public isOwnershipRequired = false;
 
-  protected repository = new NotificationRepository();
+  public repository = new NotificationRepository();
 
    // This will add ownerships whenever a document is created.
   // Here we can later add order ID, and also check that order ID in the checking logic.
   public addOwnerships(request: Request, response: Response, next: NextFunction, notificationDoc: INotificationDoc): void {
     let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
-    notificationDoc.owners = [{
-      ownerId: currentToken.userId,
-      ownershipType: enums.OwnershipType.user
-    }];
+    notificationDoc.owners.push({
+        ownerId: currentToken.userId,
+        ownershipType: enums.OwnershipType.user
+    });
   }
 
   // TODO cleanup the security here.  Not sure we should be saying everyone owns all the notifications.

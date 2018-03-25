@@ -20,7 +20,7 @@ export class UserSettingsComponent implements OnInit {
     public loading = false;
     public passwordNewValue: string;
     public password2Value: string;
-    public currentEmail: string;
+    public existingEmail: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -38,7 +38,7 @@ export class UserSettingsComponent implements OnInit {
         const decodedToken: ITokenPayload = JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION))  as ITokenPayload;
         this.userService.get<IUser>(decodedToken.userId).subscribe(user => {
             this.user = user;
-            this.currentEmail = user.email;
+            this.existingEmail = user.email;
         }, error => {
             this.errorEventBus.throw(error);
         });
@@ -48,7 +48,7 @@ export class UserSettingsComponent implements OnInit {
         if (isValid) {
             this.userService.update<IUser>(this.user, this.user.id).subscribe((user) => {
                 this.user = user;
-                this.currentEmail = user.email;
+                this.existingEmail = user.email;
             }, error => {
                 this.errorEventBus.throw(error);
             });

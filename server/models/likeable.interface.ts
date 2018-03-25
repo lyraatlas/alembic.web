@@ -1,4 +1,4 @@
 export interface ILikeable {
     likedBy?: string[],
-    totalCount?: number,
+    likeCount?: number,
 }

@@ -33,7 +33,8 @@ class BootstrapTest {
 
             console.log('About to create identity test data.');
             // This will create, 2 users, an organization, and add the users to the correct roles.
-            //await AuthUtil.createIdentityApiTestData();
+            await AuthUtil.registerUser("dave2");
+            await AuthUtil.Initialize();
             done();
         });
     }

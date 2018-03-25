@@ -26,6 +26,8 @@ export const CONST = {
         VALIDATE_EMAIL: '/validate-email',
         PASSWORD_RESET_REQUEST: '/password-reset-request',
         INLINE_PASSWORD_CHANGE: '/update-password-inline',
+        LIKES: '/likes',
+        COMMENTS: '/comments',
         client: {
         },
         common:{

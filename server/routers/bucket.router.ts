@@ -14,4 +14,23 @@ export class BucketRouter extends BaseRouter {
         super();
         this.resource = CONST.ep.BUCKETS;
     }
+
+    public getRouter(): Router{
+        return super.getRouter()
+        .patch(`${this.resource}${CONST.ep.LIKES}/:id`, async (request: Request, response: Response, next: NextFunction) => {
+            await BucketController.addLike(request,response,next,this.controller);
+        })
+        .delete(`${this.resource}${CONST.ep.LIKES}/:id`, async (request: Request, response: Response, next: NextFunction) => {
+            await BucketController.removeLike(request,response,next,this.controller);
+        })
+        .post(`${this.resource}${CONST.ep.COMMENTS}/:id`, async (request: Request, response: Response, next: NextFunction) => {
+            await BucketController.addComment(request,response,next,this.controller);
+        })
+        .delete(`${this.resource}${CONST.ep.COMMENTS}/:id`, async (request: Request, response: Response, next: NextFunction) => {
+            await BucketController.removeComment(request,response,next,this.controller);
+        })
+        .patch(`${this.resource}${CONST.ep.COMMENTS}/:id`, async (request: Request, response: Response, next: NextFunction) => {
+            await BucketController.editComment(request,response,next,this.controller);
+        })
+    }
 }

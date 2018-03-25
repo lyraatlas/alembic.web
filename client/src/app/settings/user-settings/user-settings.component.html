@@ -124,8 +124,8 @@
                                 <div class="form-group">
                                         <label class="col-sm-2 control-label"></label>
                                         <div class="col-sm-4">
-                                                <button type="submit" [disabled]="currentEmail != user.email" class="btn btn-fill btn-wd col-sm-4 ">Update Password</button>
-                                                <small [hidden]="currentEmail == user.email" class="text-warning">
+                                                <button type="submit" [disabled]="existingEmail != user.email" class="btn btn-fill btn-wd col-sm-4 ">Update Password</button>
+                                                <small [hidden]="existingEmail == user.email" class="text-warning">
                                                         Save your changes to email address before updating your password.
                                                 </small>  
                                         </div> 
