@@ -9,6 +9,7 @@ import * as chai from 'chai';
 import log = require('winston');
 import { IdentityApiService } from "../services/identity.api.service";
 import { IUser } from '../models/user.interface';
+import { ITokenPayload } from '../models';
 
 const api = supertest.agent(App.server);
 const identityApi = null // supertest(Config.active.get('identityApiEndpoint'));
@@ -21,6 +22,7 @@ const should = chai.should();
 export class AuthUtil {
 
     static userToken: string = '';
+    static decodedToken: ITokenPayload;
 
     public static async Initialize(): Promise<string> {
         if(this.userToken == ''){
@@ -41,6 +43,7 @@ export class AuthUtil {
                 expect(authResponse.body.token).length.to.be.greaterThan(0);
     
                 this.userToken = authResponse.body.token;
+                this.decodedToken = authResponse.body.decoded;
     
                 return this.userToken;
     

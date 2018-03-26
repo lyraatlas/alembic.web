@@ -20,8 +20,10 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
                 
                 let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
     
-                (item as ICommentable).totalComments = ++(item as ICommentable).totalComments;
-                (item as ICommentable).comments.push({
+                let commentableItem = (item as ICommentable);
+
+                commentableItem.totalComments = ++commentableItem.totalComments;
+                commentableItem.comments.push({
                     comment: request.body.comment,
                     commentBy: currentToken.userId,
                     createdAt: new Date(),
@@ -44,9 +46,11 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
                 
                 let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
     
-                (item as ICommentable).totalComments = --(item as ICommentable).totalComments;
-                (item as ICommentable).comments = (item as ICommentable).comments.filter( (item) => {
-                    item._id !== request.body._id
+                let commentableItem = (item as ICommentable);
+
+                commentableItem.totalComments = --commentableItem.totalComments;
+                commentableItem.comments = commentableItem.comments.filter( (item) => {
+                    item._id != request.body._id
                 });
     
                 // Save the update to the database
@@ -66,8 +70,10 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
                 
                 let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
     
-                (item as ICommentable).totalComments = --(item as ICommentable).totalComments;
-                (item as ICommentable).comments.map( (item) => {
+                let commentableItem = (item as ICommentable);
+
+                commentableItem.totalComments = --commentableItem.totalComments;
+                commentableItem.comments.map( (item) => {
                     if(item._id === request.body._id){
                         item.comment = request.body.comment
                         item.modifiedAt = new Date();

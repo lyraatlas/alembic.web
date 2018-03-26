@@ -18,15 +18,26 @@ export function Likeable<TBase extends Constructor>(Base: TBase) {
                 let item = await controller.repository.single(itemId);
                 
                 let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
-    
-                (item as ILikeable).likeCount = ++(item as ILikeable).likeCount;
-                (item as ILikeable).likedBy.push(currentToken.userId);
+
+                let likeableItem = (item as ILikeable);
+
+                if(likeableItem.totalLikes){
+                    likeableItem.totalLikes = ++likeableItem.totalLikes;
+                }
+                else{
+                    likeableItem.totalLikes = 1;
+                }
+
+                // Only add the likedBy if it doesn't already exist.
+                if(likeableItem.likedBy.indexOf(currentToken.userId) <0){
+                    likeableItem.likedBy.push(currentToken.userId);
+                }
     
                 // Save the update to the database
                 await controller.repository.save(item);
     
                 // Send the new product which is not a template back.
-                response.status(200).json(item);
+                response.status(202).json(item);
     
                 return item;
             } catch (err) { next(err); }
@@ -38,9 +49,17 @@ export function Likeable<TBase extends Constructor>(Base: TBase) {
                 let item = await controller.repository.single(itemId);
                 
                 let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
-    
-                (item as ILikeable).likeCount = --(item as ILikeable).likeCount;
-                (item as ILikeable).likedBy = (item as ILikeable).likedBy.filter(val => val !== currentToken.userId);
+
+                let likeableItem = (item as ILikeable);
+
+                if(likeableItem.totalLikes){
+                    likeableItem.totalLikes = --likeableItem.totalLikes;
+                }
+                else{
+                    likeableItem.totalLikes = 0;
+                }
+
+                likeableItem.likedBy = likeableItem.likedBy.filter(val => val != currentToken.userId);
     
                 // Save the update to the database
                 await controller.repository.save(item);

@@ -30,7 +30,7 @@ const BucketSchema = new Schema({
         comment: { type: String },
     })],
     totalComments: {type: Number},
-    totalCount: {type: Number},
+    totalLikes: {type: Number},
     name: { type: String },
     description: { type: String },
     bucketItems: {type: Schema.Types.ObjectId, ref: 'bucket-item'},

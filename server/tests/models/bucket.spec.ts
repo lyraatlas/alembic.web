@@ -117,6 +117,51 @@ class BucketTest {
         return;
     }
 
+    @test('it should add a like to a bucket')
+    public async AddALikeToABucket() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        let bucketUpdate = {};
+
+        let response = await api
+            .patch(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.LIKES}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(bucketUpdate);
+
+        console.dir(response.body);
+        expect(response.status).to.equal(202);
+        expect(response.body).to.have.property('totalLikes');
+        expect(response.body).to.have.property('likedBy');
+        expect(response.body.totalLikes).to.equal(1);
+        expect(response.body.likedBy[0]).to.equal(AuthUtil.decodedToken.userId);
+        return;
+    }
+
+    @test('it should remove a like from a bucket')
+    public async RemoveALikeFromABucket() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        let bucketUpdate = {};
+
+        let response1 = await api
+            .patch(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.LIKES}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(bucketUpdate);
+
+        let response = await api
+            .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.LIKES}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(bucketUpdate);
+
+        //console.dir(response.body);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('totalLikes');
+        expect(response.body).to.have.property('likedBy');
+        expect(response.body.totalLikes).to.equal(0);
+        expect(response.body.likedBy.length).to.equal(0);
+        return;
+    }
+
     @test('it should delete a bucket')
     public async deleteABucket() {
         let createdId = await this.createBucket(AuthUtil.userToken);
