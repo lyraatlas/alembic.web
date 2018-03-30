@@ -23,14 +23,12 @@ const BucketItemSchema = new Schema({
         ownershipType: { type: Number, enum: [enums.EnumHelper.getValuesFromEnum(enums.OwnershipType)] },
     }],
     likeBy: [{type: Schema.Types.ObjectId, ref: 'user'}],
-    totalLikes: {type: Number},
     comments: [{
         commentBy: {type: Schema.Types.ObjectId, ref: 'user'},
         comment: { type: String },
         createdAt: { type: Date },
         modifiedAt: { type: Date },
     }],
-    totalComments: {type: Number},
     name: { type: String },
     description: { type: String },
     href: { type: String }

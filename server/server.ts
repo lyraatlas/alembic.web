@@ -231,6 +231,7 @@ class Application {
     this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.BucketRouter().getRouter());
     this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.BucketItemRouter().getRouter());
     this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.UserRouter().getRouter());
+    this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.NotificationRouter().getRouter());
 
     this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKETS}${CONST.ep.UPLOAD_IMAGES}/:id`,
       Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE),

@@ -29,8 +29,6 @@ const BucketSchema = new Schema({
         commentBy: {type: Schema.Types.ObjectId, ref: 'user'},
         comment: { type: String },
     })],
-    totalComments: {type: Number},
-    totalLikes: {type: Number},
     name: { type: String },
     description: { type: String },
     bucketItems: {type: Schema.Types.ObjectId, ref: 'bucket-item'},

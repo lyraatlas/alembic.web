@@ -13,6 +13,9 @@ export enum LoginStrategy{
 
 export enum NotificationType{
     BucketLiked =1,
+    BucketItemLiked =2,
+    BucketCommentAded = 3,
+    BucketItemCommentAdded = 4,
 }
 
 export enum PushNotificationType{

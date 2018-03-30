@@ -29,7 +29,6 @@ export class NotificationController extends BaseController {
     });
   }
 
-  // TODO cleanup the security here.  Not sure we should be saying everyone owns all the notifications.
   public isOwner(request: Request, response: Response, next: NextFunction, notificationDoc: INotificationDoc): boolean {
     // We'll assume this is only for CRUD
     // Get the current token, so we can get the ownerId in this case organization id off of here.

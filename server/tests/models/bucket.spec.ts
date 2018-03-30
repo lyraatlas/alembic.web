@@ -128,11 +128,38 @@ class BucketTest {
             .set("x-access-token", AuthUtil.userToken)
             .send(bucketUpdate);
 
-        console.dir(response.body);
         expect(response.status).to.equal(202);
-        expect(response.body).to.have.property('totalLikes');
         expect(response.body).to.have.property('likedBy');
-        expect(response.body.totalLikes).to.equal(1);
+        expect(response.body.likedBy.length).to.equal(1);
+        expect(response.body.likedBy[0]).to.equal(AuthUtil.decodedToken.userId);
+
+        let response2 = await api
+        .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.NOTIFICATIONS}`)
+        .set("x-access-token", AuthUtil.userToken);
+
+        console.dir(response2.body);
+        return;
+    }
+
+    @test('it should only add the like once')
+    public async AddLikeOnce() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        let bucketUpdate = {};
+
+        let response2 = await api
+            .patch(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.LIKES}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(bucketUpdate);
+
+        let response = await api
+            .patch(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.LIKES}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(bucketUpdate);
+
+        expect(response.status).to.equal(202);
+        expect(response.body).to.have.property('likedBy');
+        expect(response.body.likedBy.length).to.equal(1);
         expect(response.body.likedBy[0]).to.equal(AuthUtil.decodedToken.userId);
         return;
     }
@@ -155,9 +182,7 @@ class BucketTest {
 
         //console.dir(response.body);
         expect(response.status).to.equal(200);
-        expect(response.body).to.have.property('totalLikes');
         expect(response.body).to.have.property('likedBy');
-        expect(response.body.totalLikes).to.equal(0);
         expect(response.body.likedBy.length).to.equal(0);
         return;
     }

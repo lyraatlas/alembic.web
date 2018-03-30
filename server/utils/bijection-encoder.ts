@@ -21,9 +21,7 @@ export class BijectionEncoder{
             encodedId += this.alphabet[value % this.base];
             value = Math.floor(value / this.base);
         }
-        if(logged){
-            //console.log(`Resulting Value from encoding:  ${encodedId.split('').reverse().join('')}`);
-        }
+
         return encodedId.split('').reverse().join('');
     }
 
@@ -34,9 +32,6 @@ export class BijectionEncoder{
         for (var j = 0; j < value.length; j++) {
             var element = value[j];
             decodedId = (decodedId * this.base) + this.alphabet.indexOf(element);
-        }
-        if(decodedId % 100 == 0){
-            //console.log(`resulting decoded value: ${decodedId}`);
         }
         
         return decodedId;

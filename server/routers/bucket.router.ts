@@ -4,6 +4,7 @@ import { Request, Response, RequestHandler, } from 'express';
 import { RequestHandlerParams, NextFunction } from 'express-serve-static-core';
 import { BaseRouter } from './base/base.router';
 import { CONST } from '../constants';
+import { NotificationType } from '../enumerations';
 
 export class BucketRouter extends BaseRouter {
     public router: Router = Router();
@@ -18,13 +19,13 @@ export class BucketRouter extends BaseRouter {
     public getRouter(): Router{
         return super.getRouter()
         .patch(`${this.resource}${CONST.ep.LIKES}/:id`, async (request: Request, response: Response, next: NextFunction) => {
-            await BucketController.addLike(request,response,next,this.controller);
+            await BucketController.addLike(request,response,next,this.controller, NotificationType.BucketLiked);
         })
         .delete(`${this.resource}${CONST.ep.LIKES}/:id`, async (request: Request, response: Response, next: NextFunction) => {
             await BucketController.removeLike(request,response,next,this.controller);
         })
         .post(`${this.resource}${CONST.ep.COMMENTS}/:id`, async (request: Request, response: Response, next: NextFunction) => {
-            await BucketController.addComment(request,response,next,this.controller);
+            await BucketController.addComment(request,response,next,this.controller, NotificationType.BucketCommentAded);
         })
         .delete(`${this.resource}${CONST.ep.COMMENTS}/:id`, async (request: Request, response: Response, next: NextFunction) => {
             await BucketController.removeComment(request,response,next,this.controller);
