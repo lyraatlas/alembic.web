@@ -21,28 +21,6 @@ export class BucketItemControllerBase extends BaseController {
         super();
     }
 
-    // This will add ownerships whenever a document is created.
-    // Here we can later add supplier ID, and also check that supplier ID in the checking logic.
-    public addOwnerships(request: Request, response: Response, next: NextFunction, bucketItemDocument: IBucketItemDoc): void {
-        let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
-        bucketItemDocument.owners.push({
-            ownerId: currentToken.userId,
-            ownershipType: OwnershipType.user
-        });
-    }
-
-    // For bucketItem documents we're going to test ownership based on organization id,
-    // although we need to be testing based on supplier id as well.
-    // TODO check ownership on supplier ID.
-    public isOwner(request: Request, response: Response, next: NextFunction, bucketItemDocument: IBucketItemDoc): boolean {
-        // We'll assume this is only for CRUD
-        // Get the current token, so we can get the ownerId in this case organization id off of here.
-        let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
-
-        // For now we're just going to check that the ownership is around organization.
-        return super.isOwnerInOwnership(bucketItemDocument, currentToken.userId, OwnershipType.user);
-    }
-
     public async preCreateHook(BucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
         BucketItem.href = `${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}/${BucketItem._id}`;
         return BucketItem;

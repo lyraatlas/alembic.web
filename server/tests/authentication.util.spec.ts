@@ -24,6 +24,9 @@ export class AuthUtil {
     static userToken: string = '';
     static decodedToken: ITokenPayload;
 
+    static userToken2: string = '';
+    static decodedToken2: ITokenPayload;
+
     public static async Initialize(): Promise<string> {
         if(this.userToken == ''){
             try {
@@ -44,9 +47,21 @@ export class AuthUtil {
     
                 this.userToken = authResponse.body.token;
                 this.decodedToken = authResponse.body.decoded;
+
+                let userId2 = await this.registerUser('at@la.com');
+                let auth2 = {
+                    "email": "at@la.com",
+                    "password": "test1234"
+                }
+
+                let authResponse2 = await api
+                .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.AUTHENTICATE}${CONST.ep.LOCAL}${CONST.ep.LOGIN}`)
+                .send(auth2);
     
+                this.userToken2 = authResponse2.body.token;
+                this.decodedToken2 = authResponse2.body.decoded;
+
                 return this.userToken;
-    
             } catch (err) {
                 this.handleTestError(err);
             }

@@ -15,7 +15,7 @@ export class NotificationUtility {
         // that user that someone added a comment on their item.
         let owned = item as IOwned;
 
-        let owners = owned.owners.find(owner => {
+        let owner = owned.owners.find(owner => {
             return owner.ownershipType == OwnershipType.user;
         });
 
@@ -27,7 +27,7 @@ export class NotificationUtility {
             isActionable: false,
             isRead: false,
             notifiedBy: currentToken.userId,
-            createdBy: owners.ownerId,
+            createdBy: owner.ownerId,
             isSystem: false,
         }
 

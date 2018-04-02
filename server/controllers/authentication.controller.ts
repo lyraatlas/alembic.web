@@ -26,15 +26,7 @@ export class AuthenticationController extends BaseController{
     public isOwnershipRequired: boolean = true;  
     public rolesRequiringOwnership: string[] = [''];
 
-    public AuthenticationController(){
-    }
-
-    public addOwnerships(request: Request, response: Response, next: NextFunction, modelDoc: IBaseModelDoc): void {
-        return;
-    }
-    public isOwner(request: Request, response: Response, next: NextFunction, document: IBaseModelDoc): boolean {
-        return false;
-    }
+    public AuthenticationController(){ }
 
     private saltRounds: Number = 5;
     private tokenExpiration: string = '24h';

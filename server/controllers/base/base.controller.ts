@@ -22,15 +22,28 @@ export abstract class BaseController {
     public abstract rolesRequiringOwnership: Array<string>;
 
     // If implemented this will be called on document creation.  This will allow us to add ownership at creation time.
-    public abstract addOwnerships(request: Request, response: Response, next: NextFunction, modelDoc: IBaseModelDoc): void;
+    public addOwnerships(request: Request, response: Response, next: NextFunction, modelDoc: IOwned): void {
+        let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
+        modelDoc.owners.push({
+            ownerId: currentToken.userId,
+            ownershipType: OwnershipType.user
+        });
+    }
 
     // The child classes implementation of ownership testing.  Allows for child classes to test various data points.
-    public abstract isOwner(request: Request, response: Response, next: NextFunction, document: IBaseModelDoc): boolean;
+    public isOwner(request: Request, response: Response, next: NextFunction, document: IOwned): boolean {
+        // We'll assume this is only for CRUD
+        // Get the current token, so we can get the ownerId in this case organization id off of here.
+        let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
+
+        // For now we're just going to check that the ownership is around organization.
+        return this.isOwnerInOwnership(document, currentToken.userId, OwnershipType.user);
+    }
 
     public isOwnerInOwnership(document: IOwned, ownerId: string, ownershipType: OwnershipType): boolean {
         let isOwner: boolean = false;
 
-        if(document && document.owners){
+        if (document && document.owners) {
             document.owners.forEach(documentOwnershipElement => {
                 if (documentOwnershipElement.ownershipType === ownershipType
                     // One of these is a bson id on the document, the other is a string, so don't use triple equal
@@ -45,9 +58,9 @@ export abstract class BaseController {
 
     public async isModificationAllowed(request: Request, response: Response, next: NextFunction): Promise<boolean> {
         // If ownership is required we need to make sure the user has the rights to CRUD this item.
-        if (this.isOwnershipRequired 
-            && this.rolesRequiringOwnership 
-            && this.rolesRequiringOwnership.length > 0 
+        if (this.isOwnershipRequired
+            && this.rolesRequiringOwnership
+            && this.rolesRequiringOwnership.length > 0
             && (request[CONST.REQUEST_TOKEN_LOCATION] as ITokenPayload)
             && (request[CONST.REQUEST_TOKEN_LOCATION] as ITokenPayload).roles
             // Is the user a role, that exists in the roles array that requires an ownership test.
@@ -60,12 +73,22 @@ export abstract class BaseController {
             // we need to throw a 404 if we didn't find the document when we're checking ownership.
             if (!document) { throw { message: 'Item Not found', status: 404 }; }
 
-            if (!this.isOwner(request, response, next, document)) {
+            if (!this.isOwner(request, response, next, document as IOwned)) {
                 ApiErrorHandler.sendAuthFailure(response, 403, 'You are not allowed to CRUD this resource. Ownership Check failed.');
                 return false;
             }
         }
         return true;
+    }
+
+    public isAdmin(request: Request, response: Response) {
+        if (Authz.isMatchBetweenRoleLists([CONST.ADMIN_ROLE], (request[CONST.REQUEST_TOKEN_LOCATION] as ITokenPayload).roles)) {
+            return true;
+        }
+        else {
+            ApiErrorHandler.sendAuthFailure(response, 403, 'Only Admins can execute this operation');
+            return false;
+        }
     }
 
     public async isValid(model: IBaseModelDoc): Promise<IValidationError[]> {
@@ -80,7 +103,7 @@ export abstract class BaseController {
         return model;
     }
 
-    public async updateValidation(model: IBaseModelDoc){
+    public async updateValidation(model: IBaseModelDoc) {
         return true;
     }
 
@@ -89,11 +112,19 @@ export abstract class BaseController {
     }
 
     public blank(request: Request, response: Response, next: NextFunction): void {
-        response.json(this.repository.blank());
+        try {
+            if (this.isAdmin(request, response)) {
+                response.json(this.repository.blank());
+            }
+        } catch (err) { next(err); }
     }
 
     public utility(request: Request, response: Response, next: NextFunction): void {
-        response.json({});
+        try {
+            if (this.isAdmin(request, response)) {
+                response.json({});
+            }
+        } catch (err) { next(err); }
     }
 
     public respondWithValidationErrors(request: Request, response: Response, next: NextFunction, validationErrors: IValidationError[]): void {
@@ -105,42 +136,44 @@ export abstract class BaseController {
 
     public async query<T extends IBaseModelDoc>(request: Request, response: Response, next: NextFunction): Promise<IQueryResponse<T>> {
         try {
-            const searchCriteria = new SearchCriteria(request, next);
+                const searchCriteria = new SearchCriteria(request, next);
 
-            // We're going to query for the models.
-            let models: T[] = await this.repository.query(request.body, this.defaultPopulationArgument, searchCriteria) as T[];
+                // We're going to query for the models.
+                let models: T[] = await this.repository.query(request.body, this.defaultPopulationArgument, searchCriteria) as T[];
 
-            // A pager will need to know the total count of models, based on the search parameters.  
-            let totalCount= await this.repository.searchingCount(request.body);
+                // A pager will need to know the total count of models, based on the search parameters.  
+                let totalCount = await this.repository.searchingCount(request.body);
 
-            let queryResponse: IQueryResponse<T> = {
-                results: models,
-                paging:{
-                    limit: searchCriteria.limit,
-                    skip: searchCriteria.skip,
-                    count: totalCount,
+                let queryResponse: IQueryResponse<T> = {
+                    results: models,
+                    paging: {
+                        limit: searchCriteria.limit,
+                        skip: searchCriteria.skip,
+                        count: totalCount,
+                    }
                 }
-            }
-            response.json(queryResponse);
+                response.json(queryResponse);
 
-            log.info(`Queried for: ${this.repository.getCollectionName()}, Found: ${models.length}`);
-            return queryResponse;
+                log.info(`Queried for: ${this.repository.getCollectionName()}, Found: ${models.length}`);
+                return queryResponse;
         } catch (err) { next(err); }
     }
 
     public async clear(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
-            let before: number = await this.repository.count(new SearchCriteria(request, next));
-            await this.repository.clear(request.body);
-            let after: number = await this.repository.count(new SearchCriteria(request, next));
+            if (this.isAdmin(request, response)) {
+                let before: number = await this.repository.count(new SearchCriteria(request, next));
+                await this.repository.clear(request.body);
+                let after: number = await this.repository.count(new SearchCriteria(request, next));
 
-            response.json({
-                Collection: this.repository.getCollectionName(),
-                Message: 'All items cleared from collection',
-                CountOfItemsRemoved: before - after
-            });
+                response.json({
+                    Collection: this.repository.getCollectionName(),
+                    Message: 'All items cleared from collection',
+                    CountOfItemsRemoved: before - after
+                });
 
-            log.info(`Cleared the entire collection: ${this.repository.getCollectionName()}`);
+                log.info(`Cleared the entire collection: ${this.repository.getCollectionName()}`);
+            }
         } catch (err) { next(err); }
     }
 
@@ -151,7 +184,7 @@ export abstract class BaseController {
 
                 if (!deletedModel) { throw { message: "Item Not Found", status: 404 }; }
 
-                if(sendResponse){
+                if (sendResponse) {
                     response.json({
                         ItemRemovedId: deletedModel.id,
                         ItemRemoved: deletedModel,
@@ -211,70 +244,70 @@ export abstract class BaseController {
 
     public async create(request: Request, response: Response, next: NextFunction, sendResponse: boolean = true): Promise<IBaseModelDoc> {
         try {
-                let model = await this.preCreateHook(this.repository.createFromBody(request.body));
+            let model = await this.preCreateHook(this.repository.createFromBody(request.body));
 
-                let validationErrors = await this.isValid(model);
+            let validationErrors = await this.isValid(model);
 
-                if (validationErrors && validationErrors.length > 0) {
-                    this.respondWithValidationErrors(request, response, next, validationErrors);
-                    return null;
-                }
+            if (validationErrors && validationErrors.length > 0) {
+                this.respondWithValidationErrors(request, response, next, validationErrors);
+                return null;
+            }
 
-                this.addOwnerships(request, response, next, model);
+            this.addOwnerships(request, response, next, model as IOwned);
 
-                model = await this.repository.create(model);
+            model = await this.repository.create(model);
 
-                if (sendResponse) {
-                    response.status(201).json(model);
-                }
+            if (sendResponse) {
+                response.status(201).json(model);
+            }
 
-                log.info(`Created New: ${this.repository.getCollectionName()}, ID: ${model._id}`);
+            log.info(`Created New: ${this.repository.getCollectionName()}, ID: ${model._id}`);
 
-                return model;
+            return model;
         } catch (err) { next(err) }
     }
 
     public async count(request: Request, response: Response, next: NextFunction): Promise<number> {
         try {
-            const searchCriteria = new SearchCriteria(request, next);
-            const count: number = await this.repository.count(searchCriteria);
+                const searchCriteria = new SearchCriteria(request, next);
+                const count: number = await this.repository.count(searchCriteria);
 
-            response.json({
-                CollectionName: this.repository.getCollectionName(),
-                CollectionCount: count,
-                SearchCriteria: searchCriteria.criteria,
-            });
+                response.json({
+                    CollectionName: this.repository.getCollectionName(),
+                    CollectionCount: count,
+                    SearchCriteria: searchCriteria.criteria,
+                });
 
-            log.info(`Executed Count Operation: ${this.repository.getCollectionName()}, Count: ${count}`);
-            
-            return count;
+                log.info(`Executed Count Operation: ${this.repository.getCollectionName()}, Count: ${count}`);
+
+                return count;
         } catch (err) { next(err) }
 
     }
 
     public async list(request: Request, response: Response, next: NextFunction): Promise<IBaseModelDoc[]> {
         try {
-            let models: IBaseModelDoc[] = await this.repository.list(new SearchCriteria(request, next), this.defaultPopulationArgument);
+                let models: IBaseModelDoc[] = await this.repository.list(new SearchCriteria(request, next), this.defaultPopulationArgument);
 
-            response.json(models);
+                response.json(models);
 
-            log.info(`Executed List Operation: ${this.repository.getCollectionName()}, Count: ${models.length}`);
+                log.info(`Executed List Operation: ${this.repository.getCollectionName()}, Count: ${models.length}`);
 
-            return models;
+                return models;
         } catch (err) { next(err) }
     }
 
     public async single(request: Request, response: Response, next: NextFunction): Promise<IBaseModelDoc> {
         try {
-            let model: IBaseModelDoc = await this.repository.single(this.getId(request), this.defaultPopulationArgument);
-            if (!model)
-                throw ({ message: 'Item Not Found', status: 404 });
+                let model: IBaseModelDoc = await this.repository.single(this.getId(request), this.defaultPopulationArgument);
+                if (!model)
+                    throw ({ message: 'Item Not Found', status: 404 });
 
-            response.json(model);
+                response.json(model);
 
-            log.info(`Executed Single Operation: ${this.repository.getCollectionName()}, item._id: ${model._id}`);
+                log.info(`Executed Single Operation: ${this.repository.getCollectionName()}, item._id: ${model._id}`);
 
-            return model;
+                return model;
         } catch (err) { next(err) }
     }
 }

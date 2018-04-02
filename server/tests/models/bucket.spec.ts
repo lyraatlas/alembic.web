@@ -52,10 +52,10 @@ class BucketTest {
         return;
     }
 
-    @test('system admins should be allowed to create new buckets')
+    @test('creating new buckets should work')
     public async TestAbilityToCreateBucket() {
         let bucket: IBucket = {
-            name: "Midnight Snap Dragon Admin",
+            name: "Russia Is Amazing",
         }
 
         let response = await api
@@ -63,11 +63,10 @@ class BucketTest {
             .set(CONST.TOKEN_HEADER_KEY, AuthUtil.userToken)
             .send(bucket);
 
+        console.dir(response.body);
         expect(response.status).to.equal(201);
-        expect(response.body).to.be.an('object');
         expect(response.body.name).to.be.equal(bucket.name);
-        // expect(response.body.ownerships).to.be.an('array');
-        // expect(response.body.ownerships.length).to.be.greaterThan(0);
+        expect(response.body.owners[0].ownerId).to.be.equal(AuthUtil.decodedToken.userId);
         return;
     }
 
@@ -78,7 +77,6 @@ class BucketTest {
             .set("x-access-token", AuthUtil.userToken);
 
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.an('array');
         expect(response.body.length).to.be.greaterThan(0); // List of all the buckets.
         return;
     }
@@ -92,7 +90,6 @@ class BucketTest {
             .set("x-access-token", AuthUtil.userToken);
 
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.an('object');
         expect(response.body).to.have.property('name');
         return;
     }
@@ -112,12 +109,44 @@ class BucketTest {
             .send(bucketUpdate);
 
         expect(response.status).to.equal(202);
-        expect(response.body).to.have.property('name');
         expect(response.body.name).to.equal(bucketUpdate.name);
         return;
     }
 
-    @test('it should add a like to a bucket')
+    @test('it should fail to update the bucket when tried by the user who doesnt own it')
+    public async updateABucketFailsWithAnotherUser() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        let bucketUpdate = {
+            _id: `${createdId}`,
+            name: "Daves Tulip",
+        };
+
+        let response = await api
+            .put(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken2)
+            .send(bucketUpdate);
+
+        // The server will respond with a 403 when the ownership check fails.    
+        expect(response.status).to.equal(403);
+        return;
+    }
+
+    @test('regular users cant call clear on the resource')
+    public async regularUsersCantCallClear() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        let response = await api
+            .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/clear`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send({});
+
+        // The server will respond with a 403 when the ownership check fails.    
+        expect(response.status).to.equal(403);
+        return;
+    }
+
+    @test('it should add a like to a bucket, and lodge a notification')
     public async AddALikeToABucket() {
         let createdId = await this.createBucket(AuthUtil.userToken);
 
@@ -129,15 +158,17 @@ class BucketTest {
             .send(bucketUpdate);
 
         expect(response.status).to.equal(202);
-        expect(response.body).to.have.property('likedBy');
         expect(response.body.likedBy.length).to.equal(1);
         expect(response.body.likedBy[0]).to.equal(AuthUtil.decodedToken.userId);
 
+        // now we're checking the notifications.
         let response2 = await api
         .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.NOTIFICATIONS}`)
         .set("x-access-token", AuthUtil.userToken);
 
-        console.dir(response2.body);
+        expect(response2.status).to.equal(200);
+        expect(response2.body[0].bucket).to.equal(createdId);
+        expect(response2.body[0].isRead).to.equal(false);
         return;
     }
 
@@ -158,7 +189,6 @@ class BucketTest {
             .send(bucketUpdate);
 
         expect(response.status).to.equal(202);
-        expect(response.body).to.have.property('likedBy');
         expect(response.body.likedBy.length).to.equal(1);
         expect(response.body.likedBy[0]).to.equal(AuthUtil.decodedToken.userId);
         return;
@@ -196,8 +226,6 @@ class BucketTest {
             .set("x-access-token", AuthUtil.userToken);
 
         expect(response.status).to.equal(200);
-        expect(response.body).to.have.property('ItemRemoved');
-        expect(response.body).to.have.property('ItemRemovedId');
         expect(response.body.ItemRemovedId).to.be.equal(createdId);
         return;
     }
@@ -222,7 +250,6 @@ class BucketTest {
         expect(response.status).to.equal(404);
         return;
     }
-
 
     private async createBucket(authToken: string):Promise<string>{
         let bucket: IBucket = {
