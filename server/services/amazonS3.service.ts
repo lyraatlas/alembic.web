@@ -35,7 +35,7 @@ export class AmazonS3Service{
         try {
             let s3data = await s3.putObject({
                 Body: data,
-                Bucket: Config.active.get('ProductImageBucketName'),
+                Bucket: Config.active.get('AlembicS3Bucket'),
                 Key: this.variationName(imageType, rawImageFile),
                 Metadata: {
                     ContentType: rawImageFile.mimetype
@@ -60,7 +60,7 @@ export class AmazonS3Service{
         const options: S3.ClientConfiguration = {
             apiVersion: '2006-03-01',
             params: {
-                Bucket: Config.active.get('ProductImageBucketName'),
+                Bucket: Config.active.get('AlembicS3Bucket'),
                 ACL: 'public-read',
                 Metadata: {
                     ContentType: mimeType
@@ -86,7 +86,7 @@ export class AmazonS3Service{
         this.configureAws();
         const s3: S3 = this.configureS3(null)
         let s3data = await s3.deleteObject({
-            Bucket: Config.active.get('ProductImageBucketName'),
+            Bucket: Config.active.get('AlembicS3Bucket'),
             Key: key
         }).promise();
 

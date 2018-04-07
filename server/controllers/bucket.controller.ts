@@ -8,6 +8,7 @@ import { BucketRepository } from "../repositories";
 import { OwnershipType } from "../enumerations";
 import { Likeable } from './base/likeable.mixin';
 import { Commentable } from './base/commentable.mixin';
+import { ImageControllerMixin } from './base/images.controller.mixin';
 
 export class BucketControllerBase extends BaseController {
 
@@ -28,10 +29,16 @@ export class BucketControllerBase extends BaseController {
         return Bucket;
     }
 
+    public async preDestroyHook(request: Request, response: Response, next: NextFunction, bucket:IBucketDoc):Promise<IBucketDoc>{
+        const imageId = request && request.params ? request.params['imageId'] : null;
+
+        return await BucketController.destroyImages(bucket, imageId);
+    }
+
     public async preSendResponseHook(Bucket: IBucketDoc): Promise<IBucketDoc> {
         return Bucket;
     }
 }
 
 // All of our mixin controllers.
-export const BucketController = Commentable(Likeable(BucketControllerBase));
+export const BucketController = ImageControllerMixin(Commentable(Likeable(BucketControllerBase)));

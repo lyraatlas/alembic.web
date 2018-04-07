@@ -1,12 +1,10 @@
 import { mongoose } from '../config/database/database';
 import { Schema, Model, Document, model } from 'mongoose';
-import { IBaseModel, IBaseModelDoc, ILikeable, IOwned, ITimeStamped, IBucketItem } from "./index";
+import { IBaseModel, IBaseModelDoc, ILikeable, IOwned, ITimeStamped, IBucketItem, ICommentable, IHasImages } from "./index";
 import * as enums from "../enumerations";
-import { IImage } from './image.interface';
-import { ICommentable } from './commentable.interface';
 
 
-export interface IBucket extends IBaseModel, ILikeable, IOwned, ITimeStamped, ICommentable {
+export interface IBucket extends IBaseModel, ILikeable, IOwned, ITimeStamped, ICommentable, IHasImages {
     name?: string,
     description?: string,
     bucketItems?: IBucketItem[],
@@ -29,6 +27,17 @@ const BucketSchema = new Schema({
         commentBy: {type: Schema.Types.ObjectId, ref: 'user'},
         comment: { type: String },
     })],
+    images: [{
+        order: { type: Number },
+        isActive: { type: Boolean },
+        variations: [{
+            type: { type: Number, enum: [enums.EnumHelper.getValuesFromEnum(enums.ImageType)] },
+            url: { type: String },
+            width: { type: Number },
+            height: { type: Number },
+            key: {type: String},
+        }],
+    }],
     name: { type: String },
     description: { type: String },
     bucketItems: {type: Schema.Types.ObjectId, ref: 'bucket-item'},

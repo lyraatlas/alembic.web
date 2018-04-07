@@ -177,9 +177,18 @@ export abstract class BaseController {
         } catch (err) { next(err); }
     }
 
+    public async preDestroyHook(request: Request, response: Response, next: NextFunction, doc: IBaseModelDoc): Promise<IBaseModelDoc>{
+        return doc;
+    }
+
     public async destroy(request: Request, response: Response, next: NextFunction, sendResponse: boolean = true): Promise<IBaseModelDoc> {
         try {
             if (await this.isModificationAllowed(request, response, next)) {
+                // Before we destroy, we want our controllers to have the opportunity to cleanup any related data.
+                const doc = await this.repository.single(this.getId(request));
+
+                await this.preDestroyHook(request,response,next,doc);
+
                 let deletedModel = await this.repository.destroy(this.getId(request));
 
                 if (!deletedModel) { throw { message: "Item Not Found", status: 404 }; }

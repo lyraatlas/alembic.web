@@ -17,11 +17,10 @@ import { mongoose, Database } from './config/database/database';
 import { DatabaseBootstrap } from './config/database/database-bootstrap';
 import { CONST } from './constants';
 import { Config } from './config/config';
-import { Router } from 'express';
+import { Router, NextFunction } from 'express';
 import { ApiErrorHandler } from './api-error-handler';
 import { HealthStatus } from './health-status';
 import { SupportingServicesBootstrap } from './config/supporting-services.bootstrap';
-
 
 import methodOverride = require('method-override');
 import log = require('winston');
@@ -31,10 +30,11 @@ import path = require('path');
 import cors = require('cors')
 import { AuthenticationController } from './controllers/authentication.controller';
 import { MulterConfiguration } from './config/multer.configuration';
-import { ImageUploadController, BucketController } from './controllers/index';
+import { ImageUploadController, BucketController, BucketItemController } from './controllers/index';
 import { IdentityApiService } from './services/identity.api.service';
 import { User } from './models/index';
 import { BucketRouter, AuthenticationRouter } from './routers';
+import { ImageControllerMixin } from './controllers/base/images.controller.mixin';
 
 // Creates and configures an ExpressJS web server.
 class Application {
@@ -233,10 +233,16 @@ class Application {
     this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.UserRouter().getRouter());
     this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE,CONST.USER_ROLE), new routers.NotificationRouter().getRouter());
 
-    this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKETS}${CONST.ep.UPLOAD_IMAGES}/:id`,
+    this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKETS}${CONST.ep.IMAGES}/:id`,
+        Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE),
+        new MulterConfiguration().uploader.array('file'),
+        new routers.BucketRouter().ImageHandler
+    );
+
+    this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKET_ITEMS}${CONST.ep.IMAGES}/:id`,
       Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE),
       new MulterConfiguration().uploader.array('file'),
-      new ImageUploadController().imageUploadMiddleware
+      new routers.BucketItemRouter().ImageHandler
     );
   }
 

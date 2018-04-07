@@ -251,6 +251,38 @@ class BucketTest {
         return;
     }
 
+    @test('create a bucket, add images, delete should delete images')
+    public async deletingShouldAlsoDeleteTheImages() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        // Now we need to post a test image. 
+        // './assets/testImage.jpg'
+        let uploadResponse =  await api.post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.IMAGES}/${createdId}`)
+        .set("x-access-token", AuthUtil.userToken)
+        .attach('file', './server/tests/assets/testImage.jpg');
+
+        expect(uploadResponse.status).to.equal(200);
+
+        // Now I want to check the response with regards to the images on the item.
+        let singleResponse = await api
+        .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdId}`)
+        .set("x-access-token", AuthUtil.userToken);
+
+        expect((singleResponse.body as IBucket).images.length).to.be.greaterThan(0);
+        expect((singleResponse.body as IBucket).images[0].isActive).to.be.true;
+        expect((singleResponse.body as IBucket).images[0].variations.length).to.be.greaterThan(0);
+
+        let response = await api
+            .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken);
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('ItemRemoved');
+        expect(response.body).to.have.property('ItemRemovedId');
+        expect(response.body.ItemRemovedId).to.be.equal(createdId);
+        return;
+    }
+
     private async createBucket(authToken: string):Promise<string>{
         let bucket: IBucket = {
             name: "Russia Is Amazing",

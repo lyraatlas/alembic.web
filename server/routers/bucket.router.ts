@@ -16,6 +16,11 @@ export class BucketRouter extends BaseRouter {
         this.resource = CONST.ep.BUCKETS;
     }
 
+    public async ImageHandler(request: Request, response: Response, next: NextFunction) {
+        // For some reason this.controller is not defined at this stage in the pipeline.
+        await BucketController.imageTransformer(request,response,next,new BucketController());
+    }
+
     public getRouter(): Router{
         return super.getRouter()
         .patch(`${this.resource}${CONST.ep.LIKES}/:id`, async (request: Request, response: Response, next: NextFunction) => {
@@ -33,5 +38,8 @@ export class BucketRouter extends BaseRouter {
         .patch(`${this.resource}${CONST.ep.COMMENTS}/:id`, async (request: Request, response: Response, next: NextFunction) => {
             await BucketController.editComment(request,response,next,this.controller);
         })
+        .delete(`${this.resource}${CONST.ep.IMAGES}/:id/:imageId`, async (request: Request, response: Response, next: NextFunction) => {
+            await this.controller.deleteImage(request, response, next, this.controller);
+        });
     }
 }

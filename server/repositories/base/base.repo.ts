@@ -1,6 +1,7 @@
 
 import { Model, Document } from "mongoose";
 import { SearchCriteria, IBaseModel, IBaseModelDoc } from "../../models/index";
+import log = require('winston');
 
 export abstract class BaseRepository<IModelDoc extends IBaseModelDoc>{
 

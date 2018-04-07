@@ -17,7 +17,7 @@ export const CONST = {
         API_DOCS: '/api-docs',
         API_SWAGGER_DEF: '/swagger-definition',
         NOTIFICATIONS: '/notifications',
-        UPLOAD_IMAGES: '/upload-images',
+        IMAGES: '/images',
         LOGIN: '/login',
         CALLBACK: '/callback',
         EMAIL_VERIFICATIONS: '/email-verifications',

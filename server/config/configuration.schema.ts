@@ -123,7 +123,7 @@ public static convictSchema: convict.Config = convict({
     AlembicS3BucketRootUrl:{
       doc:'This is the root of the url that well use whenever a product image is added.',
       format: String,
-      default: 'https://s3.us-east-2.amazonaws.com/',
+      default: 'https://s3.amazonaws.com/',
       env: 'ALEMBIC_S3_BUCKET_ROOT_URL',
       sensitive: true
     },

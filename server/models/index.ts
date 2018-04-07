@@ -17,3 +17,5 @@ export * from './bucket-item.interface';
 export * from './bucket.interface';
 export * from './user.interface'
 export * from './email-verification.interface';
+export * from './commentable.interface';
+export * from './has-images.interface';

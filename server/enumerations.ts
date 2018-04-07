@@ -1,24 +1,24 @@
-export enum BucketType{
-    country =1,
-    activity =2,
-    continent =3,
+export enum BucketType {
+    country = 1,
+    activity = 2,
+    continent = 3,
 }
 
-export enum LoginStrategy{
+export enum LoginStrategy {
     Local = 1,
     Facebook = 2,
     Instagram = 3,
     Google = 4
 }
 
-export enum NotificationType{
-    BucketLiked =1,
-    BucketItemLiked =2,
+export enum NotificationType {
+    BucketLiked = 1,
+    BucketItemLiked = 2,
     BucketCommentAded = 3,
     BucketItemCommentAdded = 4,
 }
 
-export enum PushNotificationType{
+export enum PushNotificationType {
     orderSent = 1,
     orderAccepted = 2,
     orderRejected = 3,
@@ -27,55 +27,55 @@ export enum PushNotificationType{
     orderDelivered = 6,
 }
 
-export enum OwnershipType{
-    user=3
+export enum OwnershipType {
+    user = 3
 }
 
-export enum ProductType{
+export enum ProductType {
     stem = 1,
     pottedPlant = 2,
     tool = 3
 }
 
-export enum ImageType{
+export enum ImageType {
     icon = 1,
-    thumbnail =2,
-    small =3,
+    thumbnail = 2,
+    small = 3,
     medium = 4,
     large = 5,
     raw = 6
 }
 
-export enum AddressType{
+export enum AddressType {
     pickup = 1,
     business = 2,
     billing = 3,
 }
 
-export enum EmailType{
+export enum EmailType {
     pickup = 1,
     business = 2,
     billing = 3,
 }
 
-export enum ContactType{
+export enum ContactType {
     pickup = 1,
     business = 2,
     billing = 3,
 }
 
-export enum TeamMemberType{
-    member =1,
-    owner =2,
+export enum TeamMemberType {
+    member = 1,
+    owner = 2,
 }
 
-export enum PhoneType{
+export enum PhoneType {
     pickup = 1,
     business = 2,
     billing = 3,
 }
 
-export enum PrimaryColor{
+export enum PrimaryColor {
     red = 1,
     blue = 2,
     green = 3,
