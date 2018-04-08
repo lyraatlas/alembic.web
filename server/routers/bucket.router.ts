@@ -5,6 +5,8 @@ import { RequestHandlerParams, NextFunction } from 'express-serve-static-core';
 import { BaseRouter } from './base/base.router';
 import { CONST } from '../constants';
 import { NotificationType } from '../enumerations';
+import * as enums from '../enumerations';
+import { IImageStyle } from '../controllers/base/images.controller.mixin';
 
 export class BucketRouter extends BaseRouter {
     public router: Router = Router();
@@ -16,9 +18,19 @@ export class BucketRouter extends BaseRouter {
         this.resource = CONST.ep.BUCKETS;
     }
 
+    public imageStyles = [{
+        imageType: enums.ImageType.thumbnail, height: 150, width: 150,
+    },
+    {
+        imageType: enums.ImageType.medium, height: 500,
+    },
+    {
+        imageType: enums.ImageType.large, height: 1024,
+    }];
+
     public async ImageHandler(request: Request, response: Response, next: NextFunction) {
-        // For some reason this.controller is not defined at this stage in the pipeline.
-        await BucketController.imageTransformer(request,response,next,new BucketController());
+        // We're basically injecting a controller, and a set of image styles in the router.
+        await BucketController.imageTransformer(request,response,next, this.controller,this.imageStyles);
     }
 
     public getRouter(): Router{

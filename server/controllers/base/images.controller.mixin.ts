@@ -21,12 +21,31 @@ import { BaseController } from './base.controller';
 import { BucketController, BucketItemController } from '..';
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
+export interface IImageStyle {
+    imageType: enums.ImageType;
+    height?: number;
+    width?: number;
+    quality?: number;
+    output?: sharp.OutputInfo;
+}
+
 export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
     return class extends Base {
 
+        public DefaultContentImageStyles: IImageStyle[] = [{
+            imageType: enums.ImageType.thumbnail, height: 150, width: 150,
+        },
+        {
+            imageType: enums.ImageType.medium, height: 500,
+        },
+        {
+            imageType: enums.ImageType.large, height: 1024,
+        }
+        ]
+
         public static const uploadDirectoryRootLocation: string = '../../../';
 
-        public static async imageTransformer(request: Request, response: Response, next: NextFunction, controller: BaseController) {
+        public static async imageTransformer(request: Request, response: Response, next: NextFunction, controller: BaseController, imageStyles: IImageStyle[]) {
             try {
                 if (request && request.files && request.files[0]) {
                     // Grab the multer file off the request.  
@@ -36,13 +55,11 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
                         const itemDoc = await controller.repository.single(request.params['id']);
                         const itemWithImage = itemDoc as IHasImages;
 
-                        // Create image variations
-                        //const raw = await this.generateVariation(enums.ImageType.raw, rawImageFile, response);
-                        const thumb = await this.generateVariation(enums.ImageType.thumbnail, rawImageFile, response, 150, 150);
-                        //const icon = await this.generateVariation(enums.ImageType.icon, rawImageFile, response, 50, 50, 50);
-                        //const small = await this.generateVariation(enums.ImageType.small, rawImageFile, response, 300);
-                        const medium = await this.generateVariation(enums.ImageType.medium, rawImageFile, response, 500);
-                        const large = await this.generateVariation(enums.ImageType.large, rawImageFile, response, 1024);
+                        const sharpImageDetails: sharp.OutputInfo[] = new Array<sharp.OutputInfo>();
+
+                        for(let imageStyle of imageStyles){
+                            imageStyle.output = await this.generateVariation(imageStyle.imageType, rawImageFile, response, imageStyle.width, imageStyle.height, imageStyle.quality);
+                        }
 
                         // figure out what the maximum product image order number is, and add one to it. 
                         const nextOrderNum = this.getNextOrderNumber(itemWithImage) + 10;
@@ -53,13 +70,9 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
                             variations: new Array<IImageVariation>()
                         }
 
-                        // Add the product images.
-                        //this.addVariation(image, rawImageFile, raw, enums.ImageType.raw, nextOrderNum);
-                        this.addVariation(image, rawImageFile, thumb, enums.ImageType.thumbnail, nextOrderNum);
-                        //this.addVariation(image, rawImageFile, icon, enums.ImageType.icon, nextOrderNum);
-                        //this.addVariation(image, rawImageFile, small, enums.ImageType.small, nextOrderNum);
-                        this.addVariation(image, rawImageFile, medium, enums.ImageType.medium, nextOrderNum);
-                        this.addVariation(image, rawImageFile, large, enums.ImageType.large, nextOrderNum);
+                        imageStyles.forEach(imageStyle => {
+                            this.addVariation(image, rawImageFile, imageStyle.output, imageStyle.imageType, nextOrderNum);
+                        })
 
                         // If this is the first image, we're going to create a new array.
                         if (!itemWithImage.images) {
@@ -73,11 +86,11 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
 
                         response.status(200).json(updatedItem);
                     } catch (err) {
-                        this.rollbackProductImages(rawImageFile, true);
+                        this.rollbackItemImages(rawImageFile, true, imageStyles);
                         ApiErrorHandler.sendError(`Error during image processing. ${err}`, 500, response, null, err);
                     }
                     finally {
-                        this.rollbackProductImages(rawImageFile, false);
+                        this.rollbackItemImages(rawImageFile, false, imageStyles);
                     }
                 }
                 else {
@@ -112,7 +125,14 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
             return image;
         }
 
-        public static async generateVariation(imageType: enums.ImageType, rawImageFile: MulterFile, response: Response, width: number = null, height: number = null, quality: number = 80): Promise<sharp.OutputInfo | any> {
+        public static async generateVariation(
+            imageType: enums.ImageType,
+            rawImageFile: MulterFile,
+            response: Response,
+            width: number = null,
+            height: number = null,
+            quality: number = 80
+        ): Promise<sharp.OutputInfo | any> {
             // If you don't turn off cache when you're trying to cleanup the files, you won't be able to deconste the file.
             sharp.cache(false);
 
@@ -129,7 +149,7 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
             return outputInfo;
         }
 
-        public static async rollbackProductImages(rawImageFile: MulterFile, cleanS3: boolean) {
+        public static async rollbackItemImages(rawImageFile: MulterFile, cleanS3: boolean, imageStyles: IImageStyle[]) {
             try {
                 // first we're going to try and clean up the image file that was uploaded to the server.
                 await fs.delete(path.resolve(__dirname, this.uploadDirectoryRootLocation, `${CONST.IMAGE_UPLOAD_PATH}${rawImageFile.filename}`));
@@ -138,24 +158,18 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
             Upload path could fill. filename: ${rawImageFile.filename}  Exception: ${err}`);
             }
 
-            try {
-                // Now we're going to try and cleanup the images on s3
-                //while we still have easy access to the file we're going to send it up to s3.
-                //this.rollbackImageVariations(rawImageFile, enums.ImageType.raw, cleanS3);
-                //this.rollbackImageVariations(rawImageFile, enums.ImageType.icon, cleanS3);
-                this.rollbackImageVariations(rawImageFile, enums.ImageType.thumbnail, cleanS3);
-                //this.rollbackImageVariations(rawImageFile, enums.ImageType.small, cleanS3);
-                this.rollbackImageVariations(rawImageFile, enums.ImageType.medium, cleanS3);
-                this.rollbackImageVariations(rawImageFile, enums.ImageType.large, cleanS3);
-
-            } catch (err) {
-                log.error(`SWALLOWING!  There was an error trying to cleanup the files from the server, and S3.
-            Upload path could fill. filename: ${rawImageFile.filename}  Exception: ${err}`);
-            }
+            imageStyles.forEach(imageStyle => {
+                try {
+                    this.rollbackVariations(rawImageFile, imageStyle.imageType, cleanS3);
+                } catch (err) {
+                    log.error(`SWALLOWING!  There was an error trying to cleanup the files from the server, and S3.
+                Upload path could fill. filename: ${rawImageFile.filename}  Exception: ${err}`);
+                }
+            });
 
         }
 
-        public static async rollbackImageVariations(rawImageFile: MulterFile, imageType: enums.ImageType, cleanS3: boolean): Promise<void> {
+        public static async rollbackVariations(rawImageFile: MulterFile, imageType: enums.ImageType, cleanS3: boolean): Promise<void> {
             try {
                 // now we're going to try and clean up all the variations that were created.
                 await fs.delete(path.resolve(__dirname, this.uploadDirectoryRootLocation, `${CONST.IMAGE_UPLOAD_PATH}${AmazonS3Service.variationName(imageType, rawImageFile)}`));
@@ -206,7 +220,7 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
             } catch (err) { next(err); }
         }
 
-        public static async destroyImages(itemDoc: IBaseModelDoc, imageId: string): Promise<IBaseModelDoc>{
+        public static async destroyImages(itemDoc: IBaseModelDoc, imageId: string): Promise<IBaseModelDoc> {
             // First we go out and get the model from the database
             const itemWithImages = itemDoc as IHasImages;
 
@@ -220,45 +234,12 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
                     if (image.variations && image.variations.length > 0) {
                         for (var j = 0; j < image.variations.length; j++) {
                             var variation = image.variations[j];
-                            //await AmazonS3Service.deleteFileFromS3(variation.key);
+                            await AmazonS3Service.deleteFileFromS3(variation.key);
                         }
                     }
                 }
             }
             return itemDoc
         }
-
-        // public static async destroy(request: Request, response: Response, next: NextFunction, controller: BaseController, sendResponse: boolean = true): Promise<IBaseModelDoc> {
-        //     try {
-        //         if (await controller.isModificationAllowed(request, response, next)) {
-
-        //             // First we go out and get the model from the database
-        //             const itemId = await controller.getId(request);
-        //             const imageId = request && request.params ? request.params['imageId'] : null;
-        //             const itemDoc = await controller.repository.single(itemId);
-        //             const itemWithImages = itemDoc as IHasImages;
-
-        //             if (!itemDoc) { throw { message: "Item Not Found", status: 404 }; }
-
-        //             // These really wordy for loops are needed, because those mongoose arrays don't always behave with a foreach.
-        //             // We're only going to delete the product images if this is a product template.
-        //             if (itemWithImages && itemWithImages.images) {
-        //                 for (var i = 0; i < itemWithImages.images.length; i++) {
-        //                     var image = itemWithImages.images[i];
-        //                     if (image.variations && image.variations.length > 0) {
-        //                         for (var j = 0; j < image.variations.length; j++) {
-        //                             var variation = image.variations[j];
-        //                             await AmazonS3Service.deleteFileFromS3(variation.key);
-        //                         }
-        //                     }
-        //                 }
-        //             }
-
-        //             await controller.superDestroy(request, response, next);
-
-        //             return itemDoc;
-        //         }
-        //     } catch (err) { next(err); }
-        // }
     }
 }

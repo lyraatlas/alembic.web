@@ -63,7 +63,6 @@ class BucketTest {
             .set(CONST.TOKEN_HEADER_KEY, AuthUtil.userToken)
             .send(bucket);
 
-        console.dir(response.body);
         expect(response.status).to.equal(201);
         expect(response.body.name).to.be.equal(bucket.name);
         expect(response.body.owners[0].ownerId).to.be.equal(AuthUtil.decodedToken.userId);
