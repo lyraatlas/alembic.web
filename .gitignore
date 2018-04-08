@@ -71,6 +71,7 @@ o-ri/launchy.bat
 o-ri/travis
 img-uploads/
 .DS_Store
-server/environments/development.json
-server/environments/integration.json
-server/environments/production.json
+server/environments/development.secrets.json
+server/environments/integration.secrets.json
+server/environments/production.secrets.json
+server/environments/all-environments.secrets.json

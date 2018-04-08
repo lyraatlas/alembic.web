@@ -14,11 +14,6 @@ public static convictSchema: convict.Config = convict({
       default: 9000,
       env: 'PORT'
     },
-    systemUserPassword:{
-      format: String,
-      default: '',
-      env: 'AB_SYSTEM_PASSWORD',
-    },
     name: {
       doc: 'The current app name could be useful for debugging',
       format: String,
@@ -35,7 +30,7 @@ public static convictSchema: convict.Config = convict({
     jwtSecretToken: {
       doc: 'The secrect token were signing jwts with',
       format: String,
-      default: 'asdf97a9s8d7baodfbhoda8f7g9adf8asj',
+      default: '',
       env: 'JWT_SECRET_TOKEN',
       sensitive: true
     },

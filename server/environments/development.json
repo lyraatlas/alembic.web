@@ -1,0 +1,5 @@
+{
+    "clientDistFolder": "dev",
+    "AlembicS3Bucket": "dev-alembic-app-images",
+    "APILocation": "http://localhost:9000"
+}
