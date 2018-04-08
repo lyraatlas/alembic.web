@@ -1,5 +1,6 @@
 {
     "clientDistFolder": "prod",
     "AlembicS3Bucket": "prod-alembic-app-images",
-    "APILocation": "http://localhost:9000"
+    "APILocation": "http://localhost:9000",
+    "isConsoleColored": false
 }

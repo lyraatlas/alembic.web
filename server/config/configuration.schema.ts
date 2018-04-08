@@ -18,7 +18,7 @@ public static convictSchema: convict.Config = convict({
       doc: 'The current app name could be useful for debugging',
       format: String,
       default: 'alembic.web',
-      env: 'APP_NAME'
+      env: 'APP_NAME',
     },
     mongoConnectionString: {
       doc: 'Mongo Connection string',
@@ -116,7 +116,7 @@ public static convictSchema: convict.Config = convict({
       sensitive: true
     },
     AlembicS3BucketRootUrl:{
-      doc:'This is the root of the url that well use whenever a product image is added.',
+      doc:'This is the root of the url that well use whenever a image is added.',
       format: String,
       default: 'https://s3.amazonaws.com/',
       env: 'ALEMBIC_S3_BUCKET_ROOT_URL',
