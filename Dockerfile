@@ -51,7 +51,14 @@ RUN cd /usr/app/client && npm run devbuild
 # build the server
 RUN gulp build 
 
+# we're going to change the environment before we test
+ENV NODE_ENV integration
+
+# this will run all our unit tests
 RUN npm test
+
+# now we change it back to development.  Although the real host will determine this value.
+ENV NODE_ENV development
 
 EXPOSE 9000
 CMD ["npm", "start"]
