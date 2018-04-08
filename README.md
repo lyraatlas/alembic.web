@@ -239,5 +239,3 @@ after you can run something like
 `echo $LA_ENV`
 
 which should show you what the environment variable that has been set.
-
-Adding a comment for cleaning bfg
