@@ -220,7 +220,7 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
             } catch (err) { next(err); }
         }
 
-        public static async destroyImages(itemDoc: IBaseModelDoc, imageId: string): Promise<IBaseModelDoc> {
+        public static async destroyImages(itemDoc: IBaseModelDoc): Promise<IBaseModelDoc> {
             // First we go out and get the model from the database
             const itemWithImages = itemDoc as IHasImages;
 

@@ -24,8 +24,8 @@ export class MulterConfiguration{
         storage: this.storage,
         fileFilter: this.fileFilter,
         limits: {
-            fileSize : 200000000, //200mb limit on filesize, this number is in bytes
-            files: 25 //maximum  of 30 files at a time
+            fileSize : 10000000, //10mb limit on filesize, this number is in bytes
+            files: 10 //maximum  of 10 files at a time
         },
     });
 

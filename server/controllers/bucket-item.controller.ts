@@ -32,9 +32,7 @@ export class BucketItemControllerBase extends BaseController {
     }
 
     public async preDestroyHook(request: Request, response: Response, next: NextFunction, bucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
-        const imageId = request && request.params ? request.params['imageId'] : null;
-
-        return await BucketItemController.destroyImages(bucketItem, imageId);
+        return await BucketItemController.destroyImages(bucketItem);
     }
 }
 
