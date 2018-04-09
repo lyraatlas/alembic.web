@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { CONST } from '../../../constants';
 import { AuthenticationService, OrderService, SupplierService } from '../../../services/index';
-import { INotification, IOrder, ISupplier } from '../../../models/index';
+import { INotification, ISupplier } from '../../../models/index';
 import { NotificationService } from '../../../services/notification.service';
 import * as enums from '../../../enumerations';
 import { Observable } from "rxjs/Observable";
@@ -127,45 +127,45 @@ export class NavbarComponent implements OnInit {
     }
 
     setupVirtualsForNotifications(notifications: Array<INotification>): Array<INotification> {
-        notifications.forEach(notification => {
-            // We want to show our unread notification symbol.
-            if (!notification.isRead) {
-                this.unreadNotifications = true;
-            }
+        // notifications.forEach(notification => {
+        //     // We want to show our unread notification symbol.
+        //     if (!notification.isRead) {
+        //         this.unreadNotifications = true;
+        //     }
 
-            switch (+notification.type) {
-                case enums.NotificationType.OrderAccepted_Core:
-                    Observable.zip(
-                        this.orderService.get<IOrder>(notification.orderAcceptedNotification.order as string),
-                        this.supplierService.get<ISupplier>(notification.orderAcceptedNotification.acceptedBy as string)
-                    ).subscribe((value: [IOrder, ISupplier]) => {
-                        notification['relatedToText'] = `Order Code: ${value[0].code}`;
-                        notification['action'] = `was accepted`;
-                        notification['byText'] = `by: ${value[1].name}`;
-                        notification.isActionCompleted
+        //     switch (+notification.type) {
+        //         case enums.NotificationType.OrderAccepted_Core:
+        //             Observable.zip(
+        //                 this.orderService.get<IOrder>(notification.orderAcceptedNotification.order as string),
+        //                 this.supplierService.get<ISupplier>(notification.orderAcceptedNotification.acceptedBy as string)
+        //             ).subscribe((value: [IOrder, ISupplier]) => {
+        //                 notification['relatedToText'] = `Order Code: ${value[0].code}`;
+        //                 notification['action'] = `was accepted`;
+        //                 notification['byText'] = `by: ${value[1].name}`;
+        //                 notification.isActionCompleted
 
-                        notification['class'] = 'label label-success';
-                        notification['message'] = `Order Code: ${value[0].code} was accepted `;
+        //                 notification['class'] = 'label label-success';
+        //                 notification['message'] = `Order Code: ${value[0].code} was accepted `;
 
-                    });
-                    break;
-                case enums.NotificationType.OrderRejected_Core:
-                    Observable.zip(
-                        this.orderService.get<IOrder>(notification.orderRejectedNotification.order as string),
-                        this.supplierService.get<ISupplier>(notification.orderRejectedNotification.rejectedBy as string)
-                    ).subscribe((value: [IOrder, ISupplier]) => {
-                        notification['relatedToText'] = `Order Code: ${value[0].code}`;
-                        notification['action'] = `was rejected`;
-                        notification['byText'] = `by: ${value[1].name}`;
+        //             });
+        //             break;
+        //         case enums.NotificationType.OrderRejected_Core:
+        //             Observable.zip(
+        //                 this.orderService.get<IOrder>(notification.orderRejectedNotification.order as string),
+        //                 this.supplierService.get<ISupplier>(notification.orderRejectedNotification.rejectedBy as string)
+        //             ).subscribe((value: [IOrder, ISupplier]) => {
+        //                 notification['relatedToText'] = `Order Code: ${value[0].code}`;
+        //                 notification['action'] = `was rejected`;
+        //                 notification['byText'] = `by: ${value[1].name}`;
 
-                        notification['message'] = `Order Code: ${value[0].code} was rejected by: ${value[1].name}`;
-                        notification['class'] = 'label label-danger'
-                    });
-                    break;
-                default:
-                    break;
-            }
-        });
+        //                 notification['message'] = `Order Code: ${value[0].code} was rejected by: ${value[1].name}`;
+        //                 notification['class'] = 'label label-danger'
+        //             });
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // });
 
         return notifications;
     }

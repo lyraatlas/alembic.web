@@ -22,6 +22,10 @@ export function Likeable<TBase extends Constructor>(Base: TBase) {
 
                 let likeableItem = (item as ILikeable);
 
+                if(!likeableItem.likedBy){
+                    likeableItem.likedBy = new Array<string>();
+                }
+
                 // Only add the likedBy if it doesn't already exist.
                 if (likeableItem.likedBy.indexOf(currentToken.userId) < 0) {
                     likeableItem.likedBy.push(currentToken.userId);
@@ -47,6 +51,10 @@ export function Likeable<TBase extends Constructor>(Base: TBase) {
                 let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
 
                 let likeableItem = (item as ILikeable);
+
+                if(!likeableItem.likedBy){
+                    likeableItem.likedBy = new Array<string>();
+                }
 
                 likeableItem.likedBy = likeableItem.likedBy.filter(val => val != currentToken.userId);
 

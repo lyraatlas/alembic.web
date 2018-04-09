@@ -4,9 +4,10 @@ import { IBaseModel, IBaseModelDoc, ITimeStamped, ILikeable, IOwned, IHasImages 
 import * as enums from "../enumerations";
 import { IImage } from './image.interface';
 import { ICommentable } from './commentable.interface';
+import { IHasLocation } from './has-location.interface';
 
 
-export interface IBucketItem extends IBaseModel, ILikeable, IOwned, ITimeStamped, ICommentable, IHasImages {
+export interface IBucketItem extends IBaseModel, ILikeable, IOwned, ITimeStamped, ICommentable, IHasImages, IHasLocation {
     name?: string,
     description?: string,
     href?: string,
@@ -22,13 +23,16 @@ const BucketItemSchema = new Schema({
         ownerId:  { type: Schema.Types.ObjectId },
         ownershipType: { type: Number, enum: [enums.EnumHelper.getValuesFromEnum(enums.OwnershipType)] },
     }],
-    likeBy: [{type: Schema.Types.ObjectId, ref: 'user'}],
+    likedBy: [{type: Schema.Types.ObjectId, ref: 'user'}],
     comments: [{
         commentBy: {type: Schema.Types.ObjectId, ref: 'user'},
         comment: { type: String },
         createdAt: { type: Date },
         modifiedAt: { type: Date },
     }],
+    // What the mongo compass query looks like: {"productLocation":{"$geoWithin":{"$centerSphere":[[40.76665209596496,-73.98568992400604],4.4717033545255673e-7]}}}
+    // The order here is Longitude, and then Latitude.
+    location: { 'type': {type: String, enum: "Point", default: "Point"}, coordinates: { type: [Number], default: [0,0] } },
     images: [{
         order: { type: Number },
         isActive: { type: Boolean },
@@ -44,6 +48,8 @@ const BucketItemSchema = new Schema({
     description: { type: String },
     href: { type: String }
 }, { timestamps: true });
+
+BucketItemSchema.index({location: '2dsphere'});
 
 //If you do any pre save methods, and you use fat arrow syntax 'this' doesn't refer to the document.
 BucketItemSchema.pre('save', function (next) {

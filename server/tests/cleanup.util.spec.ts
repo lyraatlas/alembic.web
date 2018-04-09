@@ -28,9 +28,6 @@ export class Cleanup {
             await BucketItem.remove({});
             await User.remove({});
             await EmailVerification.remove({});
-            // We don't clear out the order number counter table.  Otherwise we would have to call seed in all of our tests.
-            // I don't want to have to call seed.
-            //await OrderCounter.remove({});
             log.info('Database all clear');
         }
         else {

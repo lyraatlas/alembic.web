@@ -1,9 +1,9 @@
 import { Database } from '../../config/database/database';
 import { App, server } from '../../server-entry';
-import { Bucket, IBucket, ITokenPayload } from '../../models';
+import { Bucket, IBucket, ITokenPayload, ICommentable } from '../../models';
 import { Config } from '../../config/config';
 import { CONST } from "../../constants";
-import { AuthUtil } from "../authentication.util.spec";
+import { AuthUtil } from "../authentication.util";
 import { Cleanup } from "../cleanup.util.spec";
 import { suite, test } from "mocha-typescript";
 import { DatabaseBootstrap } from "../../config/database/database-bootstrap";
@@ -190,6 +190,97 @@ class BucketTest {
         expect(response.status).to.equal(202);
         expect(response.body.likedBy.length).to.equal(1);
         expect(response.body.likedBy[0]).to.equal(AuthUtil.decodedToken.userId);
+        return;
+    }
+
+    @test('it should only add a comment to the item')
+    public async AddComment() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        const testComment = "This is a test comment";
+
+        let addComment = {
+            comment: testComment,
+        };
+
+        let response = await api
+            .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.COMMENTS}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(addComment);
+
+        console.dir(response.body.comments);
+
+        expect(response.status).to.equal(202);
+        expect(response.body.comments.length).to.equal(1);
+        expect(response.body.comments[0].comment).to.equal(testComment);
+        return;
+    }
+
+    @test('it should only edit a comment to the item')
+    public async EditComment() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        const testComment = "This is a test comment";
+
+        let addComment = {
+            comment: testComment,
+        };
+
+        let responseAdd = await api
+            .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.COMMENTS}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(addComment);
+        
+        const createdCommentId = (responseAdd.body as ICommentable).comments[0]._id;
+
+        const editedText = "Updated Text";
+
+        let editComment = {
+            comment: editedText,
+            _id: createdCommentId,
+        };
+
+        let response = await api
+            .patch(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.COMMENTS}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(editComment);
+
+        console.dir(response.body.comments);
+
+        expect(response.status).to.equal(200);
+        expect(response.body.comments.length).to.equal(1);
+        expect(response.body.comments[0].comment).to.equal(editedText);
+        return;
+    }
+
+    @test('it should only delete the comment from the item')
+    public async RemoveComment() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        const testComment = "This is a test comment";
+
+        let addComment = {
+            comment: testComment,
+        };
+
+        let responseAdd = await api
+            .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.COMMENTS}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(addComment);
+
+        const createdCommentId = (responseAdd.body as ICommentable).comments[0]._id;
+
+        let removeRequest = {
+            _id: createdCommentId
+        }
+
+        let response = await api
+        .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.COMMENTS}/${createdId}`)
+        .set("x-access-token", AuthUtil.userToken)
+        .send(removeRequest);
+
+        expect(response.status).to.equal(200);
+        expect(response.body.comments.length).to.equal(0);
         return;
     }
 

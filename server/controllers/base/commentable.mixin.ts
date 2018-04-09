@@ -33,8 +33,8 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
 
                 await NotificationUtility.addNotification(notificationType,item,currentToken);
     
-                // Send the new product which is not a template back.
-                response.status(200).json(item);
+                // Send the added comment back
+                response.status(202).json(item);
     
                 return item;
             } catch (err) { next(err); }
@@ -73,7 +73,7 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
                 let commentableItem = (item as ICommentable);
 
                 commentableItem.comments.map( (item) => {
-                    if(item._id === request.body._id){
+                    if(item._id == request.body._id){
                         item.comment = request.body.comment
                         item.modifiedAt = new Date();
                     }

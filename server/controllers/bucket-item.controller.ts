@@ -12,7 +12,7 @@ import { ImageControllerMixin } from './base/images.controller.mixin';
 
 export class BucketItemControllerBase extends BaseController {
 
-    public defaultPopulationArgument = {};
+    public defaultPopulationArgument = null;
     public rolesRequiringOwnership = [CONST.GUEST_ROLE, CONST.USER_ROLE];
     public isOwnershipRequired = true;
 

@@ -3,7 +3,7 @@ import { App, server } from '../../server-entry';
 import { Bucket, IBucket, ITokenPayload, IUser } from '../../models';
 import { Config } from '../../config/config';
 import { CONST } from "../../constants";
-import { AuthUtil } from "../authentication.util.spec";
+import { AuthUtil } from "../authentication.util";
 import { Cleanup } from "../cleanup.util.spec";
 import { suite, test } from "mocha-typescript";
 import { DatabaseBootstrap } from "../../config/database/database-bootstrap";
