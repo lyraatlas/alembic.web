@@ -59,7 +59,7 @@ export class AuthenticationService extends BaseService<IUser>{
                 } else {
                     reject('There was a problem getting a token back from the server on facebook login.');
                 }
-            }, { scope: 'public_profile,email' });
+            }, { scope: 'email' });
         });
     }
 

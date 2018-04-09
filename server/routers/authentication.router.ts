@@ -50,7 +50,7 @@ export class AuthenticationRouter extends BaseRouter {
         passport.use(new FacebookTokenStrategy({
             clientID: Config.active.get('facebookClientId'),
             clientSecret: Config.active.get('facebookClientSecret'),
-            profileFields: ['id', 'displayName', 'email'] //notice here I'm telling passport what fields I want back from facebook.
+            profileFields: ['id', 'displayName', 'email',] //notice here I'm telling passport what fields I want back from facebook.
         },
             (accessToken, refreshToken, profile, done) => {
                 // here what will come in is a profile.id
