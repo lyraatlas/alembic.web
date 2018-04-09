@@ -3,7 +3,7 @@ import { ROUTES } from '../.././sidebar/sidebar.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { CONST } from '../../../constants';
-import { AuthenticationService, OrderService, SupplierService } from '../../../services/index';
+import { AuthenticationService, SupplierService } from '../../../services/index';
 import { INotification, ISupplier } from '../../../models/index';
 import { NotificationService } from '../../../services/notification.service';
 import * as enums from '../../../enumerations';
@@ -44,7 +44,6 @@ export class NavbarComponent implements OnInit {
         private element: ElementRef,
         private authenticationService: AuthenticationService,
         private notificationService: NotificationService,
-        private orderService: OrderService,
         private supplierService: SupplierService,
     ) {
 

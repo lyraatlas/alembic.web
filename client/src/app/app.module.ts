@@ -15,11 +15,11 @@ import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthGuard } from './guards/index';
-import { AlertService, AuthenticationService, ProductService, SupplierService, OrderService, UserService } from '../services/index';
+import { AlertService, AuthenticationService, ProductService, SupplierService, UserService } from '../services/index';
 import { AlertComponent } from './directives/alert/alert.component';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { ErrorEventBus, ProductImageEventBus, OrderItemEventBus } from '../event-buses/';
+import { ErrorEventBus, ProductImageEventBus } from '../event-buses/';
 import { NotificationService } from '../services/notification.service';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
@@ -54,9 +54,7 @@ import { NavigatorModule } from './shared/navigator/navigator.module';
         ProductService,
         SupplierService,
         ErrorEventBus,
-        OrderService,
         ProductImageEventBus,
-        OrderItemEventBus,
         NotificationService
     ],
     bootstrap:    [ AppComponent ]
