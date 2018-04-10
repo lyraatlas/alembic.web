@@ -6,6 +6,19 @@ export enum AlertType {
     empty = 5
 }
 
+export enum BucketType {
+    country = 1,
+    activity = 2,
+    continent = 3,
+}
+
+export enum NotificationType {
+    BucketLiked = 1,
+    BucketItemLiked = 2,
+    BucketCommentAded = 3,
+    BucketItemCommentAdded = 4,
+}
+
 export enum OrderStatus{
     entered = 1,
     sent = 2,

@@ -69,6 +69,16 @@ export class BaseService<T extends IBaseModel> {
             .catch(this.handleError);
     }
 
+    getMyList<T extends IBaseModel>(query?: Object, skip?: number, limit?:number): Observable<T[]> {
+        const url = this.buildUrl({ query, skip:skip, limit:limit, operation: CONST.ep.MINE });
+        return this.http
+            .get(url, this.requestOptions)
+            .map((res: Response) => {
+                return res.json();
+            })
+            .catch(this.handleError);
+    }
+
     query<T extends IBaseModel>(query: Object, skip?: number, limit?:number): Observable<T[]> {
         const url = this.buildUrl({operation: 'query', skip:skip, limit:limit });
         return this.http

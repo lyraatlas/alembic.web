@@ -10,7 +10,7 @@ export * from './owned.interface';
 export * from './likeable.interface';
 
 // New stuff
-export * from './notifications/notification.interface';
+export * from './notification.interface';
 export * from './owned.interface';
 export * from './likeable.interface';
 export * from './bucket-item.interface';

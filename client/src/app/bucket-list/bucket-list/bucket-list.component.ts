@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { BucketService } from '../../../services/bucket.service';
+import { IBucket } from '../../../models';
 
 @Component({
   selector: 'app-bucket-list',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BucketListComponent implements OnInit {
 
-  constructor() { }
+  constructor(public bucketService: BucketService) { }
 
   ngOnInit() {
+    this.bucketService.getMyList().subscribe((items: Array<IBucket>) =>{
+        
+        console.dir(items);
+    })
   }
 
 }

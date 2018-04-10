@@ -8,3 +8,12 @@ export * from './address.interface';
 export * from './email.interface';
 export * from './phone.interface';
 export * from './notifications/notification.interface';
+export * from './owned.interface';
+export * from './likeable.interface';
+export * from './bucket-item.interface';
+export * from './bucket.interface';
+export * from './user.interface'
+export * from './commentable.interface';
+export * from './has-images.interface';
+export * from './time-stamped.interface';
+export * from './has-location.interface';

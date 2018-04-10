@@ -26,6 +26,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { NavigatorComponent } from './shared/navigator/navigator.component';
 import { NavigatorModule } from './shared/navigator/navigator.module';
 import { BucketSummaryComponent } from './shared/bucket-summary/bucket-summary.component';
+import { BucketService } from '../services/bucket.service';
 
 @NgModule({
     imports:      [
@@ -50,6 +51,7 @@ import { BucketSummaryComponent } from './shared/bucket-summary/bucket-summary.c
     providers: [
         AlertService,
         UserService,
+        BucketService,
         AuthenticationService,
         AuthGuard,
         BaseRequestOptions,

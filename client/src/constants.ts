@@ -28,6 +28,7 @@ export const CONST = {
         INLINE_PASSWORD_CHANGE: '/update-password-inline',
         LIKES: '/likes',
         COMMENTS: '/comments',
+        MINE: '/mine',
         client: {
         },
         common:{

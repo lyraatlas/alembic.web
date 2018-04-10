@@ -1,10 +1,10 @@
-import { mongoose } from '../../config/database/database';
+import { mongoose } from '../config/database/database';
 import { Schema, Model, Document, model } from 'mongoose';
-import { IBaseModel, IBaseModelDoc, IUser, IBucket, IBucketItem } from "../index";
-import * as enums from "../../enumerations";
-import { BijectionEncoder } from '../../utils/bijection-encoder';
+import { IBaseModel, IBaseModelDoc, IUser, IBucket, IBucketItem } from "./index";
+import * as enums from "../enumerations";
+import { BijectionEncoder } from '../utils/bijection-encoder';
 import * as log from 'winston';
-import { IOwned } from '../owned.interface';
+import { IOwned } from './owned.interface';
 
 export interface INotification extends IBaseModel, IOwned {
     type: enums.NotificationType
