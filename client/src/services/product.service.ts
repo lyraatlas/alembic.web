@@ -19,7 +19,7 @@ export class ProductService extends BaseService<IProduct>{
      createActiveProductFromTemplate(productId: string): Observable<IProduct>{
         console.log(`About to create a product from a template`);
         return this.http
-        .post(`${this.serviceConfig.rootApiUrl}/${this.serviceConfig.urlSuffix}${CONST.ep.ACCEPT}/${productId}`, null, this.requestOptions)
+        .post(`${this.serviceConfig.rootApiUrl}/${this.serviceConfig.urlSuffix}/${productId}`, null, this.requestOptions)
         .map((res: Response) => {
             return res.json();
         }).catch(this.handleError);

@@ -1,6 +1,6 @@
 
 import { Model, Document } from "mongoose";
-import { SearchCriteria, IBaseModel, IBaseModelDoc } from "../../models/index";
+import { SearchCriteria, IBaseModel, IBaseModelDoc, IOwner } from "../../models/index";
 import log = require('winston');
 
 export abstract class BaseRepository<IModelDoc extends IBaseModelDoc>{
@@ -31,6 +31,19 @@ export abstract class BaseRepository<IModelDoc extends IBaseModelDoc>{
 
     public async list(searchCriteria: SearchCriteria, populationArgument?: any): Promise<IModelDoc[]> {
         let query = this.mongooseModelInstance.find()
+            .skip(searchCriteria.skip)
+            .limit(searchCriteria.limit)
+            .sort(searchCriteria.sort);
+
+        query = populationArgument ? query.populate(populationArgument) : query;
+
+        return await query;
+    }
+
+    public async listByOwner(searchCriteria: SearchCriteria, owner: IOwner, populationArgument?: any): Promise<IModelDoc[]> {
+        let query = this.mongooseModelInstance.find(
+            { 'owners.ownerId': owner.ownerId, 'owners.ownershipType': owner.ownershipType }
+        )
             .skip(searchCriteria.skip)
             .limit(searchCriteria.limit)
             .sort(searchCriteria.sort);

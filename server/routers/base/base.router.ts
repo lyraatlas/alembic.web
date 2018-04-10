@@ -5,6 +5,7 @@ import { IncomingMessage } from 'http';
 import { BaseController } from '../../controllers/base/base.controller';
 import { Schema, Model, Document } from 'mongoose';
 import { BaseRepository } from "../../repositories";
+import { CONST } from '../../constants';
 
 export abstract class BaseRouter{
         public abstract controller: BaseController;
@@ -19,6 +20,9 @@ export abstract class BaseRouter{
                         // Listing Operation
                         .get(`${this.resource}`, async (request: Request, response: Response, next: NextFunction) => {
                                 await this.controller.list(request, response, next);
+                        })
+                        .get(`${this.resource}${CONST.ep.MINE}`, async (request: Request, response: Response, next: NextFunction) => {
+                            await this.controller.listByOwner(request, response, next);
                         })
                         // Query Operation for sending a post query json object
                         .post(`${this.resource}/query`, async (request: Request, response: Response, next: NextFunction) => {

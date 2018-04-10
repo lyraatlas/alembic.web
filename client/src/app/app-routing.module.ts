@@ -17,16 +17,21 @@ export const AppRoutes: Routes = [
   { 
     path: '', 
     component: AdminLayoutComponent, 
-    children: [{
+    children: [
+      {
         path: 'dashboard',
         loadChildren: './dashboard/dashboard.module#DashboardModule'
       },
       {
         path: 'settings',
         loadChildren: './settings/settings.module#SettingsModule'
-      }
+      },      
+      {
+        path: 'bucket-list',
+        loadChildren: './bucket-list/bucket-list.module#BucketListModule'
+      },
     ],
-     canActivate: [AuthGuard] 
+    canActivate: [AuthGuard] 
   },
   { path: '', 
     component: AuthLayoutComponent, 

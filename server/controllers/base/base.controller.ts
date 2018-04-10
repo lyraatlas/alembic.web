@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, RequestParamHandler, Response, Router } from 'express';
 import { Document, DocumentQuery, Model, Schema } from 'mongoose';
 import * as log from 'winston';
-import { IValidationError, SearchCriteria, IBaseModel, IBaseModelDoc, ITokenPayload, IOwned, ILikeable } from '../../models/';
+import { IValidationError, SearchCriteria, IBaseModel, IBaseModelDoc, ITokenPayload, IOwned, ILikeable, IOwner } from '../../models/';
 import { ObjectId } from 'bson';
 import { BaseRepository } from "../../repositories/";
 import { CONST } from "../../constants";
@@ -28,6 +28,14 @@ export abstract class BaseController {
             ownerId: currentToken.userId,
             ownershipType: OwnershipType.user
         });
+    }
+
+    public getCurrentOwner(request: Request): IOwner{
+        let currentToken: ITokenPayload = request[CONST.REQUEST_TOKEN_LOCATION];
+        return {
+            ownerId: currentToken.userId,
+            ownershipType: OwnershipType.user
+        }
     }
 
     // The child classes implementation of ownership testing.  Allows for child classes to test various data points.
@@ -297,6 +305,18 @@ export abstract class BaseController {
     public async list(request: Request, response: Response, next: NextFunction): Promise<IBaseModelDoc[]> {
         try {
                 let models: IBaseModelDoc[] = await this.repository.list(new SearchCriteria(request, next), this.defaultPopulationArgument);
+
+                response.json(models);
+
+                log.info(`Executed List Operation: ${this.repository.getCollectionName()}, Count: ${models.length}`);
+
+                return models;
+        } catch (err) { next(err) }
+    }
+
+    public async listByOwner(request: Request, response: Response, next: NextFunction): Promise<IBaseModelDoc[]> {
+        try {
+                let models: IBaseModelDoc[] = await this.repository.listByOwner(new SearchCriteria(request, next), this.getCurrentOwner(request), this.defaultPopulationArgument);
 
                 response.json(models);
 

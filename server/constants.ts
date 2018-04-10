@@ -2,6 +2,7 @@ export const CONST = {
     ep: {
         API: '/api',
         V1: '/v1',
+        MINE: '/mine',
         AUTHENTICATE: '/authenticate',
         LOCAL: '/local',
         FACEBOOK: '/facebook',

@@ -25,6 +25,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { NavigatorComponent } from './shared/navigator/navigator.component';
 import { NavigatorModule } from './shared/navigator/navigator.module';
+import { BucketSummaryComponent } from './shared/bucket-summary/bucket-summary.component';
 
 @NgModule({
     imports:      [
@@ -44,6 +45,7 @@ import { NavigatorModule } from './shared/navigator/navigator.module';
         AdminLayoutComponent,
         AuthLayoutComponent,
         AlertComponent,
+        BucketSummaryComponent,
     ],
     providers: [
         AlertService,
