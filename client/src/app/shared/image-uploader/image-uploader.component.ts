@@ -65,7 +65,7 @@ export class ImageUploaderComponent implements OnInit {
         this.productImageEventBus.uploadProductImage();
         this.uploadInput.emit({ type: 'remove', id: output.file.id });
       if(output.file.responseStatus != 200){
-        this.alertService.send({ text: 'There was an error with the image upload', notificationType: enums.AlertType.danger }, true);
+        this.alertService.send({ text: 'There was an error with the image upload', alertType: enums.AlertType.danger }, true);
       }
     }
 
@@ -73,7 +73,7 @@ export class ImageUploaderComponent implements OnInit {
 
   startUpload(): void {
     if(!this.relatedId){
-      this.alertService.send({ text: 'You have to save the product before you can upload images.', notificationType: enums.AlertType.warning }, true);
+      this.alertService.send({ text: 'You have to save the product before you can upload images.', alertType: enums.AlertType.warning }, true);
     }else{
       const event: UploadInput = {
         type: 'uploadAll',

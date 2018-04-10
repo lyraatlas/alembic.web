@@ -17,7 +17,7 @@ export class UserRouter extends BaseRouter {
 
     public getRouter(): Router{
         return super.getRouter()
-        .patch(`${this.resource}${CONST.ep.INLINE_PASSWORD_CHANGE}/:id`, async (request: Request, response: Response, next: NextFunction) => {
+        .patch(`${this.resource}/:id${CONST.ep.INLINE_PASSWORD_CHANGE}`, async (request: Request, response: Response, next: NextFunction) => {
             await this.controller.updatePassword(request, response, next);
         })
     }

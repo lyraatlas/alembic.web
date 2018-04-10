@@ -23,26 +23,31 @@ export class UserController extends BaseController {
     }
 
     public async updatePassword(request: Request, response: Response, next: NextFunction): Promise<IUser> {
-        if (await this.isModificationAllowed(request, response, next)) {
-            // first we need to get the user from the request.
-            const user = await this.repository.getUserForPasswordCheck(this.getId(request));
-
-            // now we have a user, with their password, we're going to validate their password.
-            const passwordResult = await bcrypt.compare(request.body.oldPassword, user.password);
-            if (passwordResult === false) {
-                ApiErrorHandler.sendAuthFailure(response, 401, `Old Password Didn't match.  Password update error.`);
-                return;
+        try{
+            if (await this.isModificationAllowed(request, response, next)) {
+                // first we need to get the user from the request.
+                const emailFilledOutUser = await this.repository.single(this.getId(request));
+    
+                const user = await this.repository.getUserForPasswordCheck(emailFilledOutUser.email);
+    
+                // now we have a user, with their password, we're going to validate their password.
+                const passwordResult = await bcrypt.compare(request.body.oldPassword, user.password);
+                if (passwordResult === false) {
+                    ApiErrorHandler.sendAuthFailure(response, 401, `Old Password Didn't match.  Password update error.`);
+                    return;
+                }
+    
+                // If the user successfully suplied the old password, we're going to update with the new password. 
+                user.password = await bcrypt.hash(request.body.newPassword, CONST.SALT_ROUNDS);
+    
+                await this.repository.updatePassword(user.id, user.password);
+    
+                user.password = '';
+    
+                response.status(202).json(user);
+                return user;
             }
-
-            // If the user successfully suplied the old password, we're going to update with the new password. 
-            user.password = await bcrypt.hash(request.body.newPassword, CONST.SALT_ROUNDS);
-
-            await this.repository.updatePassword(user.id, user.password);
-
-            user.password = '';
-
-            return user;
-        }
+        } catch (err) { next(err); }
     }
 
     public async preCreateHook(User: IUserDoc): Promise<IUserDoc> {

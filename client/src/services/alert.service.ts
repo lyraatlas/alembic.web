@@ -33,6 +33,6 @@ export class AlertService {
 
     throw(error: AppError, showAfterNavigationChange = true){
         this.keepAfterNavigationChange = showAfterNavigationChange;
-        this.messages$.next({ text: error.message, notificationType: AlertType.danger});
+        this.messages$.next({ text: `${error.message} : ${error.description}`, alertType: AlertType.danger});
     }
 }

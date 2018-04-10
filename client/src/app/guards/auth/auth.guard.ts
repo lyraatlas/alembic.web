@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
                 return true;
             }
 
-            this.alertService.send({text: "Token expired", notificationType: AlertType.danger}, true);
+            this.alertService.send({text: "Token expired", alertType: AlertType.danger}, true);
             this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url }});
             return false;
         }

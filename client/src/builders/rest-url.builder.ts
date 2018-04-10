@@ -103,7 +103,6 @@ export class RestUrlBuilder {
         }
 
         if (this.operation !== null) {
-            urlParts.push('/');
             urlParts.push(this.operation);
         }
 

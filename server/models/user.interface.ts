@@ -47,6 +47,11 @@ export interface IUserDoc extends IUser, IBaseModelDoc {
 }
 
 const UserSchema = new Schema({
+    owners: [{
+        _id: { auto: false },
+        ownerId:  { type: Schema.Types.ObjectId },
+        ownershipType: { type: Number, enum: [enums.EnumHelper.getValuesFromEnum(enums.OwnershipType)] },
+    }],
     firstName: {type: String, required: false},
     lastName: {type: String, required: false},
     email: {type:String},

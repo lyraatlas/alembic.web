@@ -3,7 +3,7 @@ import * as express from 'express';
 import mongoose = require('mongoose');
 import { Schema, Model, Document } from 'mongoose';
 import { Config } from '../config/config';
-import { ITokenPayload, IBaseModelDoc, IUserDoc, User, IEmailVerification, SearchCriteria, IUser } from '../models/';
+import { ITokenPayload, IBaseModelDoc, IUserDoc, User, IEmailVerification, SearchCriteria, IUser, IOwned, IOwner } from '../models/';
 import { CONST } from "../constants";
 import { ApiErrorHandler } from "../api-error-handler";
 import * as log from 'winston';
@@ -11,6 +11,7 @@ import { BaseController } from './base/base.controller';
 import { BaseRepository, UserRepository, EmailVerificationRepository } from '../repositories/index';
 import * as moment from 'moment';
 import * as enums from '../enumerations';
+
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -69,6 +70,17 @@ export class AuthenticationController extends BaseController{
             const userDoc = this.repository.createFromInterface(newUser);
 
             const savedUser = await this.repository.create(userDoc);
+
+            savedUser.owners = new Array<IOwner>();
+
+            // You have to add yourself as an owner, otherwise you can't make changes to your profile. 
+            savedUser.owners.push({
+                ownerId: savedUser.id,
+                ownershipType: enums.OwnershipType.user
+            });
+
+            await this.repository.save(savedUser);
+
             return done(null, savedUser);
         }
     }
@@ -129,12 +141,15 @@ export class AuthenticationController extends BaseController{
             user = await user.save();
 
             //Now that we have an id, we're going to update the user again, with their ownership of themselves.
-            user.owners = [{
-                ownerId: user._id,
+            user.owners = new Array<IOwner>();
+
+            // You have to add yourself as an owner, otherwise you can't make changes to your profile. 
+            user.owners.push({
+                ownerId: user.id,
                 ownershipType: enums.OwnershipType.user
-              }];
-            
-            user = await user.save();
+            });
+
+            await this.repository.update(user.id,user);
 
             var emailVerifyRepo = new EmailVerificationRepository();
 

@@ -30,9 +30,9 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group" [ngClass]="{ 'has-error': lastName.invalid && f.submitted}">
+                                <div class="form-group" [ngClass]="{ 'form-error': lastName.invalid && f.submitted}">
                                     <label class="col-sm-2 control-label">Last Name</label>
-                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (lastName.invalid && f.submitted) }">
+                                    <div class="col-sm-4">
                                         <input type="text" name="lastName" placeholder="Last Name" #lastName="ngModel" required class="form-control" [(ngModel)]="user.lastName">
                                         <small [hidden]="lastName.valid || (lastName.pristine && !f.submitted)" class="text-warning">
                                             Last Name is required.
@@ -40,9 +40,9 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group" [ngClass]="{ 'has-error': email.invalid && f.submitted}">
+                                <div class="form-group" [ngClass]="{ 'form-error': email.invalid && f.submitted}">
                                     <label class="col-sm-2 control-label">Email</label>
-                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (email.invalid && f.submitted) }">
+                                    <div class="col-sm-4" >
                                         <input type="email" name="email" placeholder="Email" #email="ngModel" required class="form-control" [(ngModel)]="user.email"
                                             pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$">
                                         <small [hidden]="email.valid || (email.pristine && !f.submitted)" class="text-warning">
@@ -53,8 +53,8 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Email Verified?</label>
-                                    <label [hidden]="!user.isEmailVerified">You have verified your email.</label>
                                     <div class="col-sm-4 mt8">
+                                        <label [hidden]="!user.isEmailVerified">You have verified your email.</label>
                                         <label [hidden]="user.isEmailVerified">You haven't verified your email yet. Click here to send another verification email.</label>
                                     </div>
                                 </div>
@@ -66,15 +66,16 @@
                                         </div>   
                                 </div>
                             </fieldset>
-
+                        </form>
+                        <form #passwordForm="ngForm" novalidate (ngSubmit)="updateUserPassword(passwordForm.valid);" class="form-horizontal">
                             <fieldset>
                                 <legend>Password</legend>
 
-                                <div class="form-group" [ngClass]="{ 'has-error': passwordOld.invalid && f.submitted}">
+                                <div class="form-group" [ngClass]="{ 'form-error': passwordOld.invalid && passwordForm.submitted && !passwordForm.pristine}">
                                     <label class="col-sm-2 control-label">Old Password</label>
-                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (passwordOld.invalid && f.submitted) }">
+                                    <div class="col-sm-4" >
                                         <input 
-                                            type="text" 
+                                            type="password" 
                                             name="passwordOld" 
                                             placeholder="Old Password" 
                                             #passwordOld="ngModel" 
@@ -82,40 +83,39 @@
                                             class="form-control" 
                                             [(ngModel)]="user.password"
                                             >
-                                        <small [hidden]="passwordOld.valid || (passwordOld.pristine && !f.submitted)" class="text-warning">
+                                        <small [hidden]="passwordOld.valid || (passwordOld.pristine)" class="text-warning">
                                             Please enter a valid existing password.
                                         </small>
                                     </div>
                                 </div>
 
-                                 <div class="form-group" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) || showPasswordWarning }">
+                                 <div class="form-group" [ngClass]="{ 'form-error': (passwordNew.invalid && passwordForm.submitted && !passwordForm.pristine) || showPasswordWarning }">
                                     <label class="col-sm-2 control-label">New Password</label>    
-                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (passwordNew.invalid && f.submitted) }">
+                                    <div class="col-sm-4" >
                                         <input  type="password" 
                                                 name="passwordNew" 
                                                 placeholder="Password"
                                                 #passwordNew="ngModel" 
                                                 class="form-control"
+                                                required
                                                 [(ngModel)]="passwordNewValue"
                                                 >
-                                        <small [hidden]="passwordNew.valid || (passwordNew.pristine && !f.submitted)" class="text-warning">
-                                            Password is Required.
+                                        <small [hidden]="passwordNew.valid || (passwordNew.pristine)" class="text-warning">
+                                            New Password is Required.
                                         </small>
                                     </div>
                                 </div>
-                                <div class="form-group" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) || showPasswordWarning }">
-                                    <label class="col-sm-2 control-label">Confirm Password</label>   
-                                    <div class="col-sm-4" [ngClass]="{ 'form-error': (password2Form.invalid && f.submitted) }">
+                                <div class="form-group" [ngClass]="{ 'form-error': (password2.invalid && passwordForm.submitted && !passwordForm.pristine) || showPasswordWarning }">
+                                    <label class="col-sm-2 control-label">Confirm Password</label>
+                                    <div class="col-sm-4" >
                                         <input  type="password" 
                                                 name="password2" 
+                                                required
                                                 placeholder="Confirm Password"
                                                 [(ngModel)]="password2Value"
-                                                #password2Form="ngModel"
+                                                #password2="ngModel"
                                                 class="form-control"
                                                 >
-                                        <small [hidden]="password2Form.valid || (password2Form.pristine && !f.submitted)" class="text-warning">
-                                            Password Confirmation is required, and should match the first password.
-                                        </small>
                                         <small [hidden]="!showPasswordWarning" class="text-warning">
                                             {{passwordWarningMessage}}
                                         </small>

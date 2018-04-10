@@ -63,7 +63,7 @@ export class RegisterComponent implements OnInit {
                     this.router.navigate(['dashboard/home']);
                 },
                 error => {
-                    this.alertService.send({text : error, notificationType : AlertType.danger}, false);
+                    this.alertService.send({text : error, alertType : AlertType.danger}, false);
                     this.loading = false;
                 }); 
         }
@@ -84,7 +84,7 @@ export class RegisterComponent implements OnInit {
                         });
                 },
                 error => {
-                    this.alertService.send({text : error, notificationType : AlertType.danger}, false);
+                    this.alertService.send({text : error, alertType : AlertType.danger}, false);
                     this.loading = false;
                 }); 
         }
@@ -125,7 +125,7 @@ export class RegisterComponent implements OnInit {
                 this.router.navigate(['dashboard/home']);
             })
             .catch((error) =>{
-                this.alertService.send({text : error, notificationType : AlertType.danger}, false);
+                this.alertService.send({text : error, alertType : AlertType.danger}, false);
                 this.loading = false;
             });
     }

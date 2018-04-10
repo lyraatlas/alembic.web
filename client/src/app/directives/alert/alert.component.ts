@@ -23,7 +23,7 @@ export class AlertComponent {
                     icon: this.calculateIcon(message),
                     message: message.text
                 }, {
-                        type: AlertType[message.notificationType],
+                        type: AlertType[message.alertType],
                         delay: this.calculateTimerDelay(message),
                         timer: this.calculateTimerDelay(message),
                         placement: {
@@ -36,8 +36,8 @@ export class AlertComponent {
     }
 
     calculateTimerDelay(message: IMessage): number{
-        if (message && message.notificationType) {
-            switch (+message.notificationType) {
+        if (message && message.alertType) {
+            switch (+message.alertType) {
                 case AlertType.danger:
                     return 5000;
                 case AlertType.info:
@@ -53,8 +53,8 @@ export class AlertComponent {
     }
 
     calculateIcon(message: IMessage) {
-        if (message && message.notificationType) {
-            switch (+message.notificationType) {
+        if (message && message.alertType) {
+            switch (+message.alertType) {
                 case AlertType.danger:
                     return "ti-alert";
                 case AlertType.info:
