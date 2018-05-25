@@ -5,4 +5,5 @@ export interface IUser{
     firstName?: string,
     lastName?   : string,
     isEmailVerified?: boolean,
+    facebookAuth?: object,
 }

@@ -18,6 +18,7 @@ declare const FB: any;
 export class UserSettingsComponent implements OnInit {
     public user: IUser  = {};
     public loading = false;
+    public isOath = false;
     public passwordNewValue: string;
     public password2Value: string;
     public existingEmail: string;
@@ -25,7 +26,6 @@ export class UserSettingsComponent implements OnInit {
     public passwordWarningMessage: string = '';
 
     @ViewChild('passwordForm') passwordForm: NgForm;
-
 
     constructor(
         private route: ActivatedRoute,
@@ -42,8 +42,10 @@ export class UserSettingsComponent implements OnInit {
         // go grab this user.
         const decodedToken: ITokenPayload = JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION))  as ITokenPayload;
         this.userService.get<IUser>(decodedToken.userId).subscribe(user => {
+            console.dir(user);
             this.user = user;
             this.existingEmail = user.email;
+            this.isOath = user.facebookAuth ? true : false;
         }, error => {
             this.errorEventBus.throw(error);
         });
