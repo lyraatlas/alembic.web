@@ -17,11 +17,10 @@ export class AuthenticationRouter extends BaseRouter {
 
     public router: Router = Router();
     public controller = new AuthenticationController();
-    public resource: string;
+    public resource: string = CONST.ep.AUTHENTICATE;
 
     public constructor() {
         super();
-        this.resource = CONST.ep.AUTHENTICATE;
 
         this.initializeInstagramStrategy();
         this.initializeFacebookStrategy();

@@ -9,12 +9,12 @@ import { IBucket } from '../../../models';
 })
 export class BucketListComponent implements OnInit {
 
-    public bucketItems: Array<IBucket>;
+    public buckets: Array<IBucket>;
     constructor(public bucketService: BucketService) { }
 
     ngOnInit() {
         this.bucketService.getMyList().subscribe((items: Array<IBucket>) => {
-            this.bucketItems = items;
+            this.buckets = items;
             console.dir(items);
         })
     }

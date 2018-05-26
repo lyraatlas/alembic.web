@@ -119,7 +119,8 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
                 type: type,
                 height: sharpInfo.height,
                 width: sharpInfo.width,
-                url: `${Config.active.get('AlembicS3BucketRootUrl')}${Config.active.get('AlembicS3Bucket')}/${AmazonS3Service.variationName(type, file)}`,
+                // I want to end up with : dev-cdn.lyraatlas.com/filename.jpg
+                url: `${Config.active.get('CDNLocation')}${'.lyraatlas.com'}/${AmazonS3Service.variationName(type, file)}`,
                 key: AmazonS3Service.variationName(type, file)
             });
             return image;

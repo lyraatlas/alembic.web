@@ -122,6 +122,13 @@ public static convictSchema: convict.Config = convict({
       env: 'ALEMBIC_S3_BUCKET_ROOT_URL',
       sensitive: true
     },
+    CDNLocation:{
+        doc:'This is the prefix for the domain where we have our cdn',
+        format: String,
+        default: 'dev-cdn',
+        env: 'ALEMBIC_CDN_LOCATION',
+        sensitive: false
+      },
     clientDistFolder:{
       doc:'The client dist folder needs to be set, we build the docker image with all the client folders built.',
       format: String,

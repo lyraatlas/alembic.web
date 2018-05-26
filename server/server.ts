@@ -233,7 +233,7 @@ class Application {
         this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE), new routers.UserRouter().getRouter());
         this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE), new routers.NotificationRouter().getRouter());
 
-        this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKETS}${CONST.ep.IMAGES}/:id`,
+        this.express.use(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.IMAGES}/:id`,
             Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE),
             new MulterConfiguration().uploader.array('file'),
             async (req, res, next) => {
@@ -241,7 +241,7 @@ class Application {
             }
         );
 
-        this.express.use(CONST.ep.API + CONST.ep.V1 + `${CONST.ep.BUCKET_ITEMS}${CONST.ep.IMAGES}/:id`,
+        this.express.use(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}${CONST.ep.IMAGES}/:id`,
             Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE),
             new MulterConfiguration().uploader.array('file'),
             async (req, res, next) => {

@@ -1,5 +1,6 @@
 {
     "clientDistFolder": "integration",
     "AlembicS3Bucket": "integration-alembic-app-images",
-    "APILocation": "http://localhost:9000"
+    "APILocation": "http://localhost:9000",
+    "CDNLocation": "int-cdn"
 }
