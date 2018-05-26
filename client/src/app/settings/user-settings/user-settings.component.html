@@ -67,7 +67,7 @@
                                 </div>
                             </fieldset>
                         </form>
-                        <form #passwordForm="ngForm" novalidate (ngSubmit)="updateUserPassword(passwordForm.valid);" class="form-horizontal">
+                        <form *ngIf="!isOath" #passwordForm="ngForm" novalidate (ngSubmit)="updateUserPassword(passwordForm.valid);" class="form-horizontal">
                             <fieldset>
                                 <legend>Password</legend>
 
