@@ -3,5 +3,9 @@
 </p>
 <span class="" style="font-size:20px;" *ngFor="let bucket of buckets">
     {{bucket.name}}
-    <img src="//{{bucket.images[1].variations[0].url}}" />
+    <ul>
+        <li *ngFor="let image of bucket.images">
+            <img src="//{{image.variations[0].url}}" />
+        </li>
+    </ul>
 </span>

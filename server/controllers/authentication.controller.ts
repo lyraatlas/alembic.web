@@ -34,10 +34,14 @@ export class AuthenticationController extends BaseController{
 
     public async authenticateLocal(request: Request, response: Response, next: NextFunction): Promise<any> {
         try {
-            const user = await this.repository.getUserForPasswordCheck(request.body.email);
+            const user :IUserDoc = await this.repository.getUserForPasswordCheck(request.body.email);
+
+            if(!user.isActive){
+                ApiErrorHandler.sendAuthFailure(response, 401, 'User is no longer active.');
+            }
             const passwordResult = await bcrypt.compare(request.body.password, user.password);
             if (passwordResult === false) {
-                ApiErrorHandler.sendAuthFailure(response, 401, 'Password does not match');
+                ApiErrorHandler.sendAuthFailure(response, 401, 'Authentication Failed');
                 return;
             }
             request.user = user;
