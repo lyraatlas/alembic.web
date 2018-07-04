@@ -1,11 +1,35 @@
-<p>
-  bucket-list works!
-</p>
-<span class="" style="font-size:20px;" *ngFor="let bucket of buckets">
-    {{bucket.name}}
-    <ul>
-        <li *ngFor="let image of bucket.images">
-            <img src="//{{image.variations[0].url}}" />
-        </li>
-    </ul>
-</span>
+<div class="content">
+    <div class="container">
+        <div class="row card-group" style="min-height:300px; display: flex; justify-content: center;">
+            <div class="" *ngFor="let bucket of buckets">
+                    <div class="card col-md-3 col-sm-6" style="width: 18rem; margin:10px 10px 10px 10px">
+                            <img *ngIf="bucket.images.length > 0 && bucket.images[0].variations" class="card-img-top" src="//{{bucket.images[0].variations[0].url}}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{bucket.name}}</h5>
+                                <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
+                                <p class="card-text">{{bucket.description}}</p>
+                                <a [routerLink]="['/bucket-list/detail', bucket._id]">Edit</a>
+                                <a (click)="DeleteBucket(bucket)">Delete</a>
+                            </div>
+                        </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-container">
+            <a class="btn btn-modal" modal-link="0">Show Modal</a>
+            <div class="foundry_modal">
+                <h2>Modal Title</h2>
+                <hr>
+                <p>
+                    ...
+                </p>
+            </div>
+        </div>
+
+        <div class="foundry_modal text-center image-bg overlay" data-time-delay="0">
+                <h2>Hey I'm a modal title</h2>
+                <p>
+                    Yo, this is a modal paragraph.
+                </p>
+            </div>

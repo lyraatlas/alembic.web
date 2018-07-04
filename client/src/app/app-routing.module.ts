@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
+import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/index';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
-import { AuthGuard } from './guards/index';
+
 
 export const AppRoutes: Routes = [
   // This is the default route, which if a user is logged in and goes to 'home' which is basically an emtpy

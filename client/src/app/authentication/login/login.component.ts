@@ -1,10 +1,8 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AuthenticationService } from '../../../services';
-import { AlertService } from '../../../services';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertType } from '../../../enumerations';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { IUser } from '../../../models/index';
+import { AlertService, AuthenticationService } from '../../../services';
 declare var $: any;
 declare const FB:any;
 

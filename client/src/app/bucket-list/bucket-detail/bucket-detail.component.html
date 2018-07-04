@@ -1,3 +1,6 @@
-<p>
-  bucket-detail works!
-</p>
+<div *ngIf="bucket"> <!--  only show if there's actually a bucket -->
+    <p>
+    bucket-detail works!
+            {{bucket.name}}
+    </p>
+</div>

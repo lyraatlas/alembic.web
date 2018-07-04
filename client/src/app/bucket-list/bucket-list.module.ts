@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BucketListComponent } from './bucket-list/bucket-list.component';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DataTablesModule } from 'angular-datatables';
-import { ImageUploaderModule } from '../shared/image-uploader/image-uploader.module'
-import { NgUploaderModule } from 'ngx-uploader';
-import { Ng2CompleterModule } from "ng2-completer";
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { BucketListRoutes } from './bucket-list.routing';
+import { DataTablesModule } from 'angular-datatables';
+import { Ng2CompleterModule } from "ng2-completer";
+import { NgUploaderModule } from 'ngx-uploader';
+import { ImageUploaderModule } from '../shared/image-uploader/image-uploader.module';
 import { BucketDetailComponent } from './bucket-detail/bucket-detail.component';
+import { BucketListRoutes } from './bucket-list.routing';
+import { BucketListComponent } from './bucket-list/bucket-list.component';
 
 @NgModule({
     imports: [
@@ -20,7 +20,7 @@ import { BucketDetailComponent } from './bucket-detail/bucket-detail.component';
         ImageUploaderModule,
         NgUploaderModule,
         Ng2CompleterModule,
-        NgxDatatableModule
+        NgxDatatableModule,
     ],
     declarations: [
         BucketListComponent,

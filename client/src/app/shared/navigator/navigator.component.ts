@@ -1,7 +1,7 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { AuthenticationService } from '../../../services';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CONST } from '../../../constants';
+import { AuthenticationService } from '../../../services';
 declare var $: any;
 @Component({
   selector: 'navigator-cmp',
@@ -66,7 +66,9 @@ export class NavigatorComponent implements OnInit, AfterViewInit {
 
     this.mr_nav = $('.nav-container nav:first') || 0;
 
-    if (window.pageYOffset <= 0) {
+    // I'm keeping this at 150 for now.  If the menu is a specific height then there's a scolling bug where it's
+    // weird and jittery when the page is just slightly larger than the window.  When there's a very small amount of scrolling to do.
+    if (window.pageYOffset <= 150) {
       if (this.mr_navFixed) {
         this.mr_navFixed = false;
         this.mr_nav.removeClass('fixed');
