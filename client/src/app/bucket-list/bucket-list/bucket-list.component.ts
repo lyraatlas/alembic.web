@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ErrorEventBus } from '../../../event-buses';
 import { IBucket } from '../../../models';
 import { BucketService } from '../../../services/bucket.service';
+import { ModalInitializer } from '../../shared/utilities/ModalInitializer';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { BucketService } from '../../../services/bucket.service';
 export class BucketListComponent implements OnInit {
 
     public buckets: Array<IBucket>;
-    constructor(public bucketService: BucketService, private errorEventBus: ErrorEventBus,) { }
+    constructor(public bucketService: BucketService, private errorEventBus: ErrorEventBus) { }
 
     ngOnInit() {
         this.bucketService.getMyList().subscribe((items: Array<IBucket>) => {
@@ -22,8 +23,6 @@ export class BucketListComponent implements OnInit {
             this.errorEventBus.throw(error);
         });
 
-        this.initModals();
+        ModalInitializer.InitializeModals();
     }
-
-    public initModals(){}
 }

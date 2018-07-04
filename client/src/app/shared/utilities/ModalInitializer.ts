@@ -1,3 +1,4 @@
+
 export class ModalInitializer{
 
     public static InitializeModals(){
@@ -12,12 +13,11 @@ export class ModalInitializer{
     }
 
     jQuery('.foundry_modal').click(function(){
-        console.log('Added a click handler to the foundry modal')
         jQuery(this).addClass('modal-acknowledged');
     });
 
     jQuery(document).on('wheel mousewheel scroll', '.foundry_modal, .modal-screen', function(evt){
-        $(this).get(0).scrollTop += (evt.originalEvent.deltaY); 
+        $(this).get(0).scrollTop += (evt.originalEvent["deltaY"]); 
         return false;
     });
     
@@ -27,7 +27,6 @@ export class ModalInitializer{
         	var iframe = jQuery(this).find('iframe');
         	iframe.attr('data-src',iframe.attr('src'));
             iframe.attr('src', '');
-
         }
         jQuery(this).find('.btn-modal').attr('modal-link', index);
 
@@ -38,18 +37,9 @@ export class ModalInitializer{
     });
     
     $('.btn-modal').unbind('click').click(function(){
-    	var linkedModal = jQuery('.foundry_modal[modal-link="' + jQuery(this).attr('modal-link') + '"]'),
-            autoplayMsg = "";
+    	var linkedModal = jQuery('.foundry_modal[modal-link="' + jQuery(this).attr('modal-link') + '"]');
         jQuery('.modal-screen').toggleClass('reveal-modal');
-        if(linkedModal.find('iframe').length){
-            if(linkedModal.find('iframe').attr('data-autoplay') === '1'){
-                var autoplayMsg = '&autoplay=1'
-            }
-        	linkedModal.find('iframe').attr('src', (linkedModal.find('iframe').attr('data-src') + autoplayMsg));
-        }
-        if(linkedModal.find('video').length){
-            linkedModal.find('video').get(0).play();
-        }
+
         linkedModal.toggleClass('reveal-modal');
         return false; 
     });
@@ -61,7 +51,7 @@ export class ModalInitializer{
 		var delay = modal.attr('data-time-delay');
 		modal.prepend($('<i class="ti-close close-modal">'));
     	if(typeof modal.attr('data-cookie') != "undefined"){
-        	if(!mr_cookies.hasItem(modal.attr('data-cookie'))){
+        	if(!localStorage.hasItem(modal.attr('data-cookie'))){
                 setTimeout(function(){
         			modal.addClass('reveal-modal');
         			$('.modal-screen').addClass('reveal-modal');
@@ -85,7 +75,7 @@ export class ModalInitializer{
             $(document).on('mouseleave', exitSelector, function(){
                 if(!$('body .reveal-modal').length){
                     if(typeof modal.attr('data-cookie') !== typeof undefined){
-                        if(!mr_cookies.hasItem(modal.attr('data-cookie'))){
+                        if(!localStorage.hasItem(modal.attr('data-cookie'))){
                             modal.addClass('reveal-modal');
                             $('.modal-screen').addClass('reveal-modal');
                         }
@@ -104,7 +94,7 @@ export class ModalInitializer{
         var modal = $(this);
         var delay = modal.attr('data-hide-after');
         if(typeof modal.attr('data-cookie') != "undefined"){
-            if(!mr_cookies.hasItem(modal.attr('data-cookie'))){
+            if(!localStorage.hasItem(modal.attr('data-cookie'))){
                 setTimeout(function(){
                 if(!modal.hasClass('modal-acknowledged')){
                     modal.removeClass('reveal-modal');
@@ -126,7 +116,7 @@ export class ModalInitializer{
     	var modal = jQuery(this).closest('.foundry_modal');
         modal.toggleClass('reveal-modal');
         if(typeof modal.attr('data-cookie') !== "undefined"){
-            mr_cookies.setItem(modal.attr('data-cookie'), "true", Infinity);
+            localStorage.setItem(modal.attr('data-cookie'), "true");
         }
     	if(modal.find('iframe').length){
             modal.find('iframe').attr('src', '');
@@ -162,7 +152,7 @@ export class ModalInitializer{
 
         if(typeof modal.attr('data-cookie') != "undefined"){
            
-            if(!mr_cookies.hasItem(modal.attr('data-cookie'))){
+            if(!localStorage.hasItem(modal.attr('data-cookie'))){
             	setTimeout(function(){
             		modal.addClass('reveal-modal');
             	},1000);
@@ -177,21 +167,11 @@ export class ModalInitializer{
     jQuery('.modal-strip .close-modal').click(function(){
         var modal = jQuery(this).closest('.modal-strip');
         if(typeof modal.attr('data-cookie') != "undefined"){
-            mr_cookies.setItem(modal.attr('data-cookie'), "true", Infinity);
+            localStorage.setItem(modal.attr('data-cookie'), "true");
         }
     	jQuery(this).closest('.modal-strip').removeClass('reveal-modal');
     	return false;
     });
 
-
-    // Video Modals
-
-    jQuery('.close-iframe').click(function() {
-        jQuery(this).closest('.modal-video').removeClass('reveal-modal');
-        jQuery(this).siblings('iframe').attr('src', '');
-        jQuery(this).siblings('video').get(0).pause();
-    });
-
-    }
     }
 }
