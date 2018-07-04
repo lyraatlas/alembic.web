@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseRequestOptions, HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ErrorEventBus, ProductImageEventBus } from '../event-buses/';
 import { BucketService } from '../services/bucket.service';
 import { AlertService, AuthenticationService, ProductService, SupplierService, UserService } from '../services/index';
@@ -34,6 +35,7 @@ import { SidebarModule } from './sidebar/sidebar.module';
         FooterModule,
         AuthenticationModule,
         DashboardModule,
+        NgxSmartModalModule.forRoot()
     ],
     declarations: [
         AppComponent,
@@ -53,7 +55,8 @@ import { SidebarModule } from './sidebar/sidebar.module';
         SupplierService,
         ErrorEventBus,
         ProductImageEventBus,
-        NotificationService
+        NotificationService,
+        NgxSmartModalService
     ],
     bootstrap:    [ AppComponent ]
 })

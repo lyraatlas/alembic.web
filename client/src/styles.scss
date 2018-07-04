@@ -2,8 +2,26 @@
 @import '../node_modules/@swimlane/ngx-datatable/release/index.css';
 @import '../node_modules/@swimlane/ngx-datatable/release/assets/icons.css';
 @import '../node_modules/@swimlane/ngx-datatable/release/themes/bootstrap.css';
+
 @import './assets/scss/global.scss';
 
 .ngx-datatable.bootstrap .datatable-footer .datatable-pager a{
     background-color: #424242;
 }
+
+// Color of overlay background
+$color-overlay: rgba(0, 0, 0, .5) !default;
+
+// Position of dialog
+$dialog-position-top: 20% !default;
+
+// Transition time
+// !! The same as the hideDelay variable defined in ngx-smart-modal.component.ts
+$transition-duration: 100ms !default;
+
+// Transition effect
+// linear | ease | ease-in | ease-out | ease-in-out
+$transition-timing-function: ease-in-out !default;
+
+// We have to do the import after to override the styles.
+@import "../node_modules/ngx-smart-modal/ngx-smart-modal";

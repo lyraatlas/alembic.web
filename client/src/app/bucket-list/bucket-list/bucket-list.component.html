@@ -1,35 +1,66 @@
 <div class="content">
     <div class="container">
         <div class="row card-group" style="min-height:300px; display: flex; justify-content: center;">
-            <div class="" *ngFor="let bucket of buckets">
-                    <div class="card col-md-3 col-sm-6" style="width: 18rem; margin:10px 10px 10px 10px">
-                            <img *ngIf="bucket.images.length > 0 && bucket.images[0].variations" class="card-img-top" src="//{{bucket.images[0].variations[0].url}}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{bucket.name}}</h5>
-                                <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
-                                <p class="card-text">{{bucket.description}}</p>
-                                <a [routerLink]="['/bucket-list/detail', bucket._id]">Edit</a>
-                                <a (click)="DeleteBucket(bucket)">Delete</a>
-                            </div>
+            <div class="row" *ngFor="let bucket of buckets">
+
+                <div class="card col-md-3 col-sm-6" style="width: 18rem; margin:10px 10px 10px 10px">
+                    <a [routerLink]="['/bucket-list/detail', bucket._id]">
+                        <img *ngIf="bucket.images.length > 0 && bucket.images[0].variations" class="card-img-top" src="//{{bucket.images[0].variations[0].url}}">
+                        <div class="card-body">
+                            <h3 class="card-title">{{bucket.name}}</h3>
+                            <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
+                            <h5 class="card-text">{{bucket.description}}</h5>
                         </div>
+                    </a>
+                    <div class="row" style="padding-bottom: 10px;">
+                            <a class="col-md-offset-7 col-md-2" (click)="quickEdit(bucket)" href="javascript:void(0)">
+                                <i class="ti-pencil" style="padding: 5px; font-size:30px; border-style: solid; border-color:#333347; border-radius: 50%; border-width: 1px;"></i>
+                            </a>
+                            <!-- <a class="col-sm-6 remove-item" (click)="DeleteBucket(bucket)" href="javascript:void(0)">
+                                <i class="ti-close"></i>
+                            </a> -->
+                        </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="modal-container">
-            <a class="btn btn-modal" modal-link="0">Show Modal</a>
-            <div class="foundry_modal">
-                <h2>Modal Title</h2>
-                <hr>
-                <p>
-                    ...
-                </p>
-            </div>
-        </div>
+    <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal">
+        <h3>Edit Your Bucket</h3>
+        <hr />
+        <form #f="ngForm" novalidate (ngSubmit)="saveBucket(f.valid)" class="form-horizontal" *ngIf="quickEditBucket">
+            <fieldset>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Name</label>
 
-        <div class="foundry_modal text-center image-bg overlay" data-time-delay="0">
-                <h2>Hey I'm a modal title</h2>
-                <p>
-                    Yo, this is a modal paragraph.
-                </p>
-            </div>
+                    <div class="col-sm-8" [ngClass]="{ 'form-error': (!name.valid && f.submitted) }">
+                        <input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="quickEditBucket.name">
+                        <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
+                            You have to name your buckets.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Description</label>
+
+                    <div class="col-sm-8" [ngClass]="{ 'form-error': (!description.valid && f.submitted) }">
+                        <textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="quickEditBucket.description"></textarea>
+                        <small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
+                            A little description is always nice.
+                        </small>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group" style="display: flex; justify-content: center;">
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-fill col-sm-6" (click)="saveBucket(f.valid)">Save Changes</button>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-fill col-sm-6" (click)="closeModal()">Cancel</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+    </ngx-smart-modal>
