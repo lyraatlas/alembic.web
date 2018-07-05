@@ -1,25 +1,22 @@
 <div class="content">
     <div class="container">
         <div class="row card-group" style="min-height:300px; display: flex; justify-content: center;">
-            <div class="row" *ngFor="let bucket of buckets">
-
-                <div class="card col-md-3 col-sm-6" style="width: 18rem; margin:10px 10px 10px 10px">
-                    <a [routerLink]="['/bucket-list/detail', bucket._id]">
-                        <img *ngIf="bucket.images.length > 0 && bucket.images[0].variations" class="card-img-top" src="//{{bucket.images[0].variations[0].url}}">
-                        <div class="card-body">
-                            <h3 class="card-title">{{bucket.name}}</h3>
-                            <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
-                            <h5 class="card-text">{{bucket.description}}</h5>
-                        </div>
+            <div class="card col" *ngFor="let bucket of buckets">
+                <a [routerLink]="['/bucket-list/detail', bucket._id]">
+                    <img *ngIf="bucket.images.length > 0 && bucket.images[0].variations" class="card-img-top" src="//{{bucket.images[0].variations[0].url}}">
+                    <div class="card-body">
+                        <h3 class="card-title">{{bucket.name}}</h3>
+                        <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
+                        <h5 class="card-text">{{bucket.description}}</h5>
+                    </div>
+                </a>
+                <div style="padding-bottom: 10px;">
+                    <a class="col-md-offset-7 col-md-2" (click)="quickEdit(bucket)" href="javascript:void(0)">
+                        <i class="ti-pencil" style="padding: 5px; font-size:30px; border-style: solid; border-color:#333347; border-radius: 50%; border-width: 1px;"></i>
                     </a>
-                    <div class="row" style="padding-bottom: 10px;">
-                            <a class="col-md-offset-7 col-md-2" (click)="quickEdit(bucket)" href="javascript:void(0)">
-                                <i class="ti-pencil" style="padding: 5px; font-size:30px; border-style: solid; border-color:#333347; border-radius: 50%; border-width: 1px;"></i>
-                            </a>
-                            <!-- <a class="col-sm-6 remove-item" (click)="DeleteBucket(bucket)" href="javascript:void(0)">
-                                <i class="ti-close"></i>
-                            </a> -->
-                        </div>
+                    <!-- <a class="col-sm-6 remove-item" (click)="DeleteBucket(bucket)" href="javascript:void(0)">
+                                    <i class="ti-close"></i>
+                                </a> -->
                 </div>
             </div>
         </div>
