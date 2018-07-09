@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { faComment } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faHeart, faPen, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { CONST } from '../../../constants';
 import { AlertType } from '../../../enumerations';
 import { ErrorEventBus } from '../../../event-buses';
-import { IBucket } from '../../../models';
-import { AlertService } from '../../../services';
+import { IBucket, ITokenPayload } from '../../../models';
+import { AlertService, UserService } from '../../../services';
 import { BucketService } from '../../../services/bucket.service';
 
 @Component({
@@ -15,22 +16,34 @@ import { BucketService } from '../../../services/bucket.service';
 export class BucketListComponent implements OnInit {
 
     public faComment = faComment;
+    public faHeart = faHeart;
+    public faPencilAlt = faPencilAlt;
+    public faPen = faPen;
 
     public buckets: Array<IBucket>;
     public quickEditBucket: IBucket;
     constructor(public bucketService: BucketService,
         private errorEventBus: ErrorEventBus,
         public ngxSmartModalService: NgxSmartModalService,
-        public alertService: AlertService
+        public alertService: AlertService,
+        public userService: UserService,
     ) { }
 
     public itemsPerRow = 4;
     public bucketTable: Array<Array<IBucket>> = new Array();
 
+    public userId: string = (JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION))  as ITokenPayload).userId;
+
     ngOnInit() {
+        this.loadBuckets();
+    }
+
+    loadBuckets(){
         this.bucketService.getMyList().subscribe((items: Array<IBucket>) => {
 
             this.buckets = items;
+
+            this.calculateLikeStatus();
 
             const numberOfRows = Math.ceil(this.buckets.length/this.itemsPerRow);
 
@@ -39,7 +52,6 @@ export class BucketListComponent implements OnInit {
             }
 
             // Now we're going to build up a list of rows.  we're going to put 4 items in each row.
-            
             let currentBucketIndex = 0;
 
             for (let i = 0; i < numberOfRows; i++) {
@@ -51,7 +63,6 @@ export class BucketListComponent implements OnInit {
 
             console.dir(this.bucketTable);
 
-            //console.dir(items);
         }, error => {
             this.errorEventBus.throw(error);
         });
@@ -65,6 +76,47 @@ export class BucketListComponent implements OnInit {
 
     closeModal(){
         this.ngxSmartModalService.close("quickEditBucketModal");
+    }
+
+    calculateLikeStatus(){
+        this.buckets.forEach(bucket => {
+            // we're going to flag the bucket as to whether the current user has liked this bucket.
+            bucket.likedBy.forEach(token=> {
+                if(token == this.userId){
+                    bucket.isLikedByCurrentUser = true;
+                }
+            })
+        });
+    }
+
+    addRemoveLike(bucket:IBucket){
+        if(bucket.likedBy.indexOf(this.userId) > -1){
+            this.bucketService.removeLike(bucket).subscribe(bucket =>{
+                bucket.isLikedByCurrentUser = false;
+                this.updateBucketInTable(bucket);
+            }, error => {
+                this.errorEventBus.throw(error);
+            });
+        }else{
+            this.bucketService.addLike(bucket).subscribe(bucket =>{
+                bucket.isLikedByCurrentUser = true;
+                this.updateBucketInTable(bucket);
+            }, error => {
+                this.errorEventBus.throw(error);
+            });
+        }
+    }
+
+    updateBucketInTable(bucket:IBucket){
+        for (let j = 0; j < this.bucketTable.length; j++) {
+            const row = this.bucketTable[j];
+            for (let i = 0; i < row.length; i++) {
+                const item = row[i];
+                if(item && item._id && item._id == bucket._id){
+                    row[i] = bucket;
+                }
+            }
+        }
     }
 
     saveBucket(isValid: boolean) {

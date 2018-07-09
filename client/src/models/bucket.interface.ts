@@ -8,4 +8,5 @@ export interface IBucket extends IBaseModel, ILikeable, IOwned, ITimeStamped, IC
     bucketItems?: IBucketItem[],
     type?: enums.BucketType,
     href?: string,
+    
 }

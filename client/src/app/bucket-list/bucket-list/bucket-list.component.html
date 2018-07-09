@@ -26,15 +26,15 @@
                                 </div>
                             </a>
 
-                            <div class="row no-margin card-content">
-                                <a class="col-xs-4 card-buttons" style="text-align: center; margin-bottom: 16px;" (click)="quickEdit(bucket)" href="javascript:void(0)">
-                                    <i class="ti-heart gold" style="padding: 5px; font-size:30px; border-style: solid; border-color:rgb(190, 150, 86); border-radius: 50%; border-width: 1px;"></i>Like
+                            <div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
+                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucket)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
+                                    <fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart" ></fa-icon><span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{bucket.likedBy.length}}</span> 
                                 </a>
-                                <a class="col-xs-4 card-buttons" (click)="addComment(bucket)">
-                                        <fa-icon style="font-size:30px; border-style: solid; border-color:rgb(190, 150, 86); border-radius: 50%; border-width: 1px;" [icon]="faComment"></fa-icon>Comment
+                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucket)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
+                                    <fa-icon [icon]="faComment" ></fa-icon><span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{bucket.comments.length}}</span> 
                                 </a>
-                                <a class="col-xs-4 card-buttons" style="text-align: center; margin-bottom: 16px;" (click)="quickEdit(bucket)" href="javascript:void(0)">
-                                    <i class="ti-pencil gold" style="padding: 5px; font-size:30px; border-style: solid; border-color:rgb(190, 150, 86); border-radius: 50%; border-width: 1px;"></i>Edit
+                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Edit This Bucket" (click)="quickEdit(bucket)"  style=" padding: 8px;  cursor: pointer">
+                                    <fa-icon [icon]="faPen" ></fa-icon> 
                                 </a>
                             </div>
 
