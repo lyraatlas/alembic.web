@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { Ng2CompleterModule } from "ng2-completer";
@@ -22,7 +23,8 @@ import { BucketListComponent } from './bucket-list/bucket-list.component';
         NgUploaderModule,
         Ng2CompleterModule,
         NgxDatatableModule,
-        NgxSmartModalModule
+        NgxSmartModalModule,
+        FontAwesomeModule
     ],
     declarations: [
         BucketListComponent,

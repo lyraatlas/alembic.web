@@ -1,26 +1,53 @@
 <div class="content">
-    <div class="container">
-        <div class="row card-group" style="min-height:300px; display: flex; justify-content: center;">
-            <div class="card col" *ngFor="let bucket of buckets">
-                <a [routerLink]="['/bucket-list/detail', bucket._id]">
-                    <img *ngIf="bucket.images.length > 0 && bucket.images[0].variations" class="card-img-top" src="//{{bucket.images[0].variations[0].url}}">
-                    <div class="card-body">
-                        <h3 class="card-title">{{bucket.name}}</h3>
-                        <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
-                        <h5 class="card-text">{{bucket.description}}</h5>
+    <div class="container" style="padding:32px 0px">
+        <h2 class="card-title" >Your Buckets</h2>
+        <p>This is where all your buckets are.  You can create as many buckets as you like to help organize your bucket lists.</p>
+        <button type="button" class="btn btn-fill btn-wd" (click)="createNewBucket()">Create New Bucket</button>
+
+        <hr />
+    </div>
+    <div class="container" style="min-height: 300px; padding:0px 0px 32px; ">
+
+        <div class="row" *ngFor="let row of bucketTable;">
+
+            <ng-container *ngFor="let bucket of row; let i=index">
+
+                <ng-container *ngIf="bucket && bucket._id">
+
+                    <div class="col-md-3 col-sm-12" style="margin-bottom: 16px;">
+
+                        <div class="card">
+                            <a [routerLink]="['/bucket-list/detail', bucket._id]">
+                                <img style="border-radius: 6px 6px 0px 0px" *ngIf="bucket.images.length > 0 && bucket.images[1].variations" src="//{{bucket.images[1].variations[1].url}}">
+                                <div class="card-content">
+                                    <h3 class="card-title">{{bucket.name}}</h3>
+                                    <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
+                                    <h5 class="card-text">{{bucket.description}}</h5>
+                                </div>
+                            </a>
+
+                            <div class="row no-margin card-content">
+                                <a class="col-xs-4 card-buttons" style="text-align: center; margin-bottom: 16px;" (click)="quickEdit(bucket)" href="javascript:void(0)">
+                                    <i class="ti-heart gold" style="padding: 5px; font-size:30px; border-style: solid; border-color:rgb(190, 150, 86); border-radius: 50%; border-width: 1px;"></i>Like
+                                </a>
+                                <a class="col-xs-4 card-buttons" (click)="addComment(bucket)">
+                                        <fa-icon style="font-size:30px; border-style: solid; border-color:rgb(190, 150, 86); border-radius: 50%; border-width: 1px;" [icon]="faComment"></fa-icon>Comment
+                                </a>
+                                <a class="col-xs-4 card-buttons" style="text-align: center; margin-bottom: 16px;" (click)="quickEdit(bucket)" href="javascript:void(0)">
+                                    <i class="ti-pencil gold" style="padding: 5px; font-size:30px; border-style: solid; border-color:rgb(190, 150, 86); border-radius: 50%; border-width: 1px;"></i>Edit
+                                </a>
+                            </div>
+
+                        </div>
                     </div>
-                </a>
-                <div style="padding-bottom: 10px;">
-                    <a class="col-md-offset-7 col-md-2" (click)="quickEdit(bucket)" href="javascript:void(0)">
-                        <i class="ti-pencil" style="padding: 5px; font-size:30px; border-style: solid; border-color:#333347; border-radius: 50%; border-width: 1px;"></i>
-                    </a>
-                    <!-- <a class="col-sm-6 remove-item" (click)="DeleteBucket(bucket)" href="javascript:void(0)">
-                                    <i class="ti-close"></i>
-                                </a> -->
-                </div>
-            </div>
+                    <!-- If we're on the first element in the list we're going to offset it by 2 [class.col-md-offset-1]="i==0"-->
+
+                </ng-container>
+            </ng-container>
         </div>
     </div>
+
+
 
     <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal">
         <h3>Edit Your Bucket</h3>

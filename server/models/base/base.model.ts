@@ -1,4 +1,3 @@
-import { Schema, Model, Document } from 'mongoose';
 import { IUser } from '..';
 
 export interface IBaseModel {

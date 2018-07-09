@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseRequestOptions, HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ErrorEventBus, ProductImageEventBus } from '../event-buses/';
 import { BucketService } from '../services/bucket.service';
@@ -35,7 +36,8 @@ import { SidebarModule } from './sidebar/sidebar.module';
         FooterModule,
         AuthenticationModule,
         DashboardModule,
-        NgxSmartModalModule.forRoot()
+        NgxSmartModalModule.forRoot(),
+        FontAwesomeModule
     ],
     declarations: [
         AppComponent,

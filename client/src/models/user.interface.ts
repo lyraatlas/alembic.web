@@ -1,5 +1,6 @@
-export interface IUser{
-    _id?: string,
+import { IBaseModel } from "./base/base-model.interface";
+
+export interface IUser extends IBaseModel{
     email?: string,
     password?: string,
     firstName?: string,

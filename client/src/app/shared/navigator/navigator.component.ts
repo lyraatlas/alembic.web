@@ -68,7 +68,12 @@ export class NavigatorComponent implements OnInit, AfterViewInit {
 
     // I'm keeping this at 150 for now.  If the menu is a specific height then there's a scolling bug where it's
     // weird and jittery when the page is just slightly larger than the window.  When there's a very small amount of scrolling to do.
-    if (window.pageYOffset <= 150) {
+    // this no-op will fix any page jitter by not doing anything while the menu is transitioning
+    if(window.pageYOffset > 100 && window.pageYOffset < 300){
+        return;
+    }
+
+    if (window.pageYOffset < 100) {
       if (this.mr_navFixed) {
         this.mr_navFixed = false;
         this.mr_nav.removeClass('fixed');
