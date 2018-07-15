@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faComment, faHeart, faPen, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CONST } from '../../../constants';
-import { AlertType } from '../../../enumerations';
+import { EditControlMode } from '../../../enumerations';
 import { ErrorEventBus } from '../../../event-buses';
 import { IBucket, ITokenPayload } from '../../../models';
 import { AlertService, UserService } from '../../../services';
 import { BucketService } from '../../../services/bucket.service';
+
 
 @Component({
     selector: 'app-bucket-list',
@@ -19,6 +21,9 @@ export class BucketListComponent implements OnInit {
     public faHeart = faHeart;
     public faPencilAlt = faPencilAlt;
     public faPen = faPen;
+    private originalName: string;
+    private originalDesc: string;
+    public editControlMode: EditControlMode;
 
     public buckets: Array<IBucket>;
     public quickEditBucket: IBucket;
@@ -27,6 +32,8 @@ export class BucketListComponent implements OnInit {
         public ngxSmartModalService: NgxSmartModalService,
         public alertService: AlertService,
         public userService: UserService,
+        private route: ActivatedRoute,
+        private router: Router,
     ) { }
 
     public itemsPerRow = 4;
@@ -68,13 +75,25 @@ export class BucketListComponent implements OnInit {
         });
     }
 
-    quickEdit(bucket: IBucket) {
-        console.log('about to run quick edit.  This should set the bucket');
-        this.quickEditBucket = bucket;
+    createBucket(){
+        this.quickEditBucket = {};
+        this.editControlMode = EditControlMode.create;
         this.ngxSmartModalService.open("quickEditBucketModal");
     }
 
-    closeModal(){
+    quickEdit(bucket: IBucket) {
+        this.quickEditBucket = bucket;
+        this.originalName = bucket.name;
+        this.originalDesc = bucket.description;
+        this.editControlMode = EditControlMode.edit;
+        this.ngxSmartModalService.open("quickEditBucketModal");
+    }
+
+    quickEditCancel(){
+        this.quickEditBucket.name = this.originalName;
+        this.quickEditBucket.description = this.originalDesc;
+        this.updateBucketInTable(this.quickEditBucket);
+        this.quickEditBucket = null;
         this.ngxSmartModalService.close("quickEditBucketModal");
     }
 
@@ -119,14 +138,17 @@ export class BucketListComponent implements OnInit {
         }
     }
 
-    saveBucket(isValid: boolean) {
-        if (isValid) {
-            this.bucketService.update(this.quickEditBucket, this.quickEditBucket._id).subscribe(response => {
-                this.alertService.send({text : 'Successfully Saved.', alertType : AlertType.success}, false);
-                this.ngxSmartModalService.close("quickEditBucketModal");
-            }, error => {
-                this.errorEventBus.throw(error);
-            });
-        }
+    canceled(){
+        var bucket = this.quickEditBucket;
+        bucket.description = this.originalDesc;
+        bucket.name = this.originalName;
+        this.updateBucketInTable(bucket);
+        this.ngxSmartModalService.close("quickEditBucketModal");
+    }
+
+    bucketSaved(bucket:IBucket){
+        this.ngxSmartModalService.close("quickEditBucketModal");
+        this.updateBucketInTable(bucket);
+        this.loadBuckets();
     }
 }

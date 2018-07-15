@@ -12,6 +12,7 @@ import { ImageUploaderModule } from '../shared/image-uploader/image-uploader.mod
 import { BucketDetailComponent } from './bucket-detail/bucket-detail.component';
 import { BucketListRoutes } from './bucket-list.routing';
 import { BucketListComponent } from './bucket-list/bucket-list.component';
+import { BucketEditControlComponent } from './bucket-edit-control/bucket-edit-control.component';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { BucketListComponent } from './bucket-list/bucket-list.component';
     ],
     declarations: [
         BucketListComponent,
-        BucketDetailComponent
+        BucketDetailComponent,
+        BucketEditControlComponent
     ]
 })
 export class BucketListModule { }

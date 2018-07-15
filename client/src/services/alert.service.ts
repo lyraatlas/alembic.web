@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
-import { Observable } from 'rxjs';
+import { NavigationStart, Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
-import { IMessage } from '../classes/message.interface';
 import { AppError } from '../classes/app-error.class';
+import { IMessage } from '../classes/message.interface';
 import { AlertType } from '../enumerations';
 
 @Injectable()

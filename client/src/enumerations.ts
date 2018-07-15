@@ -12,6 +12,12 @@ export enum BucketType {
     continent = 3,
 }
 
+export enum EditControlMode {
+    edit = 1,
+    create = 2,
+    none = 3,
+}
+
 export enum NotificationType {
     BucketLiked = 1,
     BucketItemLiked = 2,

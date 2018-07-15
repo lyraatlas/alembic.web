@@ -23,5 +23,12 @@ $transition-duration: 100ms !default;
 // linear | ease | ease-in | ease-out | ease-in-out
 $transition-timing-function: ease-in-out !default;
 
+
 // We have to do the import after to override the styles.
 @import "../node_modules/ngx-smart-modal/ngx-smart-modal";
+
+// This was really obnoxious I can't seem to override the styles for this stupid thing even with local classes
+// had to include the padding here, to make it work.
+.la-modal{
+    padding:24px !important;
+}

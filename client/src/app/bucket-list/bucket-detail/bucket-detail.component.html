@@ -1,6 +1,109 @@
-<div *ngIf="bucket"> <!--  only show if there's actually a bucket -->
-    <p>
-    bucket-detail works!
-            {{bucket.name}}
-    </p>
-</div>
+<div class="content" *ngIf="bucket">
+    <div class="container" style="padding:32px 0px">
+        <h2 class="card-title">{{bucket.name}}</h2>
+        <p>{{bucket.description}}</p>
+        <button type="button" class="btn btn-fill btn-wd" (click)="addBucketItem()">Create Bucket Item</button>
+        <button type="button" class="btn btn-fill btn-wd" (click)="editBucket()">Edit Board</button>
+        <button type="button" class="btn btn-fill btn-wd" (click)="showDeleteConfirm()">Delete Board</button>
+        <hr />
+    </div>
+    <div class="container" style="min-height: 300px; padding:0px 0px 32px; ">
+
+        <div class="row" *ngFor="let row of bucketItemTable;">
+
+            <ng-container *ngFor="let bucketItem of row; let i=index">
+
+                <ng-container *ngIf="bucketItem && bucketItem._id">
+
+                    <div class="col-md-3 col-sm-12" style="margin-bottom: 16px;">
+
+                        <div class="card">
+                            <a [routerLink]="['/bucket-item-list/detail', bucketItem._id]">
+                                <img style="border-radius: 6px 6px 0px 0px" *ngIf="bucketItem.images.length > 0 && bucketItem.images[1].variations" src="//{{bucketItem.images[1].variations[1].url}}">
+                                <div class="card-content">
+                                    <h3 class="card-title">{{bucketItem.name}}</h3>
+                                    <!-- <p class="card-subtitle">{{bucketItem.images[0]}}</p> -->
+                                    <h5 class="card-text">{{bucketItem.description}}</h5>
+                                </div>
+                            </a>
+
+                            <div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
+                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucketItem)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
+                                    <fa-icon [class.gold]="bucketItem.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+                                    <span *ngIf="bucketItem.likedBy && bucketItem.likedBy.length > 0">&nbsp;{{bucketItem.likedBy.length}}</span>
+                                </a>
+                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucketItem)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
+                                    <fa-icon [icon]="faComment"></fa-icon>
+                                    <span *ngIf="bucketItem.comments && bucketItem.comments.length > 0">&nbsp;{{bucketItem.comments.length}}</span>
+                                </a>
+                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEdit(bucketItem)" style=" padding: 8px;  cursor: pointer">
+                                    <fa-icon [icon]="faPen"></fa-icon>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- If we're on the first element in the list we're going to offset it by 2 [class.col-md-offset-1]="i==0"-->
+
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+
+
+
+    <ngx-smart-modal #quickEditBucketItemModal hideDelay="100" identifier="quickEditbucketItemModal">
+        <h3>Edit Your Bucket Item</h3>
+        <hr />
+        <form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="form-horizontal" *ngIf="quickEditBucketItem">
+            <fieldset>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Name</label>
+
+                    <div class="col-sm-8" [ngClass]="{ 'form-error': (!name.valid && f.submitted) }">
+                        <input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="quickEditBucketItem.name">
+                        <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
+                            You have to name your buckets.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Description</label>
+
+                    <div class="col-sm-8" [ngClass]="{ 'form-error': (!description.valid && f.submitted) }">
+                        <textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="quickEditBucketItem.description"></textarea>
+                        <small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
+                            A little description is always nice.
+                        </small>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group" style="display: flex; justify-content: center;">
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-fill col-sm-6" (click)="saveBucketItem(f.valid)">Save Changes</button>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-fill col-sm-6" (click)="quickEditCancel()">Cancel</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+    </ngx-smart-modal>
+
+
+    <ngx-smart-modal #deleteConfirmModal hideDelay="100" identifier="deleteConfirmModal">
+        <h3>Are you sure you want to delete?</h3>
+
+        <hr />
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2">
+                <button type="button" class="btn btn-fill btn-wd btn-danger" (click)="deleteBucket()">Delete</button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-fill btn-wd" (click)="cancelDelete()">Cancel</button>
+            </div>
+
+        </div>
+    </ngx-smart-modal>

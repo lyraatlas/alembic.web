@@ -1,8 +1,12 @@
-<div class="content">
+<div class="container">
     <div class="container" style="padding:32px 0px">
-        <h2 class="card-title" >Your Buckets</h2>
-        <p>This is where all your buckets are.  You can create as many buckets as you like to help organize your bucket lists.</p>
-        <button type="button" class="btn btn-fill btn-wd" (click)="createNewBucket()">Create New Bucket</button>
+        <h2 class="card-title">Your Bucket Boards</h2>
+        <p>
+            This is where all your bucket boards are. You can create as many bucket boards as you like to help organize your bucket lists.
+            Organize them however you like. A lot of people create bucket boards by activity or region. For instance create
+            a board for all your dream scuba trips, or a bucket for everywhere you want to go in south america.
+        </p>
+        <button type="button" class="btn btn-fill btn-wd" (click)="createBucket()">Create New Bucket Board</button>
 
         <hr />
     </div>
@@ -28,13 +32,15 @@
 
                             <div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
                                 <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucket)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
-                                    <fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart" ></fa-icon><span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{bucket.likedBy.length}}</span> 
+                                    <fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+                                    <span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{bucket.likedBy.length}}</span>
                                 </a>
                                 <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucket)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
-                                    <fa-icon [icon]="faComment" ></fa-icon><span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{bucket.comments.length}}</span> 
+                                    <fa-icon [icon]="faComment"></fa-icon>
+                                    <span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{bucket.comments.length}}</span>
                                 </a>
-                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Edit This Bucket" (click)="quickEdit(bucket)"  style=" padding: 8px;  cursor: pointer">
-                                    <fa-icon [icon]="faPen" ></fa-icon> 
+                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Edit This Bucket" (click)="quickEdit(bucket)" style=" padding: 8px;  cursor: pointer">
+                                    <fa-icon [icon]="faPen"></fa-icon>
                                 </a>
                             </div>
 
@@ -49,42 +55,10 @@
 
 
 
-    <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal">
-        <h3>Edit Your Bucket</h3>
-        <hr />
-        <form #f="ngForm" novalidate (ngSubmit)="saveBucket(f.valid)" class="form-horizontal" *ngIf="quickEditBucket">
-            <fieldset>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Name</label>
+</div>
 
-                    <div class="col-sm-8" [ngClass]="{ 'form-error': (!name.valid && f.submitted) }">
-                        <input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="quickEditBucket.name">
-                        <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
-                            You have to name your buckets.
-                        </small>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Description</label>
-
-                    <div class="col-sm-8" [ngClass]="{ 'form-error': (!description.valid && f.submitted) }">
-                        <textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="quickEditBucket.description"></textarea>
-                        <small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
-                            A little description is always nice.
-                        </small>
-                    </div>
-                </div>
-                <hr/>
-                <div class="form-group" style="display: flex; justify-content: center;">
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-fill col-sm-6" (click)="saveBucket(f.valid)">Save Changes</button>
-                    </div>
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-fill col-sm-6" (click)="closeModal()">Cancel</button>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
-
+<ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal" customClass="la-modal nsm-dialog-animation-fade">
+        <app-bucket-edit-control class="la-modal" [(bucket)]="quickEditBucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()"
+            [mode]="editControlMode"></app-bucket-edit-control>
     </ngx-smart-modal>
