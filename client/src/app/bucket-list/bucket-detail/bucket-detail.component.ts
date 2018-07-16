@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CONST } from '../../../constants';
-import { AlertType } from '../../../enumerations';
+import { AlertType, EditControlMode } from '../../../enumerations';
 import { ErrorEventBus } from '../../../event-buses';
 import { IBucket, ITokenPayload } from '../../../models';
 import { AlertService } from '../../../services';
 import { BucketService } from '../../../services/bucket.service';
+import { BucketUtilities } from '../utilities/bucket-utilities';
 
 @Component({
     selector: 'app-bucket-detail',
@@ -18,6 +19,9 @@ export class BucketDetailComponent implements OnInit {
     public bucket: IBucket;
     public itemsPerRow = 4;
     public bucketTable: Array<Array<IBucket>> = new Array();
+    public editControlMode = EditControlMode.edit;
+    public originalName: string;
+    public originalDesc: string;
 
     public userId: string = (JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION))  as ITokenPayload).userId;
 
@@ -64,13 +68,31 @@ export class BucketDetailComponent implements OnInit {
         })
     }
 
+    bucketSaved(bucket:IBucket){
+        this.ngxSmartModalService.close("quickEditBucketModal");
+        this.fetchBucket();
+    }
+
+    editBucket(bucket: IBucket) {
+        this.originalName = bucket.name;
+        this.originalDesc = bucket.description;
+        this.editControlMode = EditControlMode.edit;
+        this.ngxSmartModalService.open("quickEditBucketModal");
+    }
+
+    canceled(){
+        this.bucket.description = this.originalDesc;
+        this.bucket.name = this.originalName;
+        this.ngxSmartModalService.close("quickEditBucketModal");
+    }
+
     fetchBucket(): any {
 
         this.bucketService.get(this.currentBucketId).subscribe((item: IBucket) => {
 
             this.bucket = item;
 
-            this.calculateLikeStatus();
+            BucketUtilities.calculateLikeStatus(new Array(this.bucket));
 
             if(this.bucket && this.bucket.bucketItems){
 
@@ -105,15 +127,5 @@ export class BucketDetailComponent implements OnInit {
         }, error => {
             this.errorEventBus.throw(error);
         });
-    }
-
-    calculateLikeStatus(){
-        if(this.bucket && this.bucket.bucketItems){
-            this.bucket.bucketItems.forEach(bucketItem =>{
-                bucketItem.likedBy.forEach(token =>{
-                    bucketItem.isLikedByCurrentUser = token == this.userId;
-                });
-            });
-        }
     }
 }

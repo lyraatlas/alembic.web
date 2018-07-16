@@ -1,23 +1,22 @@
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { MimeType } from '../../enumerations';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch'
-
-import { ServiceError } from '../../classes/app-error.class'
-import { IBaseModel } from '../../models';
-import { environment } from "../../environments/environment";
-import { ServiceConfigType, ServiceConfig } from './service-config';
-import { RestUrlConfigType, RestUrlBuilder } from '../../builders/rest-url.builder';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
+import { RestUrlBuilder, RestUrlConfigType } from '../../builders/rest-url.builder';
+import { ServiceError } from '../../classes/app-error.class';
 import { CONST } from '../../constants';
+import { MimeType } from '../../enumerations';
+import { IBaseModel } from '../../models';
+import { ServiceConfig, ServiceConfigType } from './service-config';
+
 
 
 export class BaseService<T extends IBaseModel> {
 
-    protected restUrlBuilder: RestUrlBuilder = new RestUrlBuilder();
-    protected requestOptions: RequestOptions;
-    protected serviceConfig: ServiceConfigType;
+    public restUrlBuilder: RestUrlBuilder = new RestUrlBuilder();
+    public requestOptions: RequestOptions;
+    public serviceConfig: ServiceConfigType;
 
     // tslint:disable-next-line:member-ordering
     public static convertToClass<T>(obj: Object, classToInstantiate): T {
@@ -30,8 +29,8 @@ export class BaseService<T extends IBaseModel> {
     }
 
     constructor(
-        protected http: Http,
-        serviceConfigType: ServiceConfigType
+        public http: Http,
+        public serviceConfigType: ServiceConfigType
     ) {
         this.serviceConfig = new ServiceConfig(serviceConfigType);
         this.requestOptions = new RequestOptions({
@@ -156,7 +155,7 @@ export class BaseService<T extends IBaseModel> {
     //     stack: Config.active.get('returnCallStackOnError') ? error.stack : '',
     //     requestBody: request.body
     // });
-    protected handleError(errorResponse: Response | any) {
+    public handleError(errorResponse: Response | any) {
         // TODO: Implement Real Logging infrastructure.
         // Might want to log to remote server (Fire and forget style)
         const appError = new ServiceError();

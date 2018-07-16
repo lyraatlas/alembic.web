@@ -3,7 +3,7 @@
         <h2 class="card-title">{{bucket.name}}</h2>
         <p>{{bucket.description}}</p>
         <button type="button" class="btn btn-fill btn-wd" (click)="addBucketItem()">Create Bucket Item</button>
-        <button type="button" class="btn btn-fill btn-wd" (click)="editBucket()">Edit Board</button>
+        <button type="button" class="btn btn-fill btn-wd" (click)="editBucket(bucket)">Edit Board</button>
         <button type="button" class="btn btn-fill btn-wd" (click)="showDeleteConfirm()">Delete Board</button>
         <hr />
     </div>
@@ -52,44 +52,9 @@
 
 
 
-    <ngx-smart-modal #quickEditBucketItemModal hideDelay="100" identifier="quickEditbucketItemModal">
-        <h3>Edit Your Bucket Item</h3>
-        <hr />
-        <form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="form-horizontal" *ngIf="quickEditBucketItem">
-            <fieldset>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Name</label>
-
-                    <div class="col-sm-8" [ngClass]="{ 'form-error': (!name.valid && f.submitted) }">
-                        <input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="quickEditBucketItem.name">
-                        <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
-                            You have to name your buckets.
-                        </small>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Description</label>
-
-                    <div class="col-sm-8" [ngClass]="{ 'form-error': (!description.valid && f.submitted) }">
-                        <textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="quickEditBucketItem.description"></textarea>
-                        <small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
-                            A little description is always nice.
-                        </small>
-                    </div>
-                </div>
-                <hr/>
-                <div class="form-group" style="display: flex; justify-content: center;">
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-fill col-sm-6" (click)="saveBucketItem(f.valid)">Save Changes</button>
-                    </div>
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-fill col-sm-6" (click)="quickEditCancel()">Cancel</button>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
-
+    <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal">
+        <app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()"
+            [mode]="editControlMode"></app-bucket-edit-control>
     </ngx-smart-modal>
 
 

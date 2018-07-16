@@ -1,6 +1,7 @@
 import { ITimeStamped } from ".";
+import { IBaseModel } from "./base/base-model.interface";
 
-export interface ICommentable {
+export interface ICommentable extends IBaseModel{
     comments?: IComment[];
 }
 

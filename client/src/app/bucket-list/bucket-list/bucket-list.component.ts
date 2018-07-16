@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faComment, faHeart, faPen, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { CONST } from '../../../constants';
 import { EditControlMode } from '../../../enumerations';
 import { ErrorEventBus } from '../../../event-buses';
-import { IBucket, ITokenPayload } from '../../../models';
-import { AlertService, UserService } from '../../../services';
-import { BucketService } from '../../../services/bucket.service';
+import { IBucket } from '../../../models';
+import { AlertService, BucketService, UserService } from '../../../services';
+import { BucketUtilities } from '../utilities/bucket-utilities';
 
 
 @Component({
@@ -27,19 +26,20 @@ export class BucketListComponent implements OnInit {
 
     public buckets: Array<IBucket>;
     public quickEditBucket: IBucket;
-    constructor(public bucketService: BucketService,
+    constructor(
+        private bucketService: BucketService,
         private errorEventBus: ErrorEventBus,
         public ngxSmartModalService: NgxSmartModalService,
         public alertService: AlertService,
         public userService: UserService,
         private route: ActivatedRoute,
         private router: Router,
-    ) { }
+    ) { 
+    }
 
     public itemsPerRow = 4;
     public bucketTable: Array<Array<IBucket>> = new Array();
 
-    public userId: string = (JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION))  as ITokenPayload).userId;
 
     ngOnInit() {
         this.loadBuckets();
@@ -50,7 +50,7 @@ export class BucketListComponent implements OnInit {
 
             this.buckets = items;
 
-            this.calculateLikeStatus();
+            BucketUtilities.calculateLikeStatus(this.buckets);
 
             const numberOfRows = Math.ceil(this.buckets.length/this.itemsPerRow);
 
@@ -67,8 +67,6 @@ export class BucketListComponent implements OnInit {
                     ++currentBucketIndex;
                 }
             }
-
-            console.dir(this.bucketTable);
 
         }, error => {
             this.errorEventBus.throw(error);
@@ -97,27 +95,17 @@ export class BucketListComponent implements OnInit {
         this.ngxSmartModalService.close("quickEditBucketModal");
     }
 
-    calculateLikeStatus(){
-        this.buckets.forEach(bucket => {
-            // we're going to flag the bucket as to whether the current user has liked this bucket.
-            bucket.likedBy.forEach(token=> {
-                if(token == this.userId){
-                    bucket.isLikedByCurrentUser = true;
-                }
-            })
-        });
-    }
 
     addRemoveLike(bucket:IBucket){
-        if(bucket.likedBy.indexOf(this.userId) > -1){
-            this.bucketService.removeLike(bucket).subscribe(bucket =>{
+        if(bucket.likedBy.indexOf(BucketUtilities.getCurrentUserId()) > -1){
+            this.bucketService.liker.removeLike(bucket).subscribe(bucket =>{
                 bucket.isLikedByCurrentUser = false;
                 this.updateBucketInTable(bucket);
             }, error => {
                 this.errorEventBus.throw(error);
             });
         }else{
-            this.bucketService.addLike(bucket).subscribe(bucket =>{
+            this.bucketService.liker.addLike(bucket).subscribe(bucket =>{
                 bucket.isLikedByCurrentUser = true;
                 this.updateBucketInTable(bucket);
             }, error => {
@@ -150,5 +138,8 @@ export class BucketListComponent implements OnInit {
         this.ngxSmartModalService.close("quickEditBucketModal");
         this.updateBucketInTable(bucket);
         this.loadBuckets();
+        if(this.editControlMode == EditControlMode.create){
+            this.router.navigate(['/bucket-list/detail', bucket._id]);
+        }
     }
 }

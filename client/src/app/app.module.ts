@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ErrorEventBus, ProductImageEventBus } from '../event-buses/';
 import { BucketService } from '../services/bucket.service';
-import { AlertService, AuthenticationService, ProductService, SupplierService, UserService } from '../services/index';
+import { AlertService, AuthenticationService, LikeableServiceMixin, ProductService, SupplierService, UserService } from '../services/index';
 import { NotificationService } from '../services/notification.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -58,7 +58,8 @@ import { SidebarModule } from './sidebar/sidebar.module';
         ErrorEventBus,
         ProductImageEventBus,
         NotificationService,
-        NgxSmartModalService
+        NgxSmartModalService,
+        LikeableServiceMixin
     ],
     bootstrap:    [ AppComponent ]
 })

@@ -1,13 +1,11 @@
-import { IBucketDoc, Bucket, ITokenPayload, IBaseModel, IBucket, IBaseModelDoc, ILikeable, INotificationDoc, IOwned, INotification } from '../../models';
-import { Router, Request, Response, RequestParamHandler, NextFunction, RequestHandler } from 'express';
-import mongoose = require('mongoose');
-import { Schema, Model, Document } from 'mongoose';
-import { BaseController } from '../base/base.controller';
+import { NextFunction, Request, Response } from 'express';
 import { CONST } from '../../constants';
-import { BucketRepository, NotificationRepository } from "../../repositories";
-import { OwnershipType, NotificationType } from "../../enumerations";
+import { NotificationType } from "../../enumerations";
+import { IBaseModelDoc, ITokenPayload } from '../../models';
 import { ICommentable } from '../../models/commentable.interface';
+import { BaseController } from '../base/base.controller';
 import { NotificationUtility } from '../notifications/notification-utility';
+import mongoose = require('mongoose');
 
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
@@ -72,10 +70,10 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
     
                 let commentableItem = (item as ICommentable);
 
-                commentableItem.comments.map( (item) => {
-                    if(item._id == request.body._id){
-                        item.comment = request.body.comment
-                        item.modifiedAt = new Date();
+                commentableItem.comments.map( (comment) => {
+                    if(comment._id == request.body._id){
+                        comment.comment = request.body.comment
+                        comment.modifiedAt = new Date();
                     }
                 });
     
