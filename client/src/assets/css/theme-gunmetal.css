@@ -5128,6 +5128,33 @@ footer.bg-dark a {
   background: none;
 }
 /*!---------- 36. SPACING ----------*/
+.mr8{
+    margin-right: 8px;
+}
+.mr16{
+    margin-right: 16px;
+}
+.mr24{
+    margin-right: 24px;
+}
+.mr32{
+    margin-right: 32px;
+}
+
+.ml8{
+   margin-left: 8px;
+}
+.ml16{
+   margin-left: 16px;
+}
+.ml24{
+   margin-left: 24px;
+}
+.ml32{
+    margin-left: 32px;
+}
+
+
 .mr0 {
   margin-right: 0;
 }

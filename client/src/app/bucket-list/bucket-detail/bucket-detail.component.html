@@ -1,74 +1,136 @@
-<div class="content" *ngIf="bucket">
-    <div class="container" style="padding:32px 0px">
-        <h2 class="card-title">{{bucket.name}}</h2>
-        <p>{{bucket.description}}</p>
-        <button type="button" class="btn btn-fill btn-wd" (click)="addBucketItem()">Create Bucket Item</button>
-        <button type="button" class="btn btn-fill btn-wd" (click)="editBucket(bucket)">Edit Board</button>
-        <button type="button" class="btn btn-fill btn-wd" (click)="showDeleteConfirm()">Delete Board</button>
-        <hr />
-    </div>
-    <div class="container" style="min-height: 300px; padding:0px 0px 32px; ">
+<div class="container">
+    <div class="content" *ngIf="bucket">
+        <div class="container pt24">
+            <div class="row">
+                <h2 class="col-md-12 card-title mb8">{{bucket.name}}</h2>
+            </div>
+            <div class="row pb8" style="cursor: pointer;">
+                <!--Comment and Like button in large form factor-->
+                <div class="col-xs-3 col-md-3 hidden-sm hidden-xs">
 
-        <div class="row" *ngFor="let row of bucketItemTable;">
+                    <a data-toggle="tooltip" title="Add A Like" (click)="toggleLike()" tooltip>
+                        <fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+                        <span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{bucket.likedBy.length}}</span>
+                    </a>
+                    <span style="font-size:16">&nbsp;&#183;&nbsp;</span>
+                    <a title="Add A Comment" (click)="addComment(bucket)">
+                        <fa-icon [icon]="faComment"></fa-icon>
+                        <span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{bucket.comments.length}}</span>
+                    </a>
 
-            <ng-container *ngFor="let bucketItem of row; let i=index">
+                </div>
 
-                <ng-container *ngIf="bucketItem && bucketItem._id">
+                <!--Comment and Like button in small/xs form factor-->
+                <div class="col-xs-12 col-sm-12 visible-sm visible-xs" style="font-size: 16px;">
+                    <a class=" " data-toggle="tooltip" title="Add A Like" (click)="toggleLike()" tooltip style="">
+                        <fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+                        <span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{bucket.likedBy.length}}</span>
+                    </a>
+                    <span style="font-size:16">&nbsp;&#183;&nbsp;</span>
+                    <a title="Add A Comment" (click)="addComment(bucket)">
+                        <fa-icon [icon]="faComment"></fa-icon>
+                        <span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{bucket.comments.length}}</span>
+                    </a>
+                </div>
 
-                    <div class="col-md-3 col-sm-12" style="margin-bottom: 16px;">
+            </div>
+            <div class="row">
+                <p class="col-md-12">{{bucket.description}}</p>
+            </div>
+            <div class="row">
+                <button type="button" class="btn col-md-2  hidden-sm hidden-xs row-btn " (click)="addBucketItem()">
+                    <fa-icon [icon]="faPlusCircle"></fa-icon>&nbsp;&nbsp;Add Item</button>
+                <button type="button" class="btn col-md-2  hidden-sm hidden-xs" (click)="editBucket(bucket)">
+                    <fa-icon [icon]="faEdit"></fa-icon>&nbsp;&nbsp;Edit Board</button>
+                <button type="button" class="btn col-md-2 hidden-sm hidden-xs danger" (click)="showDeleteConfirm()">
+                    <fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;&nbsp;Delete Board</button>
+            </div>
+            <div class="row mb16" style="font-size: 24px; cursor: pointer; opacity: .7">
+                <div class="col-sm-12 col-xs-12 visible-sm visible-xs">
+                    <a class="mr8" (click)="addBucketItem()">
+                        <fa-icon [icon]="faPlusCircle"></fa-icon>
+                    </a>
+                    <a class="mr8" (click)="editBucket(bucket)">
+                        <fa-icon [icon]="faEdit"></fa-icon>
+                    </a>
+                    <a class="" (click)="showDeleteConfirm()">
+                        <fa-icon [icon]="faTrashAlt"></fa-icon>
+                    </a>
+                </div>
+            </div>
+            <hr />
+        </div>
 
-                        <div class="card">
-                            <a [routerLink]="['/bucket-item-list/detail', bucketItem._id]">
-                                <img style="border-radius: 6px 6px 0px 0px" *ngIf="bucketItem.images.length > 0 && bucketItem.images[1].variations" src="//{{bucketItem.images[1].variations[1].url}}">
-                                <div class="card-content">
-                                    <h3 class="card-title">{{bucketItem.name}}</h3>
-                                    <!-- <p class="card-subtitle">{{bucketItem.images[0]}}</p> -->
-                                    <h5 class="card-text">{{bucketItem.description}}</h5>
+        <div class="container" style="min-height: 300px; padding:0px 0px 24px; ">
+
+            <div class="row" *ngFor="let row of bucketItemTable;">
+
+                <ng-container *ngFor="let bucketItem of row; let i=index">
+
+                    <ng-container *ngIf="bucketItem && bucketItem._id">
+
+                        <div class="col-md-3 col-sm-12" style="margin-bottom: 16px;">
+
+                            <div class="card">
+                                <a [routerLink]="['/bucket-item-list/detail', bucketItem._id]">
+                                    <img style="border-radius: 6px 6px 0px 0px" *ngIf="bucketItem.images.length > 0 && bucketItem.images[1].variations" src="//{{bucketItem.images[1].variations[1].url}}">
+                                    <div class="card-content">
+                                        <h3 class="card-title">{{bucketItem.name}}</h3>
+                                        <!-- <p class="card-subtitle">{{bucketItem.images[0]}}</p> -->
+                                        <h5 class="card-text">{{bucketItem.description}}</h5>
+                                    </div>
+                                </a>
+
+                                <div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
+                                    <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucketItem)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
+                                        <fa-icon [class.gold]="bucketItem.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+                                        <span *ngIf="bucketItem.likedBy && bucketItem.likedBy.length > 0">&nbsp;{{bucketItem.likedBy.length}}</span>
+                                    </a>
+                                    <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucketItem)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
+                                        <fa-icon [icon]="faComment"></fa-icon>
+                                        <span *ngIf="bucketItem.comments && bucketItem.comments.length > 0">&nbsp;{{bucketItem.comments.length}}</span>
+                                    </a>
+                                    <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEdit(bucketItem)" style=" padding: 8px;  cursor: pointer">
+                                        <fa-icon [icon]="faPen"></fa-icon>
+                                    </a>
                                 </div>
-                            </a>
 
-                            <div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
-                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucketItem)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
-                                    <fa-icon [class.gold]="bucketItem.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
-                                    <span *ngIf="bucketItem.likedBy && bucketItem.likedBy.length > 0">&nbsp;{{bucketItem.likedBy.length}}</span>
-                                </a>
-                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucketItem)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
-                                    <fa-icon [icon]="faComment"></fa-icon>
-                                    <span *ngIf="bucketItem.comments && bucketItem.comments.length > 0">&nbsp;{{bucketItem.comments.length}}</span>
-                                </a>
-                                <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEdit(bucketItem)" style=" padding: 8px;  cursor: pointer">
-                                    <fa-icon [icon]="faPen"></fa-icon>
-                                </a>
                             </div>
-
                         </div>
-                    </div>
-                    <!-- If we're on the first element in the list we're going to offset it by 2 [class.col-md-offset-1]="i==0"-->
+                        <!-- If we're on the first element in the list we're going to offset it by 2 [class.col-md-offset-1]="i==0"-->
 
+                    </ng-container>
                 </ng-container>
-            </ng-container>
+            </div>
         </div>
     </div>
+</div>
 
 
 
-    <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal">
-        <app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()"
-            [mode]="editControlMode"></app-bucket-edit-control>
-    </ngx-smart-modal>
+<ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal">
+    <app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()" [mode]="editControlMode"></app-bucket-edit-control>
+</ngx-smart-modal>
+
+<!-- [(bucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)" (cancel)="canceledBucketItemSave()" 
+    [mode]="editControlMode" -->
+<ngx-smart-modal #quickEditBucketItem hideDelay="100" identifier="quickEditBucketItem">
+    <app-bucket-item-quick-edit class="la-modal" ></app-bucket-item-quick-edit>
+</ngx-smart-modal>
 
 
-    <ngx-smart-modal #deleteConfirmModal hideDelay="100" identifier="deleteConfirmModal">
-        <h3>Are you sure you want to delete?</h3>
 
-        <hr />
-        <div class="row">
-            <div class="col-md-4 col-md-offset-2">
-                <button type="button" class="btn btn-fill btn-wd btn-danger" (click)="deleteBucket()">Delete</button>
-            </div>
-            <div class="col-md-4">
-                <button type="button" class="btn btn-fill btn-wd" (click)="cancelDelete()">Cancel</button>
-            </div>
+<ngx-smart-modal #deleteConfirmModal hideDelay="100" identifier="deleteConfirmModal">
+    <h3>Are you sure you want to delete?</h3>
 
+    <hr />
+    <div class="row">
+        <div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-2">
+            <button type="button" class="btn btn-fill btn-wd btn-danger" (click)="deleteBucket()">Delete</button>
         </div>
-    </ngx-smart-modal>
+        <div class="col-xs-6 col-xs-offset-3  col-sm-4">
+            <button type="button" class="btn btn-fill btn-wd" (click)="cancelDelete()">Cancel</button>
+        </div>
+
+    </div>
+</ngx-smart-modal>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faComment, faEdit, faHeart, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CONST } from '../../../constants';
 import { AlertType, EditControlMode } from '../../../enumerations';
@@ -15,6 +16,13 @@ import { BucketUtilities } from '../utilities/bucket-utilities';
     styleUrls: ['./bucket-detail.component.scss']
 })
 export class BucketDetailComponent implements OnInit {
+    // Icons
+    public faHeart = faHeart;
+    public faEdit = faEdit;
+    public faPlusCircle = faPlusCircle;
+    public faTrashAlt = faTrashAlt;
+    public faComment = faComment;
+
     public currentBucketId: string;
     public bucket: IBucket;
     public itemsPerRow = 4;
@@ -68,6 +76,27 @@ export class BucketDetailComponent implements OnInit {
         })
     }
 
+    toggleLike(){
+        console.log('About to toggle the like');
+
+        if(this.bucket.likedBy.indexOf(BucketUtilities.getCurrentUserId()) > -1){
+            this.bucketService.liker.removeLike(this.bucket).subscribe(bucket =>{
+                this.bucket = bucket;
+                this.bucket.isLikedByCurrentUser = false;
+            }, error => {
+                this.errorEventBus.throw(error);
+            });
+        }else{
+            this.bucketService.liker.addLike(this.bucket).subscribe(bucket =>{
+                this.bucket = bucket;
+                this.bucket.isLikedByCurrentUser = true;
+            }, error => {
+                this.errorEventBus.throw(error);
+            });
+        }
+    }
+
+
     bucketSaved(bucket:IBucket){
         this.ngxSmartModalService.close("quickEditBucketModal");
         this.fetchBucket();
@@ -84,6 +113,10 @@ export class BucketDetailComponent implements OnInit {
         this.bucket.description = this.originalDesc;
         this.bucket.name = this.originalName;
         this.ngxSmartModalService.close("quickEditBucketModal");
+    }
+
+    addBucketItem(){
+        this.ngxSmartModalService.open("quickEditBucketItem");
     }
 
     fetchBucket(): any {
@@ -110,20 +143,8 @@ export class BucketDetailComponent implements OnInit {
                         this.bucketTable[i][slotNumber] = this.bucket.bucketItems[currentBucketIndex];
                         ++currentBucketIndex;
                     }
-                }
-    
-                console.dir(this.bucketTable);
-    
+                }    
             }
-
-        }, error => {
-            this.errorEventBus.throw(error);
-        });
-
-        this.bucketService.get(this.currentBucketId).subscribe((bucket: IBucket) => {
-
-            this.bucket = bucket;
-
         }, error => {
             this.errorEventBus.throw(error);
         });
