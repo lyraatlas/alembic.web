@@ -58,6 +58,7 @@
     "jwt-decode": "^2.2.0",
     "moment": "^2.19.2",
     "ng2-completer": "^1.6.3",
+    "ngx-file-drop": "^3.0.2",
     "ngx-smart-modal": "^6.0.4",
     "ngx-uploader": "^3.3.11",
     "nouislider": "^9.2.0",
