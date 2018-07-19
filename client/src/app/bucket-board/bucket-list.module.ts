@@ -10,11 +10,11 @@ import { FileDropModule } from 'ngx-file-drop';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgUploaderModule } from 'ngx-uploader';
 import { ImageUploaderModule } from '../shared/image-uploader/image-uploader.module';
-import { BucketDetailComponent } from './bucket-detail/bucket-detail.component';
-import { BucketEditControlComponent } from './bucket-edit-control/bucket-edit-control.component';
-import { BucketItemQuickEditComponent } from './bucket-item-quick-edit/bucket-item-quick-edit.component';
 import { BucketListRoutes } from './bucket-list.routing';
-import { BucketListComponent } from './bucket-list/bucket-list.component';
+import { BucketDetailComponent } from './buckets/bucket-detail/bucket-detail.component';
+import { BucketEditControlComponent } from './buckets/bucket-edit-control/bucket-edit-control.component';
+import { BucketListComponent } from './buckets/bucket-list/bucket-list.component';
+import { BucketItemQuickEditComponent } from './items/bucket-item-quick-edit/bucket-item-quick-edit.component';
 
 @NgModule({
     imports: [

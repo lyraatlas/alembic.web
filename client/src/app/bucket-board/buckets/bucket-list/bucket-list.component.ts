@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faComment, faHeart, faPen, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { EditControlMode } from '../../../enumerations';
-import { ErrorEventBus } from '../../../event-buses';
-import { IBucket } from '../../../models';
-import { AlertService, BucketService, UserService } from '../../../services';
-import { BucketUtilities } from '../utilities/bucket-utilities';
+import { EditControlMode } from '../../../../enumerations';
+import { ErrorEventBus } from '../../../../event-buses';
+import { IBucket } from '../../../../models';
+import { AlertService, BucketService, UserService } from '../../../../services';
+import { BucketUtilities } from '../../utilities/bucket-utilities';
 
 
 @Component({
@@ -139,7 +139,7 @@ export class BucketListComponent implements OnInit {
         this.updateBucketInTable(bucket);
         this.loadBuckets();
         if(this.editControlMode == EditControlMode.create){
-            this.router.navigate(['/bucket-list/detail', bucket._id]);
+            this.router.navigate(['/bucket-board/detail', bucket._id]);
         }
     }
 }

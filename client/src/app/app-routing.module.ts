@@ -27,8 +27,8 @@ export const AppRoutes: Routes = [
         loadChildren: './settings/settings.module#SettingsModule'
       },      
       {
-        path: 'bucket-list',
-        loadChildren: './bucket-list/bucket-list.module#BucketListModule'
+        path: 'bucket-board',
+        loadChildren: './bucket-board/bucket-list.module#BucketListModule'
       },
     ],
     canActivate: [AuthGuard] 

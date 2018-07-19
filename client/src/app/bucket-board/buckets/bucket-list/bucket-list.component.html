@@ -21,7 +21,7 @@
                     <div class="col-md-3 col-sm-12" style="margin-bottom: 16px;">
 
                         <div class="card">
-                            <a [routerLink]="['/bucket-list/detail', bucket._id]">
+                            <a [routerLink]="['/bucket-board/detail', bucket._id]">
                                 <img style="border-radius: 6px 6px 0px 0px" *ngIf="bucket.images.length > 0 && bucket.images[1].variations" src="//{{bucket.images[1].variations[1].url}}">
                                 <div class="card-content">
                                     <h3 class="card-title">{{bucket.name}}</h3>

@@ -1,0 +1,67 @@
+<h3 *ngIf="controlMode ==  EditControlMode.edit">
+    Edit Your Bucket Item</h3>
+<h3 *ngIf="controlMode ==  EditControlMode.create">Add a new Bucket Item</h3>
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="form-horizontal" *ngIf="bucketItem">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Name</label>
+
+                        <div class="col-sm-8" [ngClass]="{ 'form-error': (!name.valid && f.submitted) }">
+                            <input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="bucketItem.name">
+                            <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
+                                You have to name your Bucket Items.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Description</label>
+
+                        <div class="col-sm-8" [ngClass]="{ 'form-error': (!description.valid && f.submitted) }">
+                            <textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="bucketItem.description"></textarea>
+                            <small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
+                                A little description is always nice.
+                            </small>
+                        </div>
+                    </div>
+                </fieldset>
+                <hr/>
+                <div class="form-group" style="display: flex; justify-content: center;">
+                    <div class="col-sm-offset-1 col-sm-5">
+                        <button type="button" class="btn btn-fill col-sm-6" (click)="cancel()">Cancel</button>
+                    </div>
+                    <div class="col-sm-5">
+                        <button type="button" class="btn btn-fill col-sm-6" (click)="saveBucketItem(f.valid)">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <file-drop (onFileDrop)="dropped($event)" (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                <span>Create a new Bucket Item</span>
+            </file-drop>
+            <div class="upload-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Path</th>
+                        </tr>
+                    </thead>
+                    <tbody class="upload-name-style">
+                        <tr *ngFor="let item of files; let i=index">
+                            <td>
+                                <strong>{{ item.relativePath }}</strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { AlertType, EditControlMode } from '../../../enumerations';
-import { ErrorEventBus } from '../../../event-buses';
-import { IBucket } from '../../../models';
-import { AlertService, UserService } from '../../../services';
-import { BucketService } from '../../../services/bucket.service';
+import { AlertType, EditControlMode } from '../../../../enumerations';
+import { ErrorEventBus } from '../../../../event-buses';
+import { IBucket } from '../../../../models';
+import { AlertService, UserService } from '../../../../services';
+import { BucketService } from '../../../../services/bucket.service';
 
 @Component({
   selector: 'app-bucket-edit-control',

@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faComment, faEdit, faHeart, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { CONST } from '../../../constants';
-import { AlertType, EditControlMode } from '../../../enumerations';
-import { ErrorEventBus } from '../../../event-buses';
-import { IBucket, ITokenPayload } from '../../../models';
-import { AlertService } from '../../../services';
-import { BucketService } from '../../../services/bucket.service';
-import { BucketUtilities } from '../utilities/bucket-utilities';
+import { CONST } from '../../../../constants';
+import { AlertType, EditControlMode } from '../../../../enumerations';
+import { ErrorEventBus } from '../../../../event-buses';
+import { IBucket, ITokenPayload } from '../../../../models';
+import { AlertService } from '../../../../services';
+import { BucketService } from '../../../../services/bucket.service';
+import { BucketUtilities } from '../../utilities/bucket-utilities';
 
 @Component({
     selector: 'app-bucket-detail',
@@ -52,7 +52,7 @@ export class BucketDetailComponent implements OnInit {
     }
 
     backToBuckets() {
-        this.router.navigate(['/bucket-list']);
+        this.router.navigate(['/bucket-board']);
     }
 
     showDeleteConfirm(){
