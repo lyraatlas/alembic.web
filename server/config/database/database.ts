@@ -1,7 +1,6 @@
 import mongoose = require('mongoose');
-import { ConnectionOptions } from 'mongoose';
-import { Config } from '../config';
 import { HealthStatus } from '../../health-status';
+import { Config } from '../config';
 import log = require('winston');
 mongoose.Promise = require('bluebird'); 
 
@@ -9,9 +8,7 @@ export class Database {
 
     public static databaseName: string = '';
     public static async connect(): Promise<void> {
-        const connectionOptions: any = {
-            useMongoClient: true,
-        }
+        const connectionOptions: any = { useNewUrlParser: true }
         if(!HealthStatus.isDatabaseConnected){
             try{
                 await mongoose.connect(Config.active.get('mongoConnectionString'), connectionOptions);
