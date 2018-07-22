@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { BaseService } from './base/base.service';
 import { CONST } from '../constants';
-import { IProduct } from '../models/index';
+import { IProduct } from '../models';
 import { environment } from '../environments/environment';
 import { MimeType } from '../enumerations';
 import { Observable } from 'rxjs/Observable';

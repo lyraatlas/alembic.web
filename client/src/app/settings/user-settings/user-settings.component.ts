@@ -4,7 +4,7 @@ import { AuthenticationService, UserService } from '../../../services';
 import { AlertService } from '../../../services';
 import { AlertType, NotificationType } from '../../../enumerations';
 import { FormBuilder, FormGroup, Validators, FormControl, Form, NgForm } from '@angular/forms';
-import { IUser, ITokenPayload } from '../../../models/index';
+import { IUser, ITokenPayload } from '../../../models';
 import { CONST } from '../../../constants';
 import { ErrorEventBus } from '../../../event-buses';
 declare var $: any;

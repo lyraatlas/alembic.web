@@ -1,16 +1,16 @@
+import { Schema } from 'mongoose';
 import { mongoose } from '../config/database/database';
-import { Schema, Model, Document, model } from 'mongoose';
-import { IBaseModel, IBaseModelDoc, ITimeStamped, ILikeable, IOwned, IHasImages } from "./index";
 import * as enums from "../enumerations";
-import { IImage } from './image.interface';
 import { ICommentable } from './commentable.interface';
 import { IHasLocation } from './has-location.interface';
+import { IBaseModel, IBaseModelDoc, IHasImages, ILikeable, IOwned, ITimeStamped } from "./index";
 
 
 export interface IBucketItem extends IBaseModel, ILikeable, IOwned, ITimeStamped, ICommentable, IHasImages, IHasLocation {
     name?: string,
     description?: string,
     href?: string,
+    bucketId?: string,
 }
 
 export interface IBucketItemDoc extends IBucketItem, IBaseModelDoc {
@@ -44,6 +44,7 @@ const BucketItemSchema = new Schema({
             key: {type: String},
         }],
     }],
+    bucketId: { type: Schema.Types.ObjectId },
     name: { type: String },
     description: { type: String },
     href: { type: String }

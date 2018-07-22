@@ -1,6 +1,5 @@
-import { IBaseModel, IAddress } from "./index";
+import { IAddress, IBaseModel, IEmail, IPhone } from ".";
 import * as enums from "../enumerations";
-import { IImage, IPhone, IEmail } from './';
 
 
 export interface IContact extends IBaseModel {

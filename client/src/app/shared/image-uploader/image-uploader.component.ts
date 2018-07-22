@@ -1,11 +1,10 @@
-import { Component, OnInit, EventEmitter, Input } from '@angular/core';
-import { UploadOutput, UploadInput, UploadFile, humanizeBytes } from 'ngx-uploader';
-import { Headers } from '@angular/http';
-import * as enums from '../../../enumerations';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { humanizeBytes, UploadFile, UploadInput, UploadOutput } from 'ngx-uploader';
 import { CONST } from '../../../constants';
-import { AlertService } from '../../../services/index';
+import * as enums from '../../../enumerations';
 import { environment } from '../../../environments/environment';
-import { ProductImageEventBus } from '../../../event-buses/index';
+import { ProductImageEventBus } from '../../../event-buses';
+import { AlertService } from '../../../services';
 
 interface FormData {
   concurrency: number;

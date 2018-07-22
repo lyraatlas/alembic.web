@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertService } from '../../../services/';
+import { Component } from '@angular/core';
 import { IMessage } from '../../../classes/message.interface';
 import { AlertType } from '../../../enumerations';
+import { AlertService } from '../../../services';
 
 declare var $: any;
 

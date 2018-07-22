@@ -1,4 +1,4 @@
-import { IBaseModel, ISupplier } from "./index";
+import { IBaseModel, ISupplier } from ".";
 import * as enums from "../enumerations";
 
 export interface IImage{

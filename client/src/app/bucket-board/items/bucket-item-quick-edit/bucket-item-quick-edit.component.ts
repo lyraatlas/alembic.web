@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FileSystemDirectoryEntry, FileSystemFileEntry, UploadEvent, UploadFile } from 'ngx-file-drop';
-import { EditControlMode } from '../../../../enumerations';
+import { faCameraRetro, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { EditControlMode, UploadStatus } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
+import { IBucket } from '../../../../models';
 import { IBucketItem } from '../../../../models/bucket-item.interface';
 import { AlertService, BucketService, UserService } from '../../../../services';
+import { BucketItemService } from '../../../../services/bucket-item.service';
 
 @Component({
     selector: 'app-bucket-item-quick-edit',
@@ -13,11 +15,22 @@ import { AlertService, BucketService, UserService } from '../../../../services';
 })
 export class BucketItemQuickEditComponent implements OnInit {
 
+    @Output() bucketItemChanged = new EventEmitter();
+    @Output() cancel = new EventEmitter();
+    @Output() bucketItemSaved = new EventEmitter<IBucketItem>();
+
+    @Input() bucket: IBucket;
+
+    @ViewChild('laFileInput') fileInput: ElementRef;
+
     // Public enumerations
     public EditControlMode = EditControlMode;
+    public faCameraRetro = faCameraRetro;
+    public faPlusSquare = faPlusSquare;
 
     //Upload Images Control
-    public files: UploadFile[] = [];
+    public files: File[] = [];
+    public uploadFiles: Array<UploadFile> = [];
     public controlMode: EditControlMode = EditControlMode.create;
     public bucketItem: IBucketItem = {
 
@@ -28,49 +41,63 @@ export class BucketItemQuickEditComponent implements OnInit {
         public alertService: AlertService,
         public userService: UserService,
         private route: ActivatedRoute,
+        private bucketItemService: BucketItemService,
         private router: Router) { }
 
     ngOnInit() {
+
     }
 
-    public dropped(event: UploadEvent) {
-        this.files = event.files;
-        for (const droppedFile of event.files) {
+    public onFilesSelected(e: any) {
+        let selectedFiles: Array<File> = this.fileInput.nativeElement.files;
+        this.processFiles(selectedFiles);
+    }
 
-            // Is it a file?
-            if (droppedFile.fileEntry.isFile) {
+    public onFilesDropped(files: Array<File>) {
+        this.processFiles(files);
+    }
 
-                // 1.  If we have an image file, we need to save the bucket item(create/save) first
-                // 2.  Then we can start uploading immediately.
-                const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-                fileEntry.file((file: File) => {
-
-                    // Here you can access the real file
-                    console.log(droppedFile.relativePath, file);
-
-                    /**
-                    // You could upload it like this:
-                    const formData = new FormData()
-                    formData.append('logo', file, relativePath)
-           
-                    // Headers
-                    const headers = new HttpHeaders({
-                      'security-token': 'mytoken'
-                    })
-           
-                    this.http.post('https://mybackend.com/api/upload/sanitize-and-save-logo', formData, { headers: headers, responseType: 'blob' })
-                    .subscribe(data => {
-                      // Sanitized logo returned from backend
-                    })
-                    **/
-
+    public processFiles(files: Array<File>){
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (file && this.validateFileType(file.type)) {
+                this.files.push(file);
+                this.uploadFiles.push({
+                    file: file,
+                    status: UploadStatus.pending
                 });
-            } else {
-                // It was a directory (empty directories are added, otherwise only files)
-                const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-                console.log(droppedFile.relativePath, fileEntry);
+                if(!this.bucketItem._id || this.bucketItem._id == ''){
+                    this.bucketItem.bucketId = this.bucket._id;
+                    this.bucketItemService.create(this.bucketItem).subscribe(item =>{
+                        this.bucketItem = item;
+                        this.bucketItemService.uploadImage(file, item._id).subscribe(res =>{
+                            console.log('image Saved');
+                        });
+                    });
+                }else{
+                    this.bucketItemService.uploadImage(file, this.bucketItem._id).subscribe(res =>{
+                        console.log('image Saved');
+                    });
+                }
             }
         }
+    }
+
+    public validateFileType(type: string){
+        return (type == "image/jpeg" || type == "image/jpg" || type == "image/png")
+    }
+
+    public validateFileName(name: string) {
+        const parts = name.split('.');
+        if (parts && parts.length > 1) {
+            const extension = parts[parts.length - 1];
+            console.log(extension);
+            console.log(name);
+            return (extension == 'jpg' ||
+                extension == 'jpeg' ||
+                extension == 'png')
+        }
+        return false;
     }
 
     public fileOver(event) {
@@ -80,4 +107,13 @@ export class BucketItemQuickEditComponent implements OnInit {
     public fileLeave(event) {
         console.log(event);
     }
+
+    cancelHandler() {
+        this.cancel.emit(null);
+    }
+}
+
+export class UploadFile{
+    public file: File;
+    public status:  UploadStatus
 }

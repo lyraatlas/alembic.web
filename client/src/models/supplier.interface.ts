@@ -1,4 +1,4 @@
-import { IBaseModel, IAddress, IContact, IEmail,IPhone } from "./index";
+import { IAddress, IBaseModel } from ".";
 import * as enums from "../enumerations";
 
 

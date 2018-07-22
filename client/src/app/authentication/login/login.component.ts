@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertType } from '../../../enumerations';
-import { IUser } from '../../../models/index';
+import { IUser } from '../../../models';
 import { AlertService, AuthenticationService } from '../../../services';
 declare var $: any;
 declare const FB:any;

@@ -4,7 +4,7 @@ import { AuthenticationService } from '../../../services';
 import { AlertService } from '../../../services';
 import { AlertType } from '../../../enumerations';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { IUser } from '../../../models/index';
+import { IUser } from '../../../models';
 declare var $: any;
 declare const FB:any;
 

@@ -1,6 +1,5 @@
-import { IBaseModel } from "../index";
+import { IBaseModel } from "..";
 import * as enums from "../../enumerations";
-import * as log from 'winston';
 
 export interface INotification extends IBaseModel {
     _id?: string,

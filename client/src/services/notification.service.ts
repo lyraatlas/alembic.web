@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { BaseService } from './base/base.service';
 import { CONST } from '../constants';
-import { INotification } from '../models/index';
+import { INotification } from '../models';
 import { environment } from '../environments/environment';
 import { MimeType, OrderStatus } from '../enumerations';
 import { Observable } from 'rxjs/Observable';

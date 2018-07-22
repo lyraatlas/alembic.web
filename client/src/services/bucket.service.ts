@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { CONST } from '../constants';
 import { environment } from '../environments/environment';
-import { IBucket } from '../models/index';
+import { IBucket } from '../models';
 import { BaseService } from './base/base.service';
 import { CommentableServiceMixin } from './mixins/commentable.service.mixin';
 import { LikeableServiceMixin } from './mixins/likeable.service.mixin';

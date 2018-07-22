@@ -4,16 +4,17 @@ import { BaseRequestOptions, HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { ErrorEventBus, ProductImageEventBus } from '../event-buses/';
+import { ErrorEventBus, ProductImageEventBus } from '../event-buses';
+import { AlertService, AuthenticationService, LikeableServiceMixin, ProductService, SupplierService, UserService } from '../services';
+import { BucketItemService } from '../services/bucket-item.service';
 import { BucketService } from '../services/bucket.service';
-import { AlertService, AuthenticationService, LikeableServiceMixin, ProductService, SupplierService, UserService } from '../services/index';
 import { NotificationService } from '../services/notification.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AlertComponent } from './directives/alert/alert.component';
-import { AuthGuard } from './guards/index';
+import { AuthGuard } from './guards';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { BucketSummaryComponent } from './shared/bucket-summary/bucket-summary.component';
@@ -59,7 +60,8 @@ import { SidebarModule } from './sidebar/sidebar.module';
         ProductImageEventBus,
         NotificationService,
         NgxSmartModalService,
-        LikeableServiceMixin
+        LikeableServiceMixin,
+        BucketItemService
     ],
     bootstrap:    [ AppComponent ]
 })

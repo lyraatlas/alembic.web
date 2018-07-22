@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { BaseService } from './base/base.service';
-import { CONST } from '../constants';
-import { IUser } from '../models/index';
-import { environment } from '../environments/environment';
-import { MimeType } from '../enumerations';
+import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { CONST } from '../constants';
+import { environment } from '../environments/environment';
+import { IUser } from '../models';
+import { BaseService } from './base/base.service';
 
 @Injectable()
 export class UserService extends BaseService<IUser>{

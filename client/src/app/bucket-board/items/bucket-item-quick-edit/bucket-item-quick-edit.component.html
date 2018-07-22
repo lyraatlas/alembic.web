@@ -1,9 +1,58 @@
-<h3 *ngIf="controlMode ==  EditControlMode.edit">
-    Edit Your Bucket Item</h3>
-<h3 *ngIf="controlMode ==  EditControlMode.create">Add a new Bucket Item</h3>
-<hr />
-<div class="container">
+<div class="content" style="margin:16px;">
+
     <div class="row">
+        <div class="col-md-12">
+            <h3 *ngIf="controlMode ==  EditControlMode.edit">
+                Edit Your Bucket Item</h3>
+            <h3 *ngIf="controlMode ==  EditControlMode.create">Add a new Bucket Item</h3>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="dropzone gold transition" appLaDnd (filesChangedEvent)="onFilesDropped($event)">
+                <div>
+                    <div>
+                        <div>
+                            <fa-icon [icon]="faCameraRetro" style="font-size:32px;"></fa-icon>
+                        </div>
+                        <div>
+                            <span>Drag and Drop Images here.</span>
+                        </div>
+                        <div>
+                            Or
+                        </div>
+                        <div>
+                            <label for="laFileInput" class="camera-label transition" style="font-weight: normal">
+                                <fa-icon [icon]="faPlusSquare" style="font-size:32px;"></fa-icon><br />
+                                Click Here to Select Pictures from your device
+                            </label>
+                            <input type="file" #laFileInput name="laFileInput" id="laFileInput" class="inputfile" (change)="onFilesSelected($event)" multiple />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="upload-table" *ngIf="files && files.length > 0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Images</th>
+                        </tr>
+                    </thead>
+                    <tbody class="upload-name-style">
+                        <tr *ngFor="let item of files; let i=index">
+                            <td>
+                                <strong>{{ item.name }}</strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
         <div class="col-md-6">
             <form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="form-horizontal" *ngIf="bucketItem">
                 <fieldset>
@@ -29,39 +78,25 @@
                         </div>
                     </div>
                 </fieldset>
-                <hr/>
-                <div class="form-group" style="display: flex; justify-content: center;">
-                    <div class="col-sm-offset-1 col-sm-5">
-                        <button type="button" class="btn btn-fill col-sm-6" (click)="cancel()">Cancel</button>
-                    </div>
-                    <div class="col-sm-5">
-                        <button type="button" class="btn btn-fill col-sm-6" (click)="saveBucketItem(f.valid)">Save</button>
-                    </div>
-                </div>
+
             </form>
         </div>
-        <div class="col-md-6">
-            <file-drop (onFileDrop)="dropped($event)" (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
-                <span>Create a new Bucket Item</span>
-            </file-drop>
-            <div class="upload-table">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Path</th>
-                        </tr>
-                    </thead>
-                    <tbody class="upload-name-style">
-                        <tr *ngFor="let item of files; let i=index">
-                            <td>
-                                <strong>{{ item.relativePath }}</strong>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+
 
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row mb16">
+        <div class="col-md-offset-3 col-md-3" style="text-align: center">
+            <button type="button" class="btn btn-fill" (click)="cancelHandler()">Cancel</button>
+        </div>
+        <div class="col-md-3" style="text-align: center">
+            <button type="button" class="btn btn-fill" (click)="saveBucketItem(f.valid)">Save</button>
+        </div>
+    </div>
 </div>

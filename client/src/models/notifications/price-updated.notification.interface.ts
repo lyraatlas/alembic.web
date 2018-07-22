@@ -1,4 +1,4 @@
-import { IProduct, ISupplier } from "../index";
+import { IProduct, ISupplier } from "..";
 
 export interface IPriceUpdatedNotification{
     updatedPrice: string,

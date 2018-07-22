@@ -1,10 +1,10 @@
 import { Component, OnInit, Renderer, ViewChild, ElementRef, Directive } from '@angular/core';
-import { ROUTES } from '../.././sidebar/sidebar.component';
+import { ROUTES } from '../../sidebar/sidebar.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { CONST } from '../../../constants';
-import { AuthenticationService, SupplierService } from '../../../services/index';
-import { INotification, ISupplier } from '../../../models/index';
+import { AuthenticationService, SupplierService } from '../../../services';
+import { INotification, ISupplier } from '../../../models';
 import { NotificationService } from '../../../services/notification.service';
 import * as enums from '../../../enumerations';
 import { Observable } from "rxjs/Observable";

@@ -1,4 +1,3 @@
-import { IBaseModel } from "./index";
 import * as enums from "../enumerations";
 
 

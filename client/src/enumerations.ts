@@ -6,6 +6,13 @@ export enum AlertType {
     empty = 5
 }
 
+export enum UploadStatus{
+    pending = 1,
+    uploading = 2,
+    finished = 3,
+    error = 4,
+}
+
 export enum BucketType {
     country = 1,
     activity = 2,

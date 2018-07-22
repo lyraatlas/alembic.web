@@ -115,6 +115,10 @@ export class BucketDetailComponent implements OnInit {
         this.ngxSmartModalService.close("quickEditBucketModal");
     }
 
+    bucketItemCancel(){
+        this.ngxSmartModalService.close("quickEditBucketItem");
+    }
+
     addBucketItem(){
         this.ngxSmartModalService.open("quickEditBucketItem");
     }

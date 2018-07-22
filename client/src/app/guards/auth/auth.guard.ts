@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import * as moment from 'moment';
 import { CONST } from '../../../constants';
-import { AlertService } from '../../../services/index';
 import { AlertType } from '../../../enumerations';
 import { ITokenPayload } from '../../../models/token-payload.interface';
-import * as moment from 'moment';
+import { AlertService } from '../../../services';
 @Injectable()
 export class AuthGuard implements CanActivate {
  

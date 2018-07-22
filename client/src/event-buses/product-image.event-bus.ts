@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { AppError } from '../classes/app-error.class';
-import { AlertService } from '../services/index';
-import { IImage, IImageVariation } from '../models/product.interface';
-import { IProduct } from '../models/index';
 import { ProductImageEventType } from '../enumerations';
+import { IProduct } from '../models';
+import { IImage } from '../models/product.interface';
+import { AlertService } from '../services';
 
 export interface IProductImageEventMessage{
     productImage: IImage,

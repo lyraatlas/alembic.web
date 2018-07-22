@@ -1,11 +1,9 @@
 import * as crypto from 'crypto';
+import * as fs from 'fs';
 import * as mime from 'mime';
 import * as multer from 'multer';
-import * as fs from 'fs';
-import * as path from 'path';
-import { CONST } from '../constants';
 import * as log from 'winston';
-import { ApiErrorHandler } from '../api-error-handler';
+import { CONST } from '../constants';
 
 
 export class MulterConfiguration{

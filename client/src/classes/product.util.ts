@@ -1,5 +1,5 @@
-import { IProduct, IImage } from "../models/index";
 import * as enums from '../enumerations';
+import { IImage, IProduct } from "../models";
 
 export class ProductUtil {
     static setThumbnailUrls(products: IProduct[]): void {
