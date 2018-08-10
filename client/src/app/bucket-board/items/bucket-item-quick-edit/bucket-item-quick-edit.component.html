@@ -52,9 +52,9 @@
             </div>
 
         </div>
-
+        <form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="form-horizontal" *ngIf="bucketItem">
         <div class="col-md-6">
-            <form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="form-horizontal" *ngIf="bucketItem">
+
                 <fieldset>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Name</label>
@@ -79,24 +79,24 @@
                     </div>
                 </fieldset>
 
-            </form>
+
         </div>
 
-
-    </div>
-
-    <div class="row">
         <div class="col-md-12">
             <hr />
         </div>
-    </div>
 
-    <div class="row mb16">
         <div class="col-md-offset-3 col-md-3" style="text-align: center">
             <button type="button" class="btn btn-fill" (click)="cancelHandler()">Cancel</button>
         </div>
         <div class="col-md-3" style="text-align: center">
             <button type="button" class="btn btn-fill" (click)="saveBucketItem(f.valid)">Save</button>
         </div>
+    </form>
+
     </div>
+
+
+
+
 </div>

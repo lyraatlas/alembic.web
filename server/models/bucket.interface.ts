@@ -1,7 +1,7 @@
+import { Schema } from 'mongoose';
 import { mongoose } from '../config/database/database';
-import { Schema, Model, Document, model } from 'mongoose';
-import { IBaseModel, IBaseModelDoc, ILikeable, IOwned, ITimeStamped, IBucketItem, ICommentable, IHasImages } from "./index";
 import * as enums from "../enumerations";
+import { IBaseModel, IBaseModelDoc, IBucketItem, ICommentable, IHasImages, ILikeable, IOwned, ITimeStamped } from "./index";
 
 
 export interface IBucket extends IBaseModel, ILikeable, IOwned, ITimeStamped, ICommentable, IHasImages {
@@ -40,7 +40,7 @@ const BucketSchema = new Schema({
     }],
     name: { type: String },
     description: { type: String },
-    bucketItems: {type: Schema.Types.ObjectId, ref: 'bucket-item'},
+    bucketItems: [{type: Schema.Types.ObjectId, ref: 'bucket-item'}],
     type: { type: Number, enum: [enums.EnumHelper.getValuesFromEnum(enums.BucketType)] },
     href: { type: String }
 }, { timestamps: true });

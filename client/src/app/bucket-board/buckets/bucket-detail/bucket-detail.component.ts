@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faComment, faEdit, faHeart, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faEdit, faHeart, faPen, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CONST } from '../../../../constants';
 import { AlertType, EditControlMode } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
-import { IBucket, ITokenPayload } from '../../../../models';
+import { IBucket, IBucketItem, ITokenPayload } from '../../../../models';
 import { AlertService } from '../../../../services';
+import { BucketItemService } from '../../../../services/bucket-item.service';
 import { BucketService } from '../../../../services/bucket.service';
 import { BucketUtilities } from '../../utilities/bucket-utilities';
 
@@ -22,11 +23,12 @@ export class BucketDetailComponent implements OnInit {
     public faPlusCircle = faPlusCircle;
     public faTrashAlt = faTrashAlt;
     public faComment = faComment;
+    public faPen = faPen;
 
     public currentBucketId: string;
     public bucket: IBucket;
     public itemsPerRow = 4;
-    public bucketTable: Array<Array<IBucket>> = new Array();
+    public bucketItemTable: Array<Array<IBucket>> = new Array();
     public editControlMode = EditControlMode.edit;
     public originalName: string;
     public originalDesc: string;
@@ -36,6 +38,7 @@ export class BucketDetailComponent implements OnInit {
     constructor(private route: ActivatedRoute,
         private router: Router,
         public bucketService: BucketService,
+        public bucketItemService: BucketItemService,
         private errorEventBus: ErrorEventBus,
         public ngxSmartModalService: NgxSmartModalService,
         public alertService: AlertService,
@@ -74,6 +77,26 @@ export class BucketDetailComponent implements OnInit {
             this.ngxSmartModalService.close("deleteConfirmModal");
             this.backToBuckets();
         })
+    }
+
+    deleteBucketItem(bucketItem: IBucketItem){
+        this.bucketItemService.delete(bucketItem._id).subscribe(res =>{
+            // after we have deleted this bucket item, we need to clean up the bucket as well, and remove this item from it.
+            const index = (this.bucket.bucketItems as IBucketItem[]).findIndex((element) =>{
+                return element._id === bucketItem._id;
+            });
+
+            this.bucket.bucketItems.splice(index,1);
+
+            this.bucketService.update(this.bucket,this.bucket._id).subscribe(bucket =>{
+                this.bucket = bucket;
+            }, error => {
+                this.errorEventBus.throw(error);
+            });
+            
+        }, error => {
+            this.errorEventBus.throw(error);
+        });
     }
 
     toggleLike(){
@@ -136,7 +159,7 @@ export class BucketDetailComponent implements OnInit {
                 const numberOfRows = Math.ceil(this.bucket.bucketItems.length/this.itemsPerRow);
 
                 for (let i = 0; i < numberOfRows; i++) {
-                    this.bucketTable[i] = new Array<IBucket>();
+                    this.bucketItemTable[i] = new Array<IBucket>();
                 }
     
                 // Now we're going to build up a list of rows.  we're going to put 4 items in each row.
@@ -144,7 +167,7 @@ export class BucketDetailComponent implements OnInit {
     
                 for (let i = 0; i < numberOfRows; i++) {
                     for (let slotNumber = 0; slotNumber < this.itemsPerRow; slotNumber++) {
-                        this.bucketTable[i][slotNumber] = this.bucket.bucketItems[currentBucketIndex];
+                        this.bucketItemTable[i][slotNumber] = this.bucket.bucketItems[currentBucketIndex] as IBucketItem;
                         ++currentBucketIndex;
                     }
                 }    

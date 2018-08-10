@@ -8,9 +8,17 @@ export class Database {
 
     public static databaseName: string = '';
     public static async connect(): Promise<void> {
-        const connectionOptions: any = { useNewUrlParser: true }
-        if(!HealthStatus.isDatabaseConnected){
-            try{
+
+        const connectionOptions: any = { 
+            useNewUrlParser: true,
+            // These two setting should help remove the 'Mongoose Topology destroyed error`
+            // sets how many times to try reconnecting
+            reconnectTries: Number.MAX_VALUE,
+            // sets the delay between every retry (milliseconds)
+            reconnectInterval: 10000 
+         }
+         if(!HealthStatus.isDatabaseConnected){
+             try{
                 await mongoose.connect(Config.active.get('mongoConnectionString'), connectionOptions);
                 this.databaseName = mongoose.connection.db.databaseName;
 
