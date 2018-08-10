@@ -61,7 +61,7 @@
             <hr />
         </div>
 
-        <div class="container" style="min-height: 300px; padding:0px 0px 24px; ">
+        <div class="container pb24" style="min-height: 300px;">
 
             <div class="row" *ngFor="let row of bucketItemTable;">
 
@@ -82,18 +82,18 @@
                                 </a>
 
                                 <div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
-                                    <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucketItem)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
+                                    <a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucketItem)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
                                         <fa-icon [class.gold]="bucketItem.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
                                         <span *ngIf="bucketItem.likedBy && bucketItem.likedBy.length > 0">&nbsp;{{bucketItem.likedBy.length}}</span>
                                     </a>
-                                    <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucketItem)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
+                                    <a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucketItem)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
                                         <fa-icon [icon]="faComment"></fa-icon>
                                         <span *ngIf="bucketItem.comments && bucketItem.comments.length > 0">&nbsp;{{bucketItem.comments.length}}</span>
                                     </a>
-                                    <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEdit(bucketItem)" style=" padding: 8px;  cursor: pointer">
+                                    <a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEditItem(bucketItem)" style="border-right: 1px solid lightgrey; padding: 8px;  cursor: pointer">
                                         <fa-icon [icon]="faPen"></fa-icon>
                                     </a>
-                                    <a class="col-xs-4 card-buttons" data-toggle="tooltip" title="Delete This bucketItem" (click)="deleteBucketItem(bucketItem)" style=" padding: 8px;  cursor: pointer">
+                                    <a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Delete This bucketItem" (click)="showDeleteItemConfirm(bucketItem)" style=" padding: 8px;  cursor: pointer">
                                         <fa-icon [icon]="faTrashAlt"></fa-icon>
                                     </a>
                                 </div>
@@ -116,7 +116,7 @@
 </ngx-smart-modal>
 
 <ngx-smart-modal #quickEditBucketItem hideDelay="100" identifier="quickEditBucketItem" customClass="modal-expander nsm-dialog-animation-ttb bucket-item-quick-edit-modal ">
-    <app-bucket-item-quick-edit [(bucket)]="bucket" (bucketItemSaved)="bucketItemSaved($event)" (cancel)="bucketItemCancel()"></app-bucket-item-quick-edit>
+    <app-bucket-item-quick-edit [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)" (cancel)="bucketItemCancel()"></app-bucket-item-quick-edit>
 </ngx-smart-modal>
 
 
@@ -134,5 +134,20 @@
         </div>
 
     </div>
+</ngx-smart-modal>
+
+<ngx-smart-modal #deleteConfirmModalItem hideDelay="100" identifier="deleteConfirmModalItem" customClass="nsm-dialog-animation-ttb">
+  <h3>Are you sure you want to delete?</h3>
+
+  <hr />
+  <div class="row">
+      <div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-2">
+          <button type="button" class="btn btn-fill btn-wd btn-danger" (click)="deleteItem()">Delete</button>
+      </div>
+      <div class="col-xs-6 col-xs-offset-3  col-sm-4">
+          <button type="button" class="btn btn-fill btn-wd" (click)="cancelDeleteItem()">Cancel</button>
+      </div>
+
+  </div>
 </ngx-smart-modal>
 

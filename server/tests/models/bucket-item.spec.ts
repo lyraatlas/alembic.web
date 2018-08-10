@@ -1,15 +1,12 @@
-import { Database } from '../../config/database/database';
-import { App, server } from '../../server-entry';
-import { BucketItem, IBucketItem, ITokenPayload, ICommentable } from '../../models';
-import { Config } from '../../config/config';
+import * as chai from 'chai';
+import { suite, test } from "mocha-typescript";
+import * as supertest from 'supertest';
 import { CONST } from "../../constants";
+import { IBucket, IBucketItem, ICommentable } from '../../models';
+import { App } from '../../server-entry';
 import { AuthUtil } from "../authentication.util";
 import { Cleanup } from "../cleanup.util.spec";
-import { suite, test } from "mocha-typescript";
-import { DatabaseBootstrap } from "../../config/database/database-bootstrap";
 
-import * as supertest from 'supertest';
-import * as chai from 'chai';
 
 const api = supertest.agent(App.server);
 const mongoose = require("mongoose");
@@ -28,13 +25,13 @@ class BucketItemItemTester {
         //     console.log('Got the dbConnected Signal, so now we can clear, and seed the database.' )
         //     await Cleanup.clearDatabase();
         //     console.log('About to seed the database');
-        //     await DatabaseBootstrap.seed();
+        //     //await DatabaseBootstrap.seed();
 
         //     console.log('About to create identity test data.');
         //     // This will create, 2 users, an organization, and add the users to the correct roles.
         //     await AuthUtil.registerUser("dave2");
         //     await AuthUtil.Initialize();
-            
+
         //     done();
         // });
 
@@ -164,8 +161,8 @@ class BucketItemItemTester {
 
         // now we're checking the notifications.
         let response2 = await api
-        .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.NOTIFICATIONS}`)
-        .set("x-access-token", AuthUtil.userToken);
+            .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.NOTIFICATIONS}`)
+            .set("x-access-token", AuthUtil.userToken);
 
         expect(response2.status).to.equal(200);
         expect(response2.body[0].bucketItem).to.equal(createdId);
@@ -231,6 +228,62 @@ class BucketItemItemTester {
         return;
     }
 
+    /*
+        Here's the request, and how it's going to be shaped. 
+        {
+            "bucketId": "123",
+            "bucketItemId": "567" 
+        }
+    */
+    @test('it should delete a bucketItem off a bucket')
+    public async deleteABucketItemFromBucket() {
+        let createdId = await this.createBucketItem(AuthUtil.userToken);
+
+        let createdBucketId = await this.createBucket(AuthUtil.userToken);
+
+        let singleBucketResponse = await api
+            .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdBucketId}`)
+            .set("x-access-token", AuthUtil.userToken);
+
+        let bucket = singleBucketResponse.body as IBucket;
+
+        (bucket.bucketItems as string[]).push(createdId);
+
+        let updateBucketResponse = await api
+            .patch(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdBucketId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(bucket);
+
+        let getBackSingle = await api
+            .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdBucketId}`)
+            .set("x-access-token", AuthUtil.userToken);
+
+        expect(getBackSingle.status).to.equal(200);
+        expect(getBackSingle.body.bucketItems.length).to.be.equal(1);
+
+        console.dir(getBackSingle.body);
+
+        let response = await api
+            .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}${CONST.ep.REMOVE_REFERENCES}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send({
+                "bucketId": createdBucketId,
+                "bucketItemId": createdId
+            });
+
+        expect(response.status).to.equal(200);
+        expect(response.body.ItemRemovedId).to.be.equal(createdId);
+
+        let singleResponseForBucket = await api
+            .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/${createdBucketId}`)
+            .set("x-access-token", AuthUtil.userToken);
+        //console.dir(singleResponseForBucket.body);
+
+        expect(singleResponseForBucket.status).to.equal(200);
+        expect(singleResponseForBucket.body.bucketItems.length).to.be.equal(0);
+
+        return;
+    }
 
     @test('should return a 404 on delete when the ID isnt there')
     public async onDeleteWithoutID404() {
@@ -258,16 +311,16 @@ class BucketItemItemTester {
 
         // Now we need to post a test image. 
         // './assets/testImage.jpg'
-        let uploadResponse =  await api.post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}${CONST.ep.IMAGES}/${createdId}`)
-        .set("x-access-token", AuthUtil.userToken)
-        .attach('file', './server/tests/assets/testImage.jpg');
+        let uploadResponse = await api.post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}${CONST.ep.IMAGES}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .attach('file', './server/tests/assets/testImage.jpg');
 
         expect(uploadResponse.status).to.equal(200);
 
         // Now I want to check the response with regards to the images on the item.
         let singleResponse = await api
-        .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}/${createdId}`)
-        .set("x-access-token", AuthUtil.userToken);
+            .get(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken);
 
         expect((singleResponse.body as IBucketItem).images.length).to.be.greaterThan(0);
         expect((singleResponse.body as IBucketItem).images[0].isActive).to.be.true;
@@ -375,7 +428,7 @@ class BucketItemItemTester {
             .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}${CONST.ep.COMMENTS}/${createdId}`)
             .set("x-access-token", AuthUtil.userToken)
             .send(addComment);
-        
+
         const createdCommentId = (responseAdd.body as ICommentable).comments[0]._id;
 
         const editedText = "Updated Text";
@@ -420,16 +473,29 @@ class BucketItemItemTester {
         }
 
         let response = await api
-        .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}${CONST.ep.COMMENTS}/${createdId}`)
-        .set("x-access-token", AuthUtil.userToken)
-        .send(removeRequest);
+            .delete(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}${CONST.ep.COMMENTS}/${createdId}`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(removeRequest);
 
         expect(response.status).to.equal(200);
         expect(response.body.comments.length).to.equal(0);
         return;
     }
 
-    private async createBucketItem(authToken: string):Promise<string>{
+    private async createBucket(authToken: string): Promise<string> {
+        let bucket: IBucket = {
+            name: "Russia Is Amazing",
+        }
+
+        let createResponse = await api
+            .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}`)
+            .set("x-access-token", authToken)
+            .send(bucket);
+
+        return createResponse.body._id;
+    }
+
+    private async createBucketItem(authToken: string): Promise<string> {
         let bucketItem: IBucketItem = {
             name: "Russia Is Amazing",
         }

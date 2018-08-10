@@ -47,7 +47,7 @@ $transition-timing-function: ease-in-out !default;
 }
 
 // You would think you could just put these classes in the component.scss and it would work, and you would be wrong.
-// I have to put these modal classes here.  It's lame, and I know it. 
+// I have to put these modal classes here.  It's lame, and I know it.
 .bucket-item-quick-edit-modal.nsm-dialog.nsm-dialog-open {
     opacity: 1;
     visibility: visible;
@@ -80,4 +80,340 @@ $transition-timing-function: ease-in-out !default;
 
 .row-btn{
     margin-left:15px;
+}
+
+.no-margin{
+  margin:0px;
+}
+
+
+.card {
+  border-radius: 6px;
+  box-shadow: 1px 1px 5px 2px rgba(204, 197, 185, 0.5);
+  background-color: #FFFFFF;
+  color: #252422;
+  position: relative;
+}
+
+.card-content{
+    padding:16px 0px 16px;
+}
+
+.card .card-title,
+.card .stats,
+.card .category,
+.card .description,
+.card .social-line,
+.card .actions,
+.card .card-content,
+.card .card-footer,
+.card .card-text,
+.card small,
+.card .card-buttons {
+  position: relative;
+}
+.card .card-link {
+  color: #444444;
+}
+.card .card-link:hover, .card .card-link:focus {
+  color: #333333;
+}
+.card a img {
+  max-width: 100%;
+  height: auto;
+}
+.card .card-header {
+  padding: 20px 15px 0px;
+  position: relative;
+  border-radius: 3px 3px 0 0;
+  z-index: 3;
+}
+.card .card-header.header-with-icon {
+  height: 150px;
+}
+.card .card-header img {
+  width: 100%;
+}
+.card .card-header .category {
+  padding: 5px 0px;
+}
+.card .actions {
+  padding: 10px 15px;
+}
+.card .more {
+  float: right;
+  z-index: 4;
+  display: block;
+  padding-top: 10px;
+  padding-right: 10px;
+  position: relative;
+}
+.card .alert {
+  border-radius: 4px;
+}
+.card .category {
+  font-size: 14px;
+  font-weight: 400;
+  color: #9A9A9A;
+  margin-bottom: 0px;
+}
+.card .category i {
+  font-size: 16px;
+}
+.card .category.error {
+  color: #DD0330;
+  font-size: 12px;
+}
+.card .card-title {
+  margin: 0;
+  color: #252422;
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+.card .card-content {
+  padding: 15px 15px 10px 15px;
+}
+.card .card-content .big-title {
+  text-transform: uppercase;
+  text-align: center;
+}
+.card .card-content .category ~ .card-title {
+  margin-top: 10px;
+}
+.card .card-content .description ~ .card-title {
+  margin-top: -10px;
+}
+.card .description {
+  font-size: 16px;
+  color: #66615b;
+}
+.card h6 {
+  font-size: 12px;
+  margin: 10px 0;
+}
+.card .card-footer {
+  padding: 0 15px 15px;
+}
+.card .card-footer .social-line .btn:first-child {
+  border-radius: 0 0 0 6px;
+}
+.card .card-footer .social-line .btn:last-child {
+  border-radius: 0 0 6px 0;
+}
+.card .card-footer hr {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+.card .card-footer > .form-group {
+  margin-bottom: 0;
+}
+.card .card-footer .footer-title {
+  padding-top: 5px;
+  display: inline-block;
+}
+.card .map {
+  height: 280px;
+  border-radius: 4px;
+}
+.card .map.map-big {
+  height: 420px;
+}
+.card.card-separator:after {
+  height: 100%;
+  right: -15px;
+  top: 0;
+  width: 1px;
+  background-color: #cfcfca;
+  content: "";
+  position: absolute;
+}
+.card .icon {
+  display: block;
+  margin: 0 auto;
+  top: 60%;
+  position: relative;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  text-align: center;
+}
+.card .icon i {
+  font-size: 60px;
+  padding: 18px;
+  width: 110px;
+  border: 2px solid #ccc5b9;
+  border-radius: 50%;
+  height: 110px;
+}
+.card .icon-big {
+  font-size: 3em;
+}
+.card .numbers {
+  text-align: right;
+  font-size: 2em;
+}
+.card .numbers p {
+  margin: 0;
+}
+.card .pull-right .label {
+  margin-top: 7px;
+}
+.card ul.team-members li {
+  padding: 10px 0px;
+}
+.card ul.team-members li:not(:last-child) {
+  border-bottom: 1px solid #F1EAE0;
+}
+.col-lg-4 .card .icon i {
+  font-size: 80px;
+  padding: 22px;
+}
+.card .stats {
+  color: #a49e93;
+  font-weight: 300;
+}
+.card.card-circle-chart .card-title {
+  margin-bottom: 10px;
+}
+.card.card-circle-chart .card-content {
+  padding: 10px 15px 10px;
+  text-align: center;
+}
+.card .bootstrap-table {
+  padding: 0px 20px;
+}
+.card[data-background-color="blue"] .card-title,
+.card[data-background-color="blue"] .stats,
+.card[data-background-color="blue"] .category,
+.card[data-background-color="blue"] .description,
+.card[data-background-color="blue"] .card-content,
+.card[data-background-color="blue"] .card-footer,
+.card[data-background-color="blue"] small,
+.card[data-background-color="blue"] .content a, .card[data-background-color="green"] .card-title,
+.card[data-background-color="green"] .stats,
+.card[data-background-color="green"] .category,
+.card[data-background-color="green"] .description,
+.card[data-background-color="green"] .card-content,
+.card[data-background-color="green"] .card-footer,
+.card[data-background-color="green"] small,
+.card[data-background-color="green"] .content a, .card[data-background-color="yellow"] .card-title,
+.card[data-background-color="yellow"] .stats,
+.card[data-background-color="yellow"] .category,
+.card[data-background-color="yellow"] .description,
+.card[data-background-color="yellow"] .card-content,
+.card[data-background-color="yellow"] .card-footer,
+.card[data-background-color="yellow"] small,
+.card[data-background-color="yellow"] .content a, .card[data-background-color="brown"] .card-title,
+.card[data-background-color="brown"] .stats,
+.card[data-background-color="brown"] .category,
+.card[data-background-color="brown"] .description,
+.card[data-background-color="brown"] .card-content,
+.card[data-background-color="brown"] .card-footer,
+.card[data-background-color="brown"] small,
+.card[data-background-color="brown"] .content a, .card[data-background-color="purple"] .card-title,
+.card[data-background-color="purple"] .stats,
+.card[data-background-color="purple"] .category,
+.card[data-background-color="purple"] .description,
+.card[data-background-color="purple"] .card-content,
+.card[data-background-color="purple"] .card-footer,
+.card[data-background-color="purple"] small,
+.card[data-background-color="purple"] .content a, .card[data-background-color="orange"] .card-title,
+.card[data-background-color="orange"] .stats,
+.card[data-background-color="orange"] .category,
+.card[data-background-color="orange"] .description,
+.card[data-background-color="orange"] .card-content,
+.card[data-background-color="orange"] .card-footer,
+.card[data-background-color="orange"] small,
+.card[data-background-color="orange"] .content a {
+  color: #FFFFFF;
+}
+.card[data-background-color="blue"] .card-content a:hover,
+.card[data-background-color="blue"] .card-content a:focus, .card[data-background-color="green"] .card-content a:hover,
+.card[data-background-color="green"] .card-content a:focus, .card[data-background-color="yellow"] .card-content a:hover,
+.card[data-background-color="yellow"] .card-content a:focus, .card[data-background-color="brown"] .card-content a:hover,
+.card[data-background-color="brown"] .card-content a:focus, .card[data-background-color="purple"] .card-content a:hover,
+.card[data-background-color="purple"] .card-content a:focus, .card[data-background-color="orange"] .card-content a:hover,
+.card[data-background-color="orange"] .card-content a:focus {
+  color: #FFFFFF;
+}
+.card[data-background-color="blue"] .icon i, .card[data-background-color="green"] .icon i, .card[data-background-color="yellow"] .icon i, .card[data-background-color="brown"] .icon i, .card[data-background-color="purple"] .icon i, .card[data-background-color="orange"] .icon i {
+  color: #FFFFFF;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+}
+.card[data-background-color="blue"] {
+  background: #b8d8d8;
+}
+.card[data-background-color="blue"] .category {
+  color: #7a9e9f;
+}
+.card[data-background-color="blue"] .description {
+  color: #506568;
+}
+.card[data-background-color="blue"] .icon i {
+  color: #506568;
+  border: 2px solid #7a9e9f;
+}
+.card[data-background-color="green"] {
+  background: #d5e5a3;
+}
+.card[data-background-color="green"] .category {
+  color: #92ac56;
+}
+.card[data-background-color="green"] .description {
+  color: #60773d;
+}
+.card[data-background-color="green"] .icon i {
+  color: #60773d;
+  border: 2px solid #92ac56;
+}
+.card[data-bakcground-color="yellow"] {
+  background: #ffe28c;
+}
+.card[data-bakcground-color="yellow"] .category {
+  color: #d88715;
+}
+.card[data-bakcground-color="yellow"] .description {
+  color: #b25825;
+}
+.card[data-bakcground-color="yellow"] .icon i {
+  color: #b25825;
+  border: 2px solid #d88715;
+}
+.card[data-background-color="brown"] {
+  background: #d6c1ab;
+}
+.card[data-background-color="brown"] .category {
+  color: #a47e65;
+}
+.card[data-background-color="brown"] .description {
+  color: #75442e;
+}
+.card[data-background-color="brown"] .icon i {
+  color: #75442e;
+  border: 2px solid #a47e65;
+}
+.card[data-background-color="purple"] {
+  background: #baa9ba;
+}
+.card[data-background-color="purple"] .category {
+  color: #5a283d;
+}
+.card[data-background-color="purple"] .description {
+  color: #3a283d;
+}
+.card[data-background-color="purple"] .icon i {
+  color: #3a283d;
+  border: 2px solid #5a283d;
+}
+.card[data-background-color="orange"] {
+  background: #ff8f5e;
+}
+.card[data-background-color="orange"] .category {
+  color: #e95e37;
+}
+.card[data-background-color="orange"] .description {
+  color: #772510;
+}
+.card[data-background-color="orange"] .icon i {
+  color: #772510;
+  border: 2px solid #e95e37;
 }

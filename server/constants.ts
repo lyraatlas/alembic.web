@@ -21,6 +21,7 @@ export const CONST = {
         IMAGES: '/images',
         LOGIN: '/login',
         CALLBACK: '/callback',
+        REMOVE_REFERENCES: '/remove-references',
         EMAIL_VERIFICATIONS: '/email-verifications',
         PASSWORD_RESET: '/password-reset',
         PASSWORD_RESET_TOKENS: '/password-reset-tokens',

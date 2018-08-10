@@ -7,7 +7,7 @@ import { IBaseModel, IBaseModelDoc, IBucketItem, ICommentable, IHasImages, ILike
 export interface IBucket extends IBaseModel, ILikeable, IOwned, ITimeStamped, ICommentable, IHasImages {
     name?: string,
     description?: string,
-    bucketItems?: IBucketItem[],
+    bucketItems?: IBucketItem[] | string[],
     type?: enums.BucketType,
     href?: string,
 }

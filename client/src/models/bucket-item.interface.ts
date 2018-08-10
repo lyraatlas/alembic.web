@@ -4,5 +4,4 @@ export interface IBucketItem extends IBaseModel, ILikeable, IOwned, ITimeStamped
     name?: string,
     description?: string,
     href?: string,
-    bucketId?: string,
 }

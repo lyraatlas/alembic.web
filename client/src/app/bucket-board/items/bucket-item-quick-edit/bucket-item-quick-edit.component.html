@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div class="upload-table" *ngIf="files && files.length > 0">
+            <div class="upload-table" *ngIf="uploadFiles && uploadFiles.length > 0">
                 <table class="table">
                     <thead>
                         <tr>
@@ -42,17 +42,20 @@
                         </tr>
                     </thead>
                     <tbody class="upload-name-style">
-                        <tr *ngFor="let item of files; let i=index">
+                        <tr *ngFor="let item of uploadFiles; let i=index">
                             <td>
-                                <strong>{{ item.name }}</strong>
+                                <strong>{{ item.file.name }}</strong>
                             </td>
+                            <td>
+                              <strong>{{ item.statusText }}</strong>
+                          </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
         </div>
-        <form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="form-horizontal" *ngIf="bucketItem">
+        <form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="form-horizontal" *ngIf="currentBucketItem">
         <div class="col-md-6">
 
                 <fieldset>
@@ -60,7 +63,7 @@
                         <label class="col-sm-3 control-label">Name</label>
 
                         <div class="col-sm-8" [ngClass]="{ 'form-error': (!name.valid && f.submitted) }">
-                            <input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="bucketItem.name">
+                            <input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="currentBucketItem.name">
                             <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
                                 You have to name your Bucket Items.
                             </small>
@@ -71,7 +74,7 @@
                         <label class="col-sm-3 control-label">Description</label>
 
                         <div class="col-sm-8" [ngClass]="{ 'form-error': (!description.valid && f.submitted) }">
-                            <textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="bucketItem.description"></textarea>
+                            <textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="currentBucketItem.description"></textarea>
                             <small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
                                 A little description is always nice.
                             </small>

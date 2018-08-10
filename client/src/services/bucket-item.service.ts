@@ -10,34 +10,48 @@ import { LikeableServiceMixin } from './mixins/likeable.service.mixin';
 
 @Injectable()
 export class BucketItemService extends BaseService<IBucketItem>{
-    
-    public liker = new LikeableServiceMixin();
-    public commenter = new CommentableServiceMixin();
 
-    constructor(public http: Http) {
-        super(http, {
-            rootApiUrl: `${environment.apiEndpoint}${environment.V1}`,
-            urlSuffix: CONST.ep.BUCKET_ITEMS
-        });
-        
-        this.liker.service = this;
-        this.commenter.service = this;
-     }
+  public liker = new LikeableServiceMixin();
+  public commenter = new CommentableServiceMixin();
 
-     public uploadImage(file: File, id: string) : Observable<IBucketItem>{
+  constructor(public http: Http) {
+    super(http, {
+      rootApiUrl: `${environment.apiEndpoint}${environment.V1}`,
+      urlSuffix: CONST.ep.BUCKET_ITEMS
+    });
 
-        let formData:FormData = new FormData();
+    this.liker.service = this;
+    this.commenter.service = this;
+  }
 
-        formData.append('file', file);
+  public removeFromBucket(bucketItemId: string, bucketId: string): Observable<string> {
 
-        this.requestOptions.headers.set(`Content-Type`, 'multipart/form-data');
-        this.requestOptions.headers.delete(`Content-Type`);
+    this.requestOptions.body = {
+      bucketId: bucketId,
+      buckItemId: bucketItemId
+    };
 
-        //http://localhost:9000/api/v1//bucket-items/images/5b54ea219902925b0be2301e
-        return this.http.post(`${this.buildUrl({operation: '/images'})}/${id}`, formData, this.requestOptions)
-            .map(res => {
-                return res.json();
-            })
-            .catch(this.handleError);
-     }
+    return this.http.delete(`${this.buildUrl({ operation: CONST.ep.REMOVE_REFERENCES })}/${bucketItemId}`, this.requestOptions)
+      .map(res => {
+        return res.json();
+      })
+      .catch(this.handleError);
+  }
+
+  public uploadImage(file: File, id: string): Observable<IBucketItem> {
+
+    let formData: FormData = new FormData();
+
+    formData.append('file', file);
+
+    this.requestOptions.headers.set(`Content-Type`, 'multipart/form-data');
+    this.requestOptions.headers.delete(`Content-Type`);
+
+    //http://localhost:9000/api/v1//bucket-items/images/5b54ea219902925b0be2301e
+    return this.http.post(`${this.buildUrl({ operation: '/images' })}/${id}`, formData, this.requestOptions)
+      .map(res => {
+        return res.json();
+      })
+      .catch(this.handleError);
+  }
 }

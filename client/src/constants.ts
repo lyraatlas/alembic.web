@@ -13,6 +13,7 @@ export const CONST = {
         ROLES: '/roles',
         BUCKETS: '/buckets',
         BUCKET_ITEMS:'/bucket-items',
+        REMOVE_REFERENCES: '/remove-references',
         REGISTER: '/register',
         API_DOCS: '/api-docs',
         API_SWAGGER_DEF: '/swagger-definition',

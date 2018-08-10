@@ -1,24 +1,18 @@
-import { Router, Request, Response, RequestParamHandler, NextFunction, RequestHandler, Application } from 'express';
-import mongoose = require('mongoose');
-import { Schema, Model, Document } from 'mongoose';
-import { Config } from '../../config/config';
-import { ITokenPayload, IBaseModelDoc, IHasImages } from '../../models/';
-import { CONST } from "../../constants";
-import { ApiErrorHandler } from "../../api-error-handler";
-import * as rimraf from 'rimraf';
-import * as path from 'path';
-import * as multer from 'multer';
-import * as sharp from 'sharp';
-import log = require('winston');
-import * as enums from '../../enumerations';
-import * as AWS from 'aws-sdk';
 import * as fs from 'async-file';
+import { NextFunction, Request, Response } from 'express';
+import * as path from 'path';
+import * as sharp from 'sharp';
+import { ApiErrorHandler } from "../../api-error-handler";
+import { Config } from '../../config/config';
+import { CONST } from "../../constants";
+import * as enums from '../../enumerations';
 import { MulterFile } from '../../models';
-import { AmazonS3Service } from '../../services/index';
+import { IBaseModelDoc, IHasImages } from '../../models/';
 import { IImage, IImageVariation } from '../../models/image.interface';
-import { BaseRepository } from '../../repositories';
+import { AmazonS3Service } from '../../services/index';
 import { BaseController } from './base.controller';
-import { BucketController, BucketItemController } from '..';
+import mongoose = require('mongoose');
+import log = require('winston');
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
 export interface IImageStyle {
@@ -52,8 +46,8 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
                     const rawImageFile = request.files[0] as MulterFile;
                     try {
                         //Now we go get the product
-                        const itemDoc = await controller.repository.single(request.params['id']);
-                        const itemWithImage = itemDoc as IHasImages;
+                        let itemDoc = await controller.repository.single(request.params['id']);
+                        let itemWithImage = itemDoc as IHasImages;
 
                         const sharpImageDetails: sharp.OutputInfo[] = new Array<sharp.OutputInfo>();
 
@@ -73,6 +67,9 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
                         imageStyles.forEach(imageStyle => {
                             this.addVariation(image, rawImageFile, imageStyle.output, imageStyle.imageType, nextOrderNum);
                         })
+
+                        itemDoc = await controller.repository.single(request.params['id']);
+                        itemWithImage = itemDoc as IHasImages;
 
                         // If this is the first image, we're going to create a new array.
                         if (!itemWithImage.images) {

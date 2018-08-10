@@ -10,7 +10,6 @@ export interface IBucketItem extends IBaseModel, ILikeable, IOwned, ITimeStamped
     name?: string,
     description?: string,
     href?: string,
-    bucketId?: string,
 }
 
 export interface IBucketItemDoc extends IBucketItem, IBaseModelDoc {
@@ -44,7 +43,6 @@ const BucketItemSchema = new Schema({
             key: {type: String},
         }],
     }],
-    bucketId: { type: Schema.Types.ObjectId },
     name: { type: String },
     description: { type: String },
     href: { type: String }
