@@ -6,13 +6,15 @@
     background-color: #eee;
     border: dotted 1px #aaa;
   }
-  
+
   .text-wrapper {
     display: table-cell;
     vertical-align: middle;
   }
-  
+
   .centered {
     font-weight: bold;
     text-align:center;
   }
+
+  @import '../../bucket-common.scss';

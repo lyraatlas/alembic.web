@@ -178,11 +178,9 @@ export class BucketItemQuickEditComponent implements OnInit {
   }
 
   public fileOver(event) {
-    console.log(event);
   }
 
   public fileLeave(event) {
-    console.log(event);
   }
 
   cancelHandler() {
