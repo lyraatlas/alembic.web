@@ -6,10 +6,9 @@ import { CONST } from '../../../../constants';
 import { AlertType, EditControlMode } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
 import { IBucket, IBucketItem, ITokenPayload } from '../../../../models';
-import { AlertService } from '../../../../services';
+import { AlertService, LikeableServiceMixin } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
 import { BucketService } from '../../../../services/bucket.service';
-import { BucketUtilities } from '../../utilities/bucket-utilities';
 
 @Component({
   selector: 'app-bucket-detail',
@@ -57,16 +56,7 @@ export class BucketDetailComponent implements OnInit {
 
   //#region Bucket Methods
 
-  showDeleteConfirm() {
-    this.ngxSmartModalService.open("deleteConfirmModal");
-  }
-
-  cancelDelete() {
-    this.ngxSmartModalService.close("deleteConfirmModal");
-  }
-
-
-  deleteBucket() {
+  deleteBucket(bucket: IBucket) {
     this.bucketService.delete(this.currentBucketId).subscribe((item) => {
       // item is some kind of delete response;
       console.dir(item);
@@ -80,23 +70,15 @@ export class BucketDetailComponent implements OnInit {
   }
 
   toggleLike() {
-    console.log('About to toggle the like');
+    this.bucketService.liker.toggleLike(this.bucket, this.errorEventBus).subscribe(item => {
+      this.bucket = item;
+    });
+  }
 
-    if (this.bucket.likedBy.indexOf(BucketUtilities.getCurrentUserId()) > -1) {
-      this.bucketService.liker.removeLike(this.bucket).subscribe(bucket => {
-        this.bucket = bucket;
-        this.bucket.isLikedByCurrentUser = false;
-      }, error => {
-        this.errorEventBus.throw(error);
-      });
-    } else {
-      this.bucketService.liker.addLike(this.bucket).subscribe(bucket => {
-        this.bucket = bucket;
-        this.bucket.isLikedByCurrentUser = true;
-      }, error => {
-        this.errorEventBus.throw(error);
-      });
-    }
+  canceled() {
+    this.bucket.description = this.originalDesc;
+    this.bucket.name = this.originalName;
+    this.ngxSmartModalService.close("quickEditBucketModal");
   }
 
   //#endregion
@@ -105,23 +87,16 @@ export class BucketDetailComponent implements OnInit {
     this.router.navigate(['/bucket-board']);
   }
 
-  showDeleteItemConfirm(bucketItem:IBucketItem) {
-    this.bucketItem = bucketItem;
-    this.ngxSmartModalService.open("deleteConfirmModalItem");
+  cancelQuickEdit() {
+    this.ngxSmartModalService.close("quickEditBucketItem");
   }
 
-  cancelDeleteItem(){
-    this.ngxSmartModalService.close("deleteConfirmModalItem");
-  }
-
-  deleteItem() {
-    this.bucketItemService.removeFromBucket(this.bucketItem._id,this.bucket._id).subscribe(res => {
-      this.bucketItem = null;
+  deleteItem(bucketItem: IBucketItem) {
+    this.bucketItemService.removeFromBucket(bucketItem._id, this.bucket._id).subscribe(res => {
+      this.bucketItem = {};
       this.fetchBucket();
-      this.ngxSmartModalService.close("deleteConfirmModalItem");
     }, error => {
       this.errorEventBus.throw(error);
-      this.ngxSmartModalService.close("deleteConfirmModalItem");
     });
   }
 
@@ -137,28 +112,40 @@ export class BucketDetailComponent implements OnInit {
     this.ngxSmartModalService.open("quickEditBucketModal");
   }
 
-  canceled() {
-    this.bucket.description = this.originalDesc;
-    this.bucket.name = this.originalName;
-    this.ngxSmartModalService.close("quickEditBucketModal");
-  }
 
-  quickEditItem(bucketItem: IBucketItem){
+  quickEditItem(bucketItem: IBucketItem) {
     this.bucketItem = bucketItem;
     this.ngxSmartModalService.open("quickEditBucketItem");
   }
 
-  bucketItemSaved(event){
+  bucketItemSaved(event) {
     this.ngxSmartModalService.close("quickEditBucketItem");
+    // We also need to clean up any of our temp variables.
+    this.bucketItem = {};
     this.fetchBucket();
   }
 
-  bucketItemCancel() {
-    this.ngxSmartModalService.close("quickEditBucketItem");
+  addRemoveLike(item:IBucketItem){
+    this.bucketItemService.liker.toggleLike(item, this.errorEventBus).subscribe(item => {
+      this.bucketItem = item;
+      this.updateBucketItemInTable(this.bucketItem);
+    });
   }
 
   addBucketItem() {
     this.ngxSmartModalService.open("quickEditBucketItem");
+  }
+
+  updateBucketItemInTable(bucketItem: IBucketItem) {
+    for (let j = 0; j < this.bucketItemTable.length; j++) {
+      const row = this.bucketItemTable[j];
+      for (let i = 0; i < row.length; i++) {
+        const item = row[i];
+        if (item && item._id && item._id == bucketItem._id) {
+          row[i] = bucketItem;
+        }
+      }
+    }
   }
 
   fetchBucket(): any {
@@ -167,7 +154,7 @@ export class BucketDetailComponent implements OnInit {
 
       this.bucket = item;
 
-      BucketUtilities.calculateLikeStatus(new Array(this.bucket));
+      LikeableServiceMixin.calculateLikeStatus(new Array(this.bucket));
 
       if (this.bucket && this.bucket.bucketItems && this.bucket.bucketItems.length > 0) {
 
@@ -186,7 +173,7 @@ export class BucketDetailComponent implements OnInit {
             ++currentBucketIndex;
           }
         }
-      }else{
+      } else {
         this.bucketItemTable = new Array();
       }
     }, error => {

@@ -9,6 +9,7 @@ import { Ng2CompleterModule } from "ng2-completer";
 import { FileDropModule } from 'ngx-file-drop';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgUploaderModule } from 'ngx-uploader';
+import { ConfirmModalComponent } from '../shared/confirm-modal/confirm-modal.component';
 import { ImageUploaderModule } from '../shared/image-uploader/image-uploader.module';
 import { LaDndDirective } from '../shared/la-dnd/la-dnd.directive';
 import { BucketListRoutes } from './bucket-list.routing';
@@ -36,7 +37,8 @@ import { BucketItemQuickEditComponent } from './items/bucket-item-quick-edit/buc
         BucketDetailComponent,
         BucketEditControlComponent,
         BucketItemQuickEditComponent,
-        LaDndDirective
+        LaDndDirective,
+        ConfirmModalComponent,
     ]
 })
 export class BucketListModule { }

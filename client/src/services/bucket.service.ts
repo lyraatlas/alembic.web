@@ -9,17 +9,20 @@ import { LikeableServiceMixin } from './mixins/likeable.service.mixin';
 
 @Injectable()
 export class BucketService extends BaseService<IBucket>{
-    
+
     public liker = new LikeableServiceMixin();
     public commenter = new CommentableServiceMixin();
+
+
 
     constructor(public http: Http) {
         super(http, {
             rootApiUrl: `${environment.apiEndpoint}${environment.V1}`,
             urlSuffix: CONST.ep.BUCKETS
         });
-        
+
         this.liker.service = this;
         this.commenter.service = this;
      }
+
 }

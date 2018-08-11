@@ -31,11 +31,15 @@ export class BucketItemService extends BaseService<IBucketItem>{
       buckItemId: bucketItemId
     };
 
-    return this.http.delete(`${this.buildUrl({ operation: CONST.ep.REMOVE_REFERENCES })}/${bucketItemId}`, this.requestOptions)
+    const deleted =  this.http.delete(`${this.buildUrl({ operation: CONST.ep.REMOVE_REFERENCES })}/${bucketItemId}`, this.requestOptions)
       .map(res => {
         return res.json();
       })
       .catch(this.handleError);
+
+     this.requestOptions.body = undefined;
+
+     return deleted;
   }
 
   public uploadImage(file: File, id: string): Observable<IBucketItem> {

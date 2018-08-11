@@ -29,7 +29,8 @@ export class AlertComponent {
                         placement: {
                             from: 'top',
                             align: 'center'
-                        }
+                        },
+                        z_index: 1500,
                     });
             }
         });

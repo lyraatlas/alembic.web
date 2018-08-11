@@ -42,7 +42,7 @@
                     <fa-icon [icon]="faPlusCircle"></fa-icon>&nbsp;&nbsp;Add Item</button>
                 <button type="button" class="btn col-md-2  hidden-sm hidden-xs" (click)="editBucket(bucket)">
                     <fa-icon [icon]="faEdit"></fa-icon>&nbsp;&nbsp;Edit Board</button>
-                <button type="button" class="btn col-md-2 hidden-sm hidden-xs danger" (click)="showDeleteConfirm()">
+                <button type="button" class="btn col-md-2 hidden-sm hidden-xs danger" (click)="confirmForBucket.show(bucket)">
                     <fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;&nbsp;Delete Board</button>
             </div>
             <div class="row mb16" style="font-size: 24px; cursor: pointer; opacity: .7">
@@ -93,7 +93,7 @@
                                     <a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEditItem(bucketItem)" style="border-right: 1px solid lightgrey; padding: 8px;  cursor: pointer">
                                         <fa-icon [icon]="faPen"></fa-icon>
                                     </a>
-                                    <a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Delete This bucketItem" (click)="showDeleteItemConfirm(bucketItem)" style=" padding: 8px;  cursor: pointer">
+                                    <a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Delete This bucketItem" (click)="confirmForItem.show(bucketItem)" style=" padding: 8px;  cursor: pointer">
                                         <fa-icon [icon]="faTrashAlt"></fa-icon>
                                     </a>
                                 </div>
@@ -116,38 +116,9 @@
 </ngx-smart-modal>
 
 <ngx-smart-modal #quickEditBucketItem hideDelay="100" identifier="quickEditBucketItem" customClass="modal-expander nsm-dialog-animation-ttb bucket-item-quick-edit-modal ">
-    <app-bucket-item-quick-edit [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)" (cancel)="bucketItemCancel()"></app-bucket-item-quick-edit>
+    <app-bucket-item-quick-edit [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)" (cancel)="cancelQuickEdit()"></app-bucket-item-quick-edit>
 </ngx-smart-modal>
 
+<app-confirm-modal #confirmForBucket id="confirmForBucket" (confirmed)="deleteBucket($event)"></app-confirm-modal>
 
-
-<ngx-smart-modal #deleteConfirmModal hideDelay="100" identifier="deleteConfirmModal" customClass="nsm-dialog-animation-ttb">
-    <h3>Are you sure you want to delete?</h3>
-
-    <hr />
-    <div class="row">
-        <div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-2">
-            <button type="button" class="btn btn-fill btn-wd btn-danger" (click)="deleteBucket()">Delete</button>
-        </div>
-        <div class="col-xs-6 col-xs-offset-3  col-sm-4">
-            <button type="button" class="btn btn-fill btn-wd" (click)="cancelDelete()">Cancel</button>
-        </div>
-
-    </div>
-</ngx-smart-modal>
-
-<ngx-smart-modal #deleteConfirmModalItem hideDelay="100" identifier="deleteConfirmModalItem" customClass="nsm-dialog-animation-ttb">
-  <h3>Are you sure you want to delete?</h3>
-
-  <hr />
-  <div class="row">
-      <div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-2">
-          <button type="button" class="btn btn-fill btn-wd btn-danger" (click)="deleteItem()">Delete</button>
-      </div>
-      <div class="col-xs-6 col-xs-offset-3  col-sm-4">
-          <button type="button" class="btn btn-fill btn-wd" (click)="cancelDeleteItem()">Cancel</button>
-      </div>
-
-  </div>
-</ngx-smart-modal>
-
+<app-confirm-modal #confirmForItem id="confirmForItem" (confirmed)="deleteItem($event)"></app-confirm-modal>

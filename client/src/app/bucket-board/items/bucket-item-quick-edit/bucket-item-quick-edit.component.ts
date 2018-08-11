@@ -1,8 +1,8 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faCameraRetro, faPlusSquare, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { EditControlMode, UploadStatus } from '../../../../enumerations';
+import { AlertType, EditControlMode, UploadStatus } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
 import { IBucket } from '../../../../models';
 import { IBucketItem } from '../../../../models/bucket-item.interface';
@@ -14,13 +14,13 @@ import { BucketItemService } from '../../../../services/bucket-item.service';
   templateUrl: './bucket-item-quick-edit.component.html',
   styleUrls: ['./bucket-item-quick-edit.component.scss']
 })
-export class BucketItemQuickEditComponent implements OnInit {
+export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 
   @Output() bucketItemChanged = new EventEmitter();
   @Output() cancel = new EventEmitter();
   @Output() bucketItemSaved = new EventEmitter<IBucketItem>();
 
-  @Input() bucket: IBucket;
+  @Input() bucket: IBucket = {};
   @Input() currentBucketItem: IBucketItem = {};
 
   @ViewChild('laFileInput') fileInput: ElementRef;
@@ -48,6 +48,20 @@ export class BucketItemQuickEditComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    // Whenever a bucket item changes, we're going to want to build up our images table.
+    if(this.currentBucketItem && this.currentBucketItem.images){
+      this.currentBucketItem.images.forEach(image => {
+        this.uploadFiles.push({
+          url: image.variations[0].url,
+          file: image.variations[0].url,
+          status: UploadStatus.finished,
+          statusText: "Added",
+        })
+      });
+    }
+  }
+
   public onFilesSelected(e: any) {
     let selectedFiles: Array<File> = this.fileInput.nativeElement.files;
     this.processFiles(selectedFiles);
@@ -58,6 +72,14 @@ export class BucketItemQuickEditComponent implements OnInit {
   }
 
   public processFiles(files: Array<File>) {
+
+    if (files.length > 5) {
+      this.alertService.send({
+        alertType: AlertType.warning,
+        text: "Sorry but you can only upload 5 images at a time."
+      });
+      return;
+    }
 
     // We want to handle the processing first.
     for (let i = 0; i < files.length; i++) {
@@ -74,42 +96,34 @@ export class BucketItemQuickEditComponent implements OnInit {
 
 
     // if we haven't created this bucket item yet, then we need to create it first.
-    if (this.currentBucketItem == null ||!this.currentBucketItem._id || this.currentBucketItem._id == '') {
+    if (this.currentBucketItem == null || !this.currentBucketItem._id || this.currentBucketItem._id == '') {
 
-      this.bucketItemService.create(this.currentBucketItem).subscribe(createdItem => {
-
+      this.bucketItemService.create(this.currentBucketItem).map(createdItem => {
         this.currentBucketItem = createdItem;
 
-        // There's a certain order of operations we need to take if this bucket item is new.
-        if (!this.bucket.bucketItems) {
-          this.bucket.bucketItems = new Array<string>();
-        }
+        this.intializeBucketItemsArray();
 
         // Now add the bucket item id to the array on the bucket.
         (this.bucket.bucketItems as string[]).push(createdItem._id);
 
         this.pushImagesToServer();
 
-        // After the image has been uploaded we wante to update the bucket with the newly created id.
-        this.bucketService.update(this.bucket, this.bucket._id).subscribe(item => {
-          this.bucket = item;
+        return createdItem;
+      }).flatMap(createdItem => {
 
-          //Now after all this, let's get the updated bucketItem
-          this.bucketItemService.get(createdItem._id).subscribe(item => {
-            this.currentBucketItem = item;
-          }, error => {
-            this.errorEventBus.throw(error);
-          });
+        return this.bucketService.update(this.bucket, this.bucket._id);
 
-        }, error => {
-          this.errorEventBus.throw(error);
-        });
+      }).subscribe(updatedBucket => {
+
+        this.bucket = updatedBucket;
 
       }, error => {
         this.errorEventBus.throw(error);
       });
     } else {
+
       this.pushImagesToServer();
+
     }
   }
 
@@ -117,47 +131,72 @@ export class BucketItemQuickEditComponent implements OnInit {
     let imageUploads: Observable<IBucketItem>[] = [];
 
     for (let i = 0; i < this.uploadFiles.length; i++) {
-      imageUploads.push(this.bucketItemService.uploadImage(this.uploadFiles[i].file, this.currentBucketItem._id));
+      if(this.uploadFiles[i].status == UploadStatus.pending){
+        imageUploads.push(this.bucketItemService.uploadImage(this.uploadFiles[i].file as File, this.currentBucketItem._id));
+      }
     }
 
-    Observable.concat(...imageUploads).subscribe(item =>{
-      this.currentBucketItem = item;
+    // ... => breaks up the parameter from an array into individual parameters passed to the method.
+    // Observable.concat takes and runs these in series.
+    Observable.concat(...imageUploads).subscribe(item => {
+      // If we just blanket push these changes on top of the bucket item, then we'll blow away any changes the
+      // user might have made to name and description.
+      this.currentBucketItem.images = item.images;
       console.log('Image Added');
     });
   }
 
   saveBucketItem(isValid: boolean) {
     if (isValid) {
-      if (!this.bucket.bucketItems) {
-        this.bucket.bucketItems = new Array<string>();
-      }
+
+      this.intializeBucketItemsArray();
+
+      // If we have an id then we just update the bucket item.
       if (this.currentBucketItem._id) {
+
         this.bucketItemService.update(this.currentBucketItem, this.currentBucketItem._id).subscribe(item => {
-          this.currentBucketItem = item;
-          this.bucketItemSaved.emit(this.currentBucketItem);
+
+          this.clearControl();
+
+          this.bucketItemSaved.emit(item);
         }, error => {
           this.errorEventBus.throw(error);
         });
+
       } else {
         // First we go in and create the bucket item.  Then we're going to update the bucket with the new bucket item.
-        this.bucketItemService.create(this.currentBucketItem).subscribe(createdItem => {
+        this.bucketItemService.create(this.currentBucketItem)
+          .map(createdItem => {
 
-          this.currentBucketItem = createdItem;
+            (this.bucket.bucketItems as string[]).push(createdItem._id);
+            // Save off the created item for later so we can emit it.
+            this.currentBucketItem = createdItem;
+            return createdItem;
+          })
+          .flatMap(() => {
 
-          (this.bucket.bucketItems as string[]).push(createdItem._id);
+            return this.bucketService.update(this.bucket, this.bucket._id);
 
-          this.bucketService.update(this.bucket, this.bucket._id).subscribe(item => {
-            this.bucket = item;
-            this.bucketItemSaved.emit(createdItem);
+          })
+          .subscribe((updatedBucket) => {
+
+            this.bucket = updatedBucket;
+            this.bucketItemSaved.emit(this.currentBucketItem);
+            this.clearControl();
+
           }, error => {
             this.errorEventBus.throw(error);
           });
-
-        }, error => {
-          this.errorEventBus.throw(error);
-        });
       }
     }
+  }
+
+  public intializeBucketItemsArray() {
+    // If the bucket doesn't have a list of items, then we create a new list for it.
+    if (!this.bucket.bucketItems) {
+      this.bucket.bucketItems = new Array<string>();
+    }
+
   }
 
   public validateFileType(type: string) {
@@ -177,6 +216,12 @@ export class BucketItemQuickEditComponent implements OnInit {
     return false;
   }
 
+  public clearControl() {
+    // this will clear the array
+    this.uploadFiles.length = 0;
+    this.currentBucketItem = {};
+  }
+
   public fileOver(event) {
   }
 
@@ -189,7 +234,8 @@ export class BucketItemQuickEditComponent implements OnInit {
 }
 
 export class UploadFile {
-  public file: File;
+  public url?: string;
+  public file: File | string;
   public status: UploadStatus;
   public statusText: string;
 }
