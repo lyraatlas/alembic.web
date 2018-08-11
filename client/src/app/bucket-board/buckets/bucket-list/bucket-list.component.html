@@ -22,7 +22,7 @@
 
                         <div class="card">
                             <a [routerLink]="['/bucket-board/detail', bucket._id]">
-                                <img style="border-radius: 6px 6px 0px 0px" *ngIf="bucket.images.length > 0 && bucket.images[1].variations" src="//{{bucket.images[1].variations[1].url}}">
+                                <img style="border-radius: 6px 6px 0px 0px" *ngIf="bucket.images.length > 0 && bucket.images[0].variations" src="//{{bucket.images[0].variations[1].url}}">
                                 <div class="card-content">
                                     <h3 class="card-title">{{bucket.name}}</h3>
                                     <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
@@ -55,7 +55,7 @@
 
 
 
-</div>                      
+</div>
 
 
 <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal" customClass="la-modal nsm-dialog-animation-fade">
