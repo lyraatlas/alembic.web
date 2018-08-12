@@ -2,6 +2,8 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, 
 import { ActivatedRoute, Router } from '@angular/router';
 import { faCameraRetro, faPlusSquare, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
+import { UploadFile } from '../../../../classes/upload-file.class';
+import { UploadResponse } from '../../../../classes/upload-response.class';
 import { AlertType, EditControlMode, UploadStatus } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
 import { IBucket } from '../../../../models';
@@ -10,232 +12,238 @@ import { AlertService, BucketService, UserService } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
 
 @Component({
-  selector: 'app-bucket-item-quick-edit',
-  templateUrl: './bucket-item-quick-edit.component.html',
-  styleUrls: ['./bucket-item-quick-edit.component.scss']
+	selector: 'app-bucket-item-quick-edit',
+	templateUrl: './bucket-item-quick-edit.component.html',
+	styleUrls: ['./bucket-item-quick-edit.component.scss']
 })
 export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 
-  @Output() bucketItemChanged = new EventEmitter();
-  @Output() cancel = new EventEmitter();
-  @Output() bucketItemSaved = new EventEmitter<IBucketItem>();
+	@Output() bucketItemChanged = new EventEmitter();
+	@Output() cancel = new EventEmitter();
+	@Output() bucketItemSaved = new EventEmitter<IBucketItem>();
 
-  @Input() bucket: IBucket = {};
-  @Input() currentBucketItem: IBucketItem = {};
+	@Input() bucket: IBucket = {};
+	@Input() currentBucketItem: IBucketItem = {};
 
-  @ViewChild('laFileInput') fileInput: ElementRef;
+	@ViewChild('laFileInput') fileInput: ElementRef;
 
-  // Public enumerations
-  public EditControlMode = EditControlMode;
-  public faCameraRetro = faCameraRetro;
-  public faPlusSquare = faPlusSquare;
-  public faTrashAlt = faTrashAlt;
+	// Public enumerations
+	public EditControlMode = EditControlMode;
+	public faCameraRetro = faCameraRetro;
+	public faPlusSquare = faPlusSquare;
+	public faTrashAlt = faTrashAlt;
 
-  //Upload Images Control
-  public files: File[] = [];
-  public uploadFiles: Array<UploadFile> = [];
-  public controlMode: EditControlMode = EditControlMode.create;
-
-  constructor(private bucketService: BucketService,
-    private errorEventBus: ErrorEventBus,
-    public alertService: AlertService,
-    public userService: UserService,
-    private route: ActivatedRoute,
-    private bucketItemService: BucketItemService,
-    private router: Router) { }
-
-  ngOnInit() {
-
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    // Whenever a bucket item changes, we're going to want to build up our images table.
-    if(this.currentBucketItem && this.currentBucketItem.images){
-      this.currentBucketItem.images.forEach(image => {
-        this.uploadFiles.push({
-          url: image.variations[0].url,
-          file: image.variations[0].url,
-          status: UploadStatus.finished,
-          statusText: "Added",
-        })
-      });
-    }
-  }
-
-  public onFilesSelected(e: any) {
-    let selectedFiles: Array<File> = this.fileInput.nativeElement.files;
-    this.processFiles(selectedFiles);
-  }
-
-  public onFilesDropped(files: Array<File>) {
-    this.processFiles(files);
-  }
-
-  public processFiles(files: Array<File>) {
-
-    if (files.length > 5) {
-      this.alertService.send({
-        alertType: AlertType.warning,
-        text: "Sorry but you can only upload 5 images at a time."
-      });
-      return;
-    }
-
-    // We want to handle the processing first.
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (file && this.validateFileType(file.type)) {
-
-        this.uploadFiles.push({
-          file: file,
-          status: UploadStatus.pending,
-          statusText: "Uploading",
-        });
-      }
-    }
+	//Upload Images Control
+	public files: File[] = [];
+	public uploadFiles: Array<UploadFile> = [];
+	public controlMode: EditControlMode = EditControlMode.create;
+	public isUploadComplete: boolean = true;
+	public name: string;
+	public description: string;
 
 
-    // if we haven't created this bucket item yet, then we need to create it first.
-    if (this.currentBucketItem == null || !this.currentBucketItem._id || this.currentBucketItem._id == '') {
+	constructor(private bucketService: BucketService,
+		private errorEventBus: ErrorEventBus,
+		public alertService: AlertService,
+		public userService: UserService,
+		private route: ActivatedRoute,
+		private bucketItemService: BucketItemService,
+		private router: Router) { }
 
-      this.bucketItemService.create(this.currentBucketItem).map(createdItem => {
-        this.currentBucketItem = createdItem;
+	ngOnInit() {
+	}
 
-        this.intializeBucketItemsArray();
+	ngOnChanges(changes: SimpleChanges) {
+		// Whenever a bucket item changes, we're going to want to build up our images table.
+		if (this.currentBucketItem && this.currentBucketItem.images) {
+			this.currentBucketItem.images.forEach(image => {
+				this.uploadFiles.push({
+					url: image.variations[0].url,
+					file: image.variations[0].url,
+					status: UploadStatus.finished,
+					statusText: "Added",
+				})
+			});
+		}
+	}
 
-        // Now add the bucket item id to the array on the bucket.
-        (this.bucket.bucketItems as string[]).push(createdItem._id);
+	public onFilesSelected(e: any) {
+		let selectedFiles: Array<File> = this.fileInput.nativeElement.files;
+		this.processFiles(selectedFiles);
+	}
 
-        this.pushImagesToServer();
+	public onFilesDropped(files: Array<File>) {
+		this.processFiles(files);
+	}
 
-        return createdItem;
-      }).flatMap(createdItem => {
+	public processFiles(files: Array<File>) {
 
-        return this.bucketService.update(this.bucket, this.bucket._id);
+		if (files.length > 5) {
+			this.alertService.send({
+				alertType: AlertType.warning,
+				text: "Sorry but you can only upload 5 images at a time."
+			});
+			return;
+		}
 
-      }).subscribe(updatedBucket => {
+		// We want to handle the processing first.
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			if (file && this.validateFileType(file.type)) {
 
-        this.bucket = updatedBucket;
+				this.uploadFiles.push({
+					file: file,
+					status: UploadStatus.pending,
+					statusText: "Uploading",
+				});
+			}
+		}
 
-      }, error => {
-        this.errorEventBus.throw(error);
-      });
-    } else {
+		if (this.uploadFiles.length > 0) {
+			this.isUploadComplete = false;
+		}
 
-      this.pushImagesToServer();
+		// if we haven't created this bucket item yet, then we need to create it first.
+		if (this.currentBucketItem == null || !this.currentBucketItem._id || this.currentBucketItem._id == '') {
 
-    }
-  }
+			this.bucketItemService.create(this.currentBucketItem).map(createdItem => {
+				this.currentBucketItem = createdItem;
 
-  pushImagesToServer() {
-    let imageUploads: Observable<IBucketItem>[] = [];
+				this.intializeBucketItemsArray();
 
-    for (let i = 0; i < this.uploadFiles.length; i++) {
-      if(this.uploadFiles[i].status == UploadStatus.pending){
-        imageUploads.push(this.bucketItemService.uploadImage(this.uploadFiles[i].file as File, this.currentBucketItem._id));
-      }
-    }
+				// Now add the bucket item id to the array on the bucket.
+				(this.bucket.bucketItems as string[]).push(createdItem._id);
 
-    // ... => breaks up the parameter from an array into individual parameters passed to the method.
-    // Observable.concat takes and runs these in series.
-    Observable.concat(...imageUploads).subscribe(item => {
-      // If we just blanket push these changes on top of the bucket item, then we'll blow away any changes the
-      // user might have made to name and description.
-      this.currentBucketItem.images = item.images;
-      console.log('Image Added');
-    });
-  }
+				this.pushImagesToServer();
 
-  saveBucketItem(isValid: boolean) {
-    if (isValid) {
+				return createdItem;
+			}).flatMap(createdItem => {
 
-      this.intializeBucketItemsArray();
+				return this.bucketService.update(this.bucket, this.bucket._id);
 
-      // If we have an id then we just update the bucket item.
-      if (this.currentBucketItem._id) {
+			}).subscribe(updatedBucket => {
 
-        this.bucketItemService.update(this.currentBucketItem, this.currentBucketItem._id).subscribe(item => {
+				this.bucket = updatedBucket;
 
-          this.clearControl();
+			}, error => {
+				this.errorEventBus.throw(error);
+			});
+		} else {
 
-          this.bucketItemSaved.emit(item);
-        }, error => {
-          this.errorEventBus.throw(error);
-        });
+			this.pushImagesToServer();
 
-      } else {
-        // First we go in and create the bucket item.  Then we're going to update the bucket with the new bucket item.
-        this.bucketItemService.create(this.currentBucketItem)
-          .map(createdItem => {
+		}
+	}
 
-            (this.bucket.bucketItems as string[]).push(createdItem._id);
-            // Save off the created item for later so we can emit it.
-            this.currentBucketItem = createdItem;
-            return createdItem;
-          })
-          .flatMap(() => {
+	pushImagesToServer() {
+		let imageUploads: Observable<UploadResponse>[] = [];
+		let totalImages: number = imageUploads.length;
 
-            return this.bucketService.update(this.bucket, this.bucket._id);
 
-          })
-          .subscribe((updatedBucket) => {
+		for (let i = 0; i < this.uploadFiles.length; i++) {
+			if (this.uploadFiles[i].status == UploadStatus.pending) {
+				imageUploads.push(this.bucketItemService.uploadImage(this.uploadFiles[i], this.currentBucketItem._id));
+			}
+		}
 
-            this.bucket = updatedBucket;
-            this.bucketItemSaved.emit(this.currentBucketItem);
-            this.clearControl();
+		// ... => breaks up the parameter from an array into individual parameters passed to the method.
+		// Observable.concat takes and runs these in series.
+		Observable.merge(...imageUploads).subscribe(uploadResponse => {
+			// If we just blanket push these changes on top of the bucket item, then we'll blow away any changes the
+			// user might have made to name and description.
+			this.currentBucketItem.images = uploadResponse.bucketItem.images;
+			--totalImages;
+			this.isUploadComplete = totalImages <= 0;
+			// It would be nice here, if we could update the imageUploads with the updated item.
+			// uploadResponse.uploadImage
+			console.log('Image Added');
+		});
+	}
 
-          }, error => {
-            this.errorEventBus.throw(error);
-          });
-      }
-    }
-  }
+	saveBucketItem(isValid: boolean) {
+		if (isValid) {
 
-  public intializeBucketItemsArray() {
-    // If the bucket doesn't have a list of items, then we create a new list for it.
-    if (!this.bucket.bucketItems) {
-      this.bucket.bucketItems = new Array<string>();
-    }
+			this.intializeBucketItemsArray();
 
-  }
+			// If we have an id then we just update the bucket item.
+			if (this.currentBucketItem._id) {
 
-  public validateFileType(type: string) {
-    return (type == "image/jpeg" || type == "image/jpg" || type == "image/png")
-  }
+				this.bucketItemService.update(this.currentBucketItem, this.currentBucketItem._id).subscribe(item => {
 
-  public validateFileName(name: string) {
-    const parts = name.split('.');
-    if (parts && parts.length > 1) {
-      const extension = parts[parts.length - 1];
-      console.log(extension);
-      console.log(name);
-      return (extension == 'jpg' ||
-        extension == 'jpeg' ||
-        extension == 'png')
-    }
-    return false;
-  }
+					this.clearControl();
 
-  public clearControl() {
-    // this will clear the array
-    this.uploadFiles.length = 0;
-    this.currentBucketItem = {};
-  }
+					this.bucketItemSaved.emit(item);
+				}, error => {
+					this.errorEventBus.throw(error);
+				});
 
-  public fileOver(event) {
-  }
+			} else {
+				// First we go in and create the bucket item.  Then we're going to update the bucket with the new bucket item.
+				this.bucketItemService.create(this.currentBucketItem)
+					.map(createdItem => {
 
-  public fileLeave(event) {
-  }
+						(this.bucket.bucketItems as string[]).push(createdItem._id);
+						// Save off the created item for later so we can emit it.
+						this.currentBucketItem = createdItem;
+						return createdItem;
+					})
+					.flatMap(() => {
 
-  cancelHandler() {
-    this.cancel.emit(null);
-  }
+						return this.bucketService.update(this.bucket, this.bucket._id);
+
+					})
+					.subscribe((updatedBucket) => {
+
+						this.bucket = updatedBucket;
+						this.bucketItemSaved.emit(this.currentBucketItem);
+						this.clearControl();
+
+					}, error => {
+						this.errorEventBus.throw(error);
+					});
+			}
+		}
+	}
+
+	public intializeBucketItemsArray() {
+		// If the bucket doesn't have a list of items, then we create a new list for it.
+		if (!this.bucket.bucketItems) {
+			this.bucket.bucketItems = new Array<string>();
+		}
+
+	}
+
+	public validateFileType(type: string) {
+		return (type == "image/jpeg" || type == "image/jpg" || type == "image/png")
+	}
+
+	public validateFileName(name: string) {
+		const parts = name.split('.');
+		if (parts && parts.length > 1) {
+			const extension = parts[parts.length - 1];
+			console.log(extension);
+			console.log(name);
+			return (extension == 'jpg' ||
+				extension == 'jpeg' ||
+				extension == 'png')
+		}
+		return false;
+	}
+
+	public clearControl() {
+		// this will clear the array
+		this.uploadFiles.length = 0;
+		this.currentBucketItem = {};
+	}
+
+	public fileOver(event) {
+	}
+
+	public fileLeave(event) {
+	}
+
+	cancelHandler() {
+		this.cancel.emit(null);
+	}
 }
 
-export class UploadFile {
-  public url?: string;
-  public file: File | string;
-  public status: UploadStatus;
-  public statusText: string;
-}

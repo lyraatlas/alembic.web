@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from '../../node_modules/rxjs';
+import { UploadFile } from '../classes/upload-file.class';
+import { UploadResponse } from '../classes/upload-response.class';
 import { CONST } from '../constants';
 import { environment } from '../environments/environment';
 import { IBucketItem } from '../models';
@@ -42,18 +44,22 @@ export class BucketItemService extends BaseService<IBucketItem>{
      return deleted;
   }
 
-  public uploadImage(file: File, id: string): Observable<IBucketItem> {
+  public uploadImage(relatedImageUpload: UploadFile, bucketItemId: string): Observable<UploadResponse> {
 
     let formData: FormData = new FormData();
 
-    formData.append('file', file);
+    formData.append('file', relatedImageUpload.file);
 
     this.requestOptions.headers.set(`Content-Type`, 'multipart/form-data');
     this.requestOptions.headers.delete(`Content-Type`);
 
     //http://localhost:9000/api/v1//bucket-items/images/5b54ea219902925b0be2301e
-    return this.http.post(`${this.buildUrl({ operation: '/images' })}/${id}`, formData, this.requestOptions)
+    return this.http.post(`${this.buildUrl({ operation: '/images' })}/${bucketItemId}`, formData, this.requestOptions)
       .map(res => {
+		  return {
+			bucketItem: res.json(),
+			uploadFile: relatedImageUpload
+		  } as UploadResponse;
         return res.json();
       })
       .catch(this.handleError);
