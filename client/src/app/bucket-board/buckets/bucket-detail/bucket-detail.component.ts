@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faComment, faEdit, faHeart, faPen, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -9,6 +9,7 @@ import { IBucket, IBucketItem, ITokenPayload } from '../../../../models';
 import { AlertService, LikeableServiceMixin } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
 import { BucketService } from '../../../../services/bucket.service';
+import { BucketItemQuickEditComponent } from '../../items/bucket-item-quick-edit/bucket-item-quick-edit.component';
 
 @Component({
 	selector: 'app-bucket-detail',
@@ -43,6 +44,9 @@ export class BucketDetailComponent implements OnInit {
 		public ngxSmartModalService: NgxSmartModalService,
 		public alertService: AlertService,
 	) { }
+	
+	@ViewChild('quickEditItemControl') quickEditItemControl: BucketItemQuickEditComponent;
+
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
@@ -112,6 +116,7 @@ export class BucketDetailComponent implements OnInit {
 
 
 	quickEditItem(bucketItem: IBucketItem) {
+		//this.quickEditItemControl.clearControl();
 		this.bucketItem = bucketItem;
 		this.ngxSmartModalService.open("quickEditBucketItem");
 	}
@@ -131,6 +136,7 @@ export class BucketDetailComponent implements OnInit {
 	}
 
 	addBucketItem() {
+		//this.quickEditItemControl.clearControl();
 		this.ngxSmartModalService.open("quickEditBucketItem");
 	}
 

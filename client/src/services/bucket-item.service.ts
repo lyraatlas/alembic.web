@@ -60,7 +60,6 @@ export class BucketItemService extends BaseService<IBucketItem>{
 			bucketItem: res.json(),
 			uploadFile: relatedImageUpload
 		  } as UploadResponse;
-        return res.json();
       })
       .catch(this.handleError);
   }

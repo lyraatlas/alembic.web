@@ -6,7 +6,7 @@ import { UploadFile } from '../../../../classes/upload-file.class';
 import { UploadResponse } from '../../../../classes/upload-response.class';
 import { AlertType, EditControlMode, UploadStatus } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
-import { IBucket } from '../../../../models';
+import { IBucket, IImage } from '../../../../models';
 import { IBucketItem } from '../../../../models/bucket-item.interface';
 import { AlertService, BucketService, UserService } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
@@ -56,13 +56,18 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 	ngOnChanges(changes: SimpleChanges) {
 		// Whenever a bucket item changes, we're going to want to build up our images table.
 		if (this.currentBucketItem && this.currentBucketItem.images) {
+			let i = 0;
+			// Whenever our bucket changes, we're going to clear out the table, and rebuild.
+			this.uploadFiles.length = 0;
 			this.currentBucketItem.images.forEach(image => {
 				this.uploadFiles.push({
+					id: image._id,
 					url: image.variations[0].url,
 					file: image.variations[0].url,
 					status: UploadStatus.finished,
 					statusText: "Added",
-				})
+				});
+				++i;
 			});
 		}
 	}
@@ -92,9 +97,10 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 			if (file && this.validateFileType(file.type)) {
 
 				this.uploadFiles.push({
+					id: i.toString(),
 					file: file,
 					status: UploadStatus.pending,
-					statusText: "Uploading",
+					statusText: "Uploading...",
 				});
 			}
 		}
@@ -149,15 +155,39 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 		// ... => breaks up the parameter from an array into individual parameters passed to the method.
 		// Observable.concat takes and runs these in series.
 		Observable.merge(...imageUploads).subscribe(uploadResponse => {
+
+			// here we're going to figure out which image has been uploaded.  we're going to diff the images, and that will show us 
+			// the image that has been uplaoded.
+			let addedImage = this.getAddedImage(this.currentBucketItem.images, uploadResponse.bucketItem.images);
+
 			// If we just blanket push these changes on top of the bucket item, then we'll blow away any changes the
 			// user might have made to name and description.
 			this.currentBucketItem.images = uploadResponse.bucketItem.images;
+
+			// We're using these two variables as a flag to tell when we can turn the save button back on. 
 			--totalImages;
 			this.isUploadComplete = totalImages <= 0;
-			// It would be nice here, if we could update the imageUploads with the updated item.
-			// uploadResponse.uploadImage
+
+			const index = this.uploadFiles.findIndex(uploadFileSingle =>{
+				return uploadFileSingle.id == uploadResponse.uploadFile.id;
+			});
+			this.uploadFiles[index].status = UploadStatus.finished;
+			this.uploadFiles[index].statusText = "Upload Successful!";
+
+			// Now we're able to put a face to this upload, and actually load the url. 
+			this.uploadFiles[index].url = addedImage.variations[0].url;
 			console.log('Image Added');
 		});
+	}
+
+	getAddedImage(currentImages: IImage[], newImages: IImage[]): IImage{
+		let addedImages = newImages.filter(newItem =>{
+			return !currentImages.some(current =>{
+				return newItem._id == current._id;
+			})
+		});
+
+		return addedImages && addedImages.length > 0 ? addedImages[0] : null;
 	}
 
 	saveBucketItem(isValid: boolean) {

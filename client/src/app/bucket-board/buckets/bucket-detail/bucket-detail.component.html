@@ -38,7 +38,7 @@
 								<p class="col-md-12">{{bucket.description}}</p>
 						</div>
 						<div class="row">
-								<button type="button" class="btn col-md-2  hidden-sm hidden-xs row-btn " (click)="addBucketItem()">
+								<button type="button" class="btn col-md-2  hidden-sm hidden-xs row-btn " (click)="addBucketItem(); ">
 										<fa-icon [icon]="faPlusCircle"></fa-icon>&nbsp;&nbsp;Add Item</button>
 								<button type="button" class="btn col-md-2  hidden-sm hidden-xs" (click)="editBucket(bucket)">
 										<fa-icon [icon]="faEdit"></fa-icon>&nbsp;&nbsp;Edit Board</button>
@@ -47,7 +47,7 @@
 						</div>
 						<div class="row mb16" style="font-size: 24px; cursor: pointer; opacity: .7">
 								<div class="col-sm-12 col-xs-12 visible-sm visible-xs">
-										<a class="mr8" (click)="addBucketItem()">
+										<a class="mr8" (click)="addBucketItem();">
 												<fa-icon [icon]="faPlusCircle"></fa-icon>
 										</a>
 										<a class="mr8" (click)="editBucket(bucket)">
@@ -90,7 +90,7 @@
 																				<fa-icon [icon]="faComment"></fa-icon>
 																				<span *ngIf="bucketItem.comments && bucketItem.comments.length > 0">&nbsp;{{bucketItem.comments.length}}</span>
 																		</a>
-																		<a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEditItem(bucketItem)" style="border-right: 1px solid lightgrey; padding: 8px;  cursor: pointer">
+																		<a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEditItem(bucketItem);" style="border-right: 1px solid lightgrey; padding: 8px;  cursor: pointer">
 																				<fa-icon [icon]="faPen"></fa-icon>
 																		</a>
 																		<a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Delete This bucketItem" (click)="confirmForItem.show(bucketItem)" style=" padding: 8px;  cursor: pointer">
@@ -116,7 +116,7 @@
 </ngx-smart-modal>
 
 <ngx-smart-modal #quickEditBucketItem hideDelay="100" identifier="quickEditBucketItem" customClass="modal-expander nsm-dialog-animation-ttb bucket-item-quick-edit-modal ">
-		<app-bucket-item-quick-edit [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)" (cancel)="cancelQuickEdit()"></app-bucket-item-quick-edit>
+		<app-bucket-item-quick-edit #quickEditItemControl [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)" (cancel)="cancelQuickEdit()"></app-bucket-item-quick-edit>
 </ngx-smart-modal>
 
 <app-confirm-modal #confirmForBucket id="confirmForBucket" (confirmed)="deleteBucket($event)"></app-confirm-modal>

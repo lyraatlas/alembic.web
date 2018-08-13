@@ -46,7 +46,7 @@
 					<tbody class="upload-name-style">
 						<tr *ngFor="let item of uploadFiles; let i=index">
 							<td *ngIf="item && item.url">
-									<img src="//{{item.url}}" />
+									<img src="//{{item.url}}" height="50" width="50" />
 							</td>
 							<td>
 								<strong>{{ item.file.name }}</strong>
