@@ -17,10 +17,10 @@ import { AlertComponent } from './directives/alert/alert.component';
 import { AuthGuard } from './guards';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
-import { BucketSummaryComponent } from './shared/bucket-summary/bucket-summary.component';
 import { FooterModule } from './shared/footer/footer.module';
 import { NavbarModule } from './shared/navbar/navbar.module';
 import { NavigatorModule } from './shared/navigator/navigator.module';
+import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './sidebar/sidebar.module';
 
 
@@ -38,14 +38,14 @@ import { SidebarModule } from './sidebar/sidebar.module';
         AuthenticationModule,
         DashboardModule,
         NgxSmartModalModule.forRoot(),
-        FontAwesomeModule
+		FontAwesomeModule,
+		SharedModule
     ],
     declarations: [
         AppComponent,
         AdminLayoutComponent,
         AuthLayoutComponent,
         AlertComponent,
-        BucketSummaryComponent,
     ],
     providers: [
         AlertService,

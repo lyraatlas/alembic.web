@@ -56,7 +56,6 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 	ngOnChanges(changes: SimpleChanges) {
 		// Whenever a bucket item changes, we're going to want to build up our images table.
 		if (this.currentBucketItem && this.currentBucketItem.images) {
-			let i = 0;
 			// Whenever our bucket changes, we're going to clear out the table, and rebuild.
 			this.uploadFiles.length = 0;
 			this.currentBucketItem.images.forEach(image => {
@@ -67,8 +66,12 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 					status: UploadStatus.finished,
 					statusText: "Added",
 				});
-				++i;
 			});
+		}
+		else{
+			// If we're adding something new, we need to clear out the array.  
+			// This happens when someone presses add, and we need to "reset" the control.
+			this.uploadFiles.length = 0;
 		}
 	}
 

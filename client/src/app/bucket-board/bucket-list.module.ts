@@ -9,9 +9,8 @@ import { Ng2CompleterModule } from "ng2-completer";
 import { FileDropModule } from 'ngx-file-drop';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgUploaderModule } from 'ngx-uploader';
-import { ConfirmModalComponent } from '../shared/confirm-modal/confirm-modal.component';
 import { ImageUploaderModule } from '../shared/image-uploader/image-uploader.module';
-import { LaDndDirective } from '../shared/la-dnd/la-dnd.directive';
+import { SharedModule } from '../shared/shared.module';
 import { BucketListRoutes } from './bucket-list.routing';
 import { BucketDetailComponent } from './buckets/bucket-detail/bucket-detail.component';
 import { BucketEditControlComponent } from './buckets/bucket-edit-control/bucket-edit-control.component';
@@ -30,15 +29,14 @@ import { BucketItemQuickEditComponent } from './items/bucket-item-quick-edit/buc
         NgxDatatableModule,
         NgxSmartModalModule,
         FontAwesomeModule,
-        FileDropModule,
+		FileDropModule,
+		SharedModule,		
     ],
     declarations: [
         BucketListComponent,
         BucketDetailComponent,
         BucketEditControlComponent,
         BucketItemQuickEditComponent,
-        LaDndDirective,
-        ConfirmModalComponent,
     ]
 })
 export class BucketListModule { }

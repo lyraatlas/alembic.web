@@ -6,6 +6,12 @@ export enum AlertType {
     empty = 5
 }
 
+export enum CommentEventType{
+	created = 1,
+	updated = 2, 
+	removed = 3, 
+}
+
 export enum UploadStatus{
     pending = 1,
     uploading = 2,

@@ -93,10 +93,14 @@ export class BucketDetailComponent implements OnInit {
 		this.ngxSmartModalService.close("quickEditBucketItem");
 	}
 
-	deleteItem(bucketItem: IBucketItem) {
-		this.bucketItemService.removeFromBucket(bucketItem._id, this.bucket._id).subscribe(res => {
+	async deleteItem(bucketItem: IBucketItem) {
+		this.bucketItemService.removeFromBucket(bucketItem._id, this.bucket._id).subscribe(async res => {
 			this.bucketItem = {};
-			this.fetchBucket();
+			await this.fetchBucket();
+			this.alertService.send({
+				text: `Successfully Deleted Item: ${bucketItem.name}`,
+				alertType: AlertType.success
+			}, true);
 		}, error => {
 			this.errorEventBus.throw(error);
 		});
@@ -137,6 +141,7 @@ export class BucketDetailComponent implements OnInit {
 
 	addBucketItem() {
 		//this.quickEditItemControl.clearControl();
+		this.bucketItem = {};
 		this.ngxSmartModalService.open("quickEditBucketItem");
 	}
 
@@ -152,9 +157,9 @@ export class BucketDetailComponent implements OnInit {
 		}
 	}
 
-	fetchBucket(): any {
+	async fetchBucket(): Promise<any> {
 
-		this.bucketService.get(this.currentBucketId).subscribe((item: IBucket) => {
+		await this.bucketService.get(this.currentBucketId).subscribe((item: IBucket) => {
 
 			this.bucket = item;
 
@@ -181,6 +186,7 @@ export class BucketDetailComponent implements OnInit {
 			} else {
 				this.bucketItemTable = new Array();
 			}
+			return item;
 		}, error => {
 			this.errorEventBus.throw(error);
 		});
