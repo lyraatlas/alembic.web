@@ -1,19 +1,18 @@
-import { NextFunction, Request, RequestHandler, RequestParamHandler, Response, Router } from 'express';
-import { Document, DocumentQuery, Model, Schema } from 'mongoose';
+import { NextFunction, Request, Response } from 'express';
 import * as log from 'winston';
-import { IValidationError, SearchCriteria, IBaseModel, IBaseModelDoc, ITokenPayload, IOwned, ILikeable, IOwner } from '../../models/';
-import { ObjectId } from 'bson';
-import { BaseRepository } from "../../repositories/";
+import { ApiErrorHandler } from "../../api-error-handler";
 import { CONST } from "../../constants";
 import { OwnershipType } from "../../enumerations";
-import { Authz } from "../authorization";
-import { ApiErrorHandler } from "../../api-error-handler";
+import { IBaseModelDoc, IOwned, IOwner, ITokenPayload, IValidationError, SearchCriteria } from '../../models/';
 import { IQueryResponse } from '../../models/query-response.interface';
+import { BaseRepository } from "../../repositories/";
+import { Authz } from "../authorization";
 
 export abstract class BaseController {
 
     public abstract repository: BaseRepository<IBaseModelDoc>;
-    public abstract defaultPopulationArgument: object;
+	public abstract defaultPopulationArgument: object;
+	public abstract preSendResponseHook(item:IBaseModelDoc): Promise<IBaseModelDoc>;
 
     // Determines whether the base class will test ownership
     public abstract isOwnershipRequired: boolean;
@@ -330,7 +329,9 @@ export abstract class BaseController {
         try {
                 let model: IBaseModelDoc = await this.repository.single(this.getId(request), this.defaultPopulationArgument);
                 if (!model)
-                    throw ({ message: 'Item Not Found', status: 404 });
+					throw ({ message: 'Item Not Found', status: 404 });
+				
+				model = await this.preSendResponseHook(model);
 
                 response.json(model);
 

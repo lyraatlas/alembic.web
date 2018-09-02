@@ -106,18 +106,10 @@
 								</ng-container>
 						</div>
 				</div>
-
-				<div class="container pt24">
-					<div class="row">
-							<h2 class="col-md-12 card-title mb8">Comments</h2>
-					</div>
-					<hr />
-					<app-comment-list></app-comment-list>
-			</div>
 		</div>
 </div>
 
-
+<app-comment-list [(commentable)]="bucket"></app-comment-list>
 
 <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal" customClass="nsm-dialog-animation-ttb">
 		<app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()" [mode]="editControlMode"></app-bucket-edit-control>

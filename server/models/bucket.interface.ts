@@ -25,7 +25,10 @@ const BucketSchema = new Schema({
     likedBy: [{type: Schema.Types.ObjectId, ref: 'user'}],
     comments: [new Schema({
         commentBy: {type: Schema.Types.ObjectId, ref: 'user'},
-        comment: { type: String },
+		comment: { type: String },
+		commentByUser: {type: Object},
+		createdAt: {type:Date},
+		modifiedAt: {type:Date},
     })],
     images: [{
         order: { type: Number },

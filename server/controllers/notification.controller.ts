@@ -1,25 +1,23 @@
-import { INotification, Notification, ITokenPayload, IBaseModel, INotificationDoc, IValidationError } from '../models';
-import { Router, Request, Response, RequestParamHandler, NextFunction, RequestHandler } from 'express';
-import mongoose = require('mongoose');
-import { Schema, Model, Document } from 'mongoose';
-import { BaseController } from './base/base.controller';
 import { CONST } from '../constants';
-import { AmazonS3Service } from '../services/index';
-import * as log from 'winston';
+import { IBaseModelDoc } from '../models';
 import { NotificationRepository } from '../repositories/index';
-import { ApiErrorHandler } from '../api-error-handler';
-import * as enums from '../enumerations';
+import { BaseController } from './base/base.controller';
+import mongoose = require('mongoose');
 
 export class NotificationController extends BaseController {
 
-  public defaultPopulationArgument = null;
+	public defaultPopulationArgument = null;
 
-  public rolesRequiringOwnership = [CONST.USER_ROLE, CONST.GUEST_ROLE];
-  public isOwnershipRequired = false;
+	public rolesRequiringOwnership = [CONST.USER_ROLE, CONST.GUEST_ROLE];
+	public isOwnershipRequired = false;
 
-  public repository = new NotificationRepository();
+	public repository = new NotificationRepository();
 
-  constructor() {
-    super();
-  }
+	constructor() {
+		super();
+	}
+
+	public async preSendResponseHook(item: IBaseModelDoc): Promise<IBaseModelDoc> {
+		return item;
+	}
 }

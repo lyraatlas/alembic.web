@@ -1,0 +1,8 @@
+<hr *ngIf="index == 0" />
+<div>
+	By:{{currentComment.commentByUser.firstName}} {{currentComment.commentByUser.lastName}} @ {{formatTime(currentComment.createdAt)}}
+</div>
+<div>
+		{{currentComment.comment}}
+</div>
+<hr />

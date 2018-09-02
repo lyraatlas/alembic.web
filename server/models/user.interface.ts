@@ -1,7 +1,7 @@
+import { Schema } from 'mongoose';
 import { mongoose } from '../config/database/database';
-import { Schema, Model, Document, model } from 'mongoose';
-import { IBaseModel, IBaseModelDoc, IOwned, ITimeStamped } from "./index";
 import * as enums from '../enumerations';
+import { IBaseModel, IBaseModelDoc, IOwned, ITimeStamped } from "./index";
 
 export interface IUser extends IBaseModel, IOwned, ITimeStamped {
     firstName?: string,
@@ -39,7 +39,8 @@ export interface IUser extends IBaseModel, IOwned, ITimeStamped {
         token?        : string,
         name?         : string,
         username?     : string
-    }
+	};
+	userId?: string;
 }
 
 export interface IUserDoc extends IUser, IBaseModelDoc {

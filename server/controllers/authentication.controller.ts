@@ -1,16 +1,14 @@
-import { Router, Request, Response, RequestParamHandler, NextFunction, RequestHandler, Application } from 'express';
-import * as express from 'express';
-import mongoose = require('mongoose');
-import { Schema, Model, Document } from 'mongoose';
-import { Config } from '../config/config';
-import { ITokenPayload, IBaseModelDoc, IUserDoc, User, IEmailVerification, SearchCriteria, IUser, IOwned, IOwner } from '../models/';
-import { CONST } from "../constants";
-import { ApiErrorHandler } from "../api-error-handler";
-import * as log from 'winston';
-import { BaseController } from './base/base.controller';
-import { BaseRepository, UserRepository, EmailVerificationRepository } from '../repositories/index';
+import { NextFunction, Request, Response } from 'express';
 import * as moment from 'moment';
+import * as log from 'winston';
+import { ApiErrorHandler } from "../api-error-handler";
+import { Config } from '../config/config';
+import { CONST } from "../constants";
 import * as enums from '../enumerations';
+import { IBaseModelDoc, IEmailVerification, IOwner, ITokenPayload, IUser, IUserDoc } from '../models/';
+import { EmailVerificationRepository, UserRepository } from '../repositories/index';
+import { BaseController } from './base/base.controller';
+import mongoose = require('mongoose');
 
 
 const bcrypt = require('bcrypt');
@@ -25,7 +23,12 @@ export class AuthenticationController extends BaseController{
     public repository: UserRepository = new UserRepository();
     public defaultPopulationArgument: object;
     public isOwnershipRequired: boolean = true;  
-    public rolesRequiringOwnership: string[] = [''];
+	public rolesRequiringOwnership: string[] = [''];
+	
+	public async preSendResponseHook(item: IBaseModelDoc): Promise<IBaseModelDoc> {
+        return item;
+    }
+
 
     public AuthenticationController(){ }
 

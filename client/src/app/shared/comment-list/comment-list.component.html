@@ -1,3 +1,22 @@
-<p>
-  comment-list works!
-</p>
+<div class="container pb16">
+	<div class="content">
+		<div class="row no-margin ">
+			<h2 class="col-md-12 card-title mb8">Comments</h2>
+		</div>
+		<div class="row pb8 no-margin">
+			<div class="col-md-12" *ngIf="commentable && commentable.comments && commentable.comments.length > 0">
+				<div *ngFor="let cmt of commentable.comments;let j=index">
+					<!-- Notice here, I'm doing something weird.  I'm specifically using the index to pull out the comment.
+															This is because angular does something weird inside for loops, and you can't just go passing the variable down through to the child component.
+															So if you want to do 2 way binding like this, you have to use the index, and not the for loop variable. 
+														 -->
+						<app-comment-item [(currentComment)]="commentable.comments[j]" [index]="j"></app-comment-item>
+				</div>
+			</div>
+			<div class="col-md-12" *ngIf="!commentable || !commentable.comments || commentable.comments.length == 0">
+				<hr />
+				No comments
+			</div>
+		</div>
+	</div>
+</div>

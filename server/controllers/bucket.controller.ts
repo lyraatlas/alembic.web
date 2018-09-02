@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { CONST } from '../constants';
 import { IBucketDoc, IBucketItemDoc } from '../models';
 import { BucketItemRepository, BucketRepository } from "../repositories";
+import { CommentRepository } from '../repositories/comment.repo';
 import { BaseController } from './base/base.controller';
 import { Commentable } from './base/commentable.mixin';
 import { ImageControllerMixin } from './base/images.controller.mixin';
@@ -18,7 +19,8 @@ export class BucketControllerBase extends BaseController {
     public isOwnershipRequired = true;
 
     public repository = new BucketRepository();
-    public bucketItemRepository = new BucketItemRepository();
+	public bucketItemRepository = new BucketItemRepository();
+	public commentRepository = new CommentRepository();
     public bucketItemController =  new BucketItemController();
 
     constructor() {
@@ -67,8 +69,16 @@ export class BucketControllerBase extends BaseController {
 
     }
 
-    public async preSendResponseHook(Bucket: IBucketDoc): Promise<IBucketDoc> {
-        return Bucket;
+    public async preSendResponseHook(bucket: IBucketDoc): Promise<IBucketDoc> {
+		// We're going to get details on the comments.
+		if(bucket && bucket.comments && bucket.comments.length > 0){
+			for (let index = 0; index < bucket.comments.length; index++) {
+				let comment = bucket.comments[index];
+				bucket.comments[index] =await this.commentRepository.getCommentDetails(comment);
+			}
+		}
+
+        return bucket;
     }
 }
 

@@ -1,40 +1,32 @@
 const newRelic = require('newrelic'); //  Has to be the first line of this file. 
-import * as express from 'express';
-import * as http from 'http';
+import { json, urlencoded } from 'body-parser';
 import * as compression from 'compression';
-import * as morgan from 'morgan';
-import * as fs from 'fs';
+import * as express from 'express';
 import * as helmet from 'helmet';
-import * as routers from './routers';
-
+import * as http from 'http';
+import * as morgan from 'morgan';
 import * as passport from 'passport';
-import { Strategy as local, IStrategyOptions } from 'passport-local';
-
-import { ObjectId } from 'bson';
-import { join } from 'path';
-import { json, urlencoded, raw } from 'body-parser';
-import { mongoose, Database } from './config/database/database';
-import { DatabaseBootstrap } from './config/database/database-bootstrap';
-import { CONST } from './constants';
-import { Config } from './config/config';
-import { Router, NextFunction } from 'express';
 import { ApiErrorHandler } from './api-error-handler';
-import { HealthStatus } from './health-status';
+import { Config } from './config/config';
+import { Database } from './config/database/database';
+import { DatabaseBootstrap } from './config/database/database-bootstrap';
+import { MulterConfiguration } from './config/multer.configuration';
 import { SupportingServicesBootstrap } from './config/supporting-services.bootstrap';
+import { CONST } from './constants';
+import { AuthenticationController } from './controllers/authentication.controller';
+import { Authz } from "./controllers/authorization";
+import { HealthStatus } from './health-status';
+import * as routers from './routers';
+import { BucketItemRouter, BucketRouter } from './routers';
+import { IdentityApiService } from './services/identity.api.service';
+
+
 
 import methodOverride = require('method-override');
 import log = require('winston');
 
-import { Authz } from "./controllers/authorization";
 import path = require('path');
 import cors = require('cors')
-import { AuthenticationController } from './controllers/authentication.controller';
-import { MulterConfiguration } from './config/multer.configuration';
-import { ImageUploadController, BucketController, BucketItemController } from './controllers/index';
-import { IdentityApiService } from './services/identity.api.service';
-import { User } from './models/index';
-import { BucketRouter, AuthenticationRouter, BucketItemRouter } from './routers';
-import { ImageControllerMixin } from './controllers/base/images.controller.mixin';
 
 // Creates and configures an ExpressJS web server.
 class Application {
@@ -231,6 +223,7 @@ class Application {
         this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE), new routers.BucketRouter().getRouter());
         this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE), new routers.BucketItemRouter().getRouter());
         this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE), new routers.UserRouter().getRouter());
+        this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE), new routers.NotificationRouter().getRouter());
         this.express.use(CONST.ep.API + CONST.ep.V1, Authz.permit(CONST.ADMIN_ROLE, CONST.USER_ROLE), new routers.NotificationRouter().getRouter());
 
         this.express.use(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}${CONST.ep.IMAGES}/:id`,

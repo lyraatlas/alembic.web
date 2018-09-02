@@ -26,8 +26,9 @@ const BucketItemSchema = new Schema({
     comments: [{
         commentBy: {type: Schema.Types.ObjectId, ref: 'user'},
         comment: { type: String },
-        createdAt: { type: Date },
-        modifiedAt: { type: Date },
+		commentByUser: {type: Object},
+		createdAt: {type:Date},
+		modifiedAt: {type:Date},
     }],
     // What the mongo compass query looks like: {"productLocation":{"$geoWithin":{"$centerSphere":[[40.76665209596496,-73.98568992400604],4.4717033545255673e-7]}}}
     // The order here is Longitude, and then Latitude.

@@ -12,6 +12,7 @@ import { CommentListComponent } from '../shared/comment-list/comment-list.compon
 import { ConfirmModalComponent } from '../shared/confirm-modal/confirm-modal.component';
 import { LaDndDirective } from '../shared/la-dnd/la-dnd.directive';
 import { ImageUploaderModule } from './image-uploader/image-uploader.module';
+import { CommentItemComponent } from './comment-item/comment-item.component';
 
 // So a lot of the shared components are already wrapped in their own module.
 // While that's fine, I don't want to have to create a module for every shared component.  So this 
@@ -34,6 +35,7 @@ import { ImageUploaderModule } from './image-uploader/image-uploader.module';
 		ConfirmModalComponent,
 		CommentListComponent,
 		ConfirmModalComponent,
+		CommentItemComponent,
 	],
 	exports:[
 		LaDndDirective,
