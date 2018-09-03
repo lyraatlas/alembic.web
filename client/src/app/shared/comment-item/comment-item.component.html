@@ -1,18 +1,44 @@
 <hr *ngIf="index == 0" class="mb8" />
-<div class="sub" style="opacity:.5">
-	<b>{{currentComment.commentByUser.firstName}} {{currentComment.commentByUser.lastName}} </b> - {{formatTime(currentComment.createdAt)}}
-</div>
-<div>
-	{{currentComment.comment}}
-</div>
-<div>
-	<div class="row no-margin" style="font-size: 10px; text-align: center;">
-			<a class="col-xs-1 card-buttons" data-toggle="tooltip" title="Edit This comment" (click)="quickEditComment();" style="cursor: pointer">
-					<fa-icon [icon]="faPen"></fa-icon>
+
+<div class="row no-margin">
+
+	<div class="col">
+
+		<span *ngIf="!isAdding" class="sub" style="opacity:.5">
+			<b>{{currentComment.commentByUser.firstName}} {{currentComment.commentByUser.lastName}} </b> - {{formatTime(currentComment.createdAt)}}
+		</span>&nbsp;&nbsp;
+
+		<span *ngIf="!isAdding && !isEditing" class="card-buttons" >
+			<a class="card-buttons action-button" data-toggle="tooltip" title="Edit This comment" (click)="editComment();">
+				<fa-icon [icon]="faPen"></fa-icon>&nbsp;Edit
+			</a>&nbsp;&nbsp;
+			<a class="card-buttons action-button" data-toggle="tooltip" title="Delete This comment" (click)="confirmForComment.show(currentComment)">
+				<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;Delete
 			</a>
-			<a class="col-xs-1 card-buttons" data-toggle="tooltip" title="Delete This comment" (click)="deleteComment" style="cursor: pointer">
-					<fa-icon [icon]="faTrashAlt"></fa-icon>
-			</a>
+		</span>
+
 	</div>
 </div>
+
+<div *ngIf="!isEditing && !isAdding" class="mb16" style="font-size:16px;">
+	{{currentComment.comment}}
+</div>
+
+<div class="mt8" *ngIf="isEditing || isAdding">
+
+	<textarea rows="4" name="editCommentText" #editCommentText="ngModel" required class="form-control" [(ngModel)]="tempCommentText"></textarea>
+
+	<div class="card-buttons">
+		<a class="card-buttons action-button" data-toggle="tooltip" title="Cancel Changes" (click)="cancelComment()">
+			<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;Cancel
+		</a>&nbsp;&nbsp;
+		<a class="card-buttons action-button" data-toggle="tooltip" title="Save Changes" (click)="saveComment();">
+			<fa-icon [icon]="faPen"></fa-icon>&nbsp;Save
+		</a>
+	</div>
+
+</div>
+
 <hr class="mb8 mt8" />
+
+<app-confirm-modal #confirmForComment id="confirmForComment" (confirmed)="deleteComment($event)"></app-confirm-modal>

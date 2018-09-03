@@ -31,6 +31,8 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
 
 				await NotificationUtility.addNotification(notificationType, item, currentToken);
 
+				item = await controller.preSendResponseHook(item);
+
 				// Send the added comment back
 				response.status(202).json(item);
 
@@ -49,18 +51,21 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
 
 				//Find the index of the comment, where the id matches, and the userId matches. 
 				//If we don't find one where both of these things match, then the userID doesn't "own" the comment, and therefore can't delete it.
-				let index = commentableItem.comments.findIndex((item) => {
-					return (item._id == request.body._id && item.commentBy == currentToken.userId)
+				let index = commentableItem.comments.findIndex((com) => {
+					return (com._id == request.body._id && com.commentBy == currentToken.userId)
 				})
 
 				if (index != -1) {
-					commentableItem.comments = commentableItem.comments.filter((item) => {
-						item._id != request.body._id;
-					});
+					commentableItem.comments.splice(index,1);
+				}
+				else{
+					throw ({ message: 'Comment Not Found', status: 404 });
 				}
 
 				// Save the update to the database
 				await controller.repository.save(item);
+
+				//item = await controller.preSendResponseHook(item);
 
 				// Send the new product which is not a template back.
 				response.status(200).json(item);
@@ -88,6 +93,8 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
 
 				// Save the update to the database
 				await controller.repository.save(item);
+
+				item = await controller.preSendResponseHook(item);
 
 				// Send the new product which is not a template back.
 				response.status(200).json(item);

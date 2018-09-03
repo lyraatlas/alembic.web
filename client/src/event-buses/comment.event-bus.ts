@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { CommentEventType } from '../../enumerations';
-import { IComment, ICommentable } from '../../models';
-import { AlertService } from '../../services/index';
+import { CommentEventType } from '../enumerations';
+import { IComment, ICommentable } from '../models';
+import { AlertService } from '../services';
 
 export interface ICommentEventMessage{
     comment: IComment,

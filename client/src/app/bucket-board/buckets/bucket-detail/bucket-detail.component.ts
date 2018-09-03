@@ -56,6 +56,7 @@ export class BucketDetailComponent implements OnInit {
 				this.fetchBucket();
 			}
 		});
+		this.bucketService.commenter
 	}
 
 	//#region Bucket Methods

@@ -13,8 +13,6 @@ export class BucketService extends BaseService<IBucket>{
     public liker = new LikeableServiceMixin();
     public commenter = new CommentableServiceMixin();
 
-
-
     constructor(public http: Http) {
         super(http, {
             rootApiUrl: `${environment.apiEndpoint}${environment.V1}`,

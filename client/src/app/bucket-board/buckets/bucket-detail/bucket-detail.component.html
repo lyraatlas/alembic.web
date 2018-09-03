@@ -38,11 +38,11 @@
 								<p class="col-md-12">{{bucket.description}}</p>
 						</div>
 						<div class="row">
-								<button type="button" class="btn col-md-2  hidden-sm hidden-xs row-btn " (click)="addBucketItem(); ">
+								<button type="button" class="btn col-md-3  hidden-sm hidden-xs row-btn " style="max-width:175px;" (click)="addBucketItem(); ">
 										<fa-icon [icon]="faPlusCircle"></fa-icon>&nbsp;&nbsp;Add Item</button>
-								<button type="button" class="btn col-md-2  hidden-sm hidden-xs" (click)="editBucket(bucket)">
+								<button type="button" class="btn col-md-3  hidden-sm hidden-xs" style="max-width:175px;" (click)="editBucket(bucket)">
 										<fa-icon [icon]="faEdit"></fa-icon>&nbsp;&nbsp;Edit Board</button>
-								<button type="button" class="btn col-md-2 hidden-sm hidden-xs danger" (click)="confirmForBucket.show(bucket)">
+								<button type="button" class="btn col-md-3 hidden-sm hidden-xs danger" style="max-width:175px;" (click)="confirmForBucket.show(bucket)">
 										<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;&nbsp;Delete Board</button>
 						</div>
 						<div class="row mb16" style="font-size: 24px; cursor: pointer; opacity: .7">
@@ -109,7 +109,7 @@
 		</div>
 </div>
 
-<app-comment-list [(commentable)]="bucket"></app-comment-list>
+<app-comment-list [(commentService)]="bucketService.commenter" [(commentableItem)]="bucket"></app-comment-list>
 
 <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal" customClass="nsm-dialog-animation-ttb">
 		<app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()" [mode]="editControlMode"></app-bucket-edit-control>

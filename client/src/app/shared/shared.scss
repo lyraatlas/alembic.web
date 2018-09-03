@@ -1,0 +1,19 @@
+.action-button{
+	border: 1px solid lightgrey; 
+	padding: 5px;
+	cursor: pointer;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 10px;
+}
+
+.action-button:hover{
+	background-color: #333347;
+	color: rgb(190, 150, 86);
+}
+
+.action-button:focus{
+	background-color: #333347;
+	color: rgb(190, 150, 86);
+}

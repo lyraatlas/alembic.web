@@ -157,7 +157,12 @@ export class BaseService<T extends IBaseModel> {
     // });
     public handleError(errorResponse: Response | any) {
         // TODO: Implement Real Logging infrastructure.
-        // Might want to log to remote server (Fire and forget style)
+		// Might want to log to remote server (Fire and forget style)
+		
+		// There's a few methods that will specifically set the request options body, things like delete on comment.
+		// this is where we need to clear this request body out no matter what happens, even in the case of error. 
+		//this.requestOptions.body = null;
+		
         const appError = new ServiceError();
         if (errorResponse instanceof Response) {
             const body = errorResponse.json() || '';
