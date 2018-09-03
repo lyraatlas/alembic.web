@@ -10,5 +10,7 @@ export interface IComment extends ITimeStamped{
 	commentBy?: string,
 	commentByUser?: IUser,
 	comment?: string,
-    _id?: string,
+	_id?: string,
+	isEditEnabled?:boolean,
+	isDeleteEnabled?:boolean,
 }

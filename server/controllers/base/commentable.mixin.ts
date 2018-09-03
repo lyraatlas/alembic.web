@@ -79,6 +79,7 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
 				let commentableItem = (item as ICommentable);
 
 				commentableItem.comments.map((comment) => {
+					// Again testing ownership here.  We need to make sure someone who isn't the owner isn't allowed to edit a comment.
 					if (comment._id == request.body._id && comment.commentBy == currentToken.userId) {
 						comment.comment = request.body.comment
 						comment.modifiedAt = new Date();

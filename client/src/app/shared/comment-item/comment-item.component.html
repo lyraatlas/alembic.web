@@ -1,8 +1,18 @@
-<hr *ngIf="index == 0" />
-<div>
-	By:{{currentComment.commentByUser.firstName}} {{currentComment.commentByUser.lastName}} @ {{formatTime(currentComment.createdAt)}}
+<hr *ngIf="index == 0" class="mb8" />
+<div class="sub" style="opacity:.5">
+	<b>{{currentComment.commentByUser.firstName}} {{currentComment.commentByUser.lastName}} </b> - {{formatTime(currentComment.createdAt)}}
 </div>
 <div>
-		{{currentComment.comment}}
+	{{currentComment.comment}}
 </div>
-<hr />
+<div>
+	<div class="row no-margin" style="font-size: 10px; text-align: center;">
+			<a class="col-xs-1 card-buttons" data-toggle="tooltip" title="Edit This comment" (click)="quickEditComment();" style="cursor: pointer">
+					<fa-icon [icon]="faPen"></fa-icon>
+			</a>
+			<a class="col-xs-1 card-buttons" data-toggle="tooltip" title="Delete This comment" (click)="deleteComment" style="cursor: pointer">
+					<fa-icon [icon]="faTrashAlt"></fa-icon>
+			</a>
+	</div>
+</div>
+<hr class="mb8 mt8" />

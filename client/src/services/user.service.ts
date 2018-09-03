@@ -12,7 +12,7 @@ export class UserService extends BaseService<IUser>{
   constructor(public http: Http) {
     super(http, {
       rootApiUrl: `${environment.apiEndpoint}${environment.V1}`,
-      urlSuffix: 'users'
+      urlSuffix: '/users'
     });
   }
 
