@@ -29,14 +29,17 @@ export class CommentItemComponent implements OnInit {
 
 	public tempCommentText: string;
 
-	constructor(public userService: UserService, public alertService: AlertService) { }
+	constructor(
+		public userService: UserService,
+		public alertService: AlertService,
+	) { }
 
 	ngOnInit() {
 		if (UserService.getCurrentUserId() == this.currentComment.commentBy) {
 			this.currentComment.isDeleteEnabled = true;
 			this.currentComment.isEditEnabled = true;
 		}
-		if (this.currentComment._id=='new') {
+		if (this.currentComment._id == 'new') {
 			this.isAdding = true;
 		}
 	}
@@ -75,14 +78,14 @@ export class CommentItemComponent implements OnInit {
 				this.commentableItem = responseItem;
 				// I wouldn't say this is the best way to do this.  sadly I don't want to write what it would take to have a 
 				// safe version of this.  This will breaak if there's multiple people who add a comment at the same time.
-				this.currentComment = responseItem.comments[responseItem.comments.length-1];
+				this.currentComment = responseItem.comments[responseItem.comments.length - 1];
 				this.notifyOnSave();
 				this.isAdding = false;
 			});
 		}
 	}
 
-	notifyOnSave(){
+	notifyOnSave() {
 		this.alertService.send({
 			text: "Comment has been saved.",
 			alertType: AlertType.success
