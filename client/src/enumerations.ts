@@ -9,7 +9,8 @@ export enum AlertType {
 export enum CommentEventType{
 	created = 1,
 	updated = 2, 
-	removed = 3, 
+	removed = 3,
+	cancelAdd =4,
 }
 
 export enum UploadStatus{

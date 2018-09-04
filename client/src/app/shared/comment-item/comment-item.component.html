@@ -12,7 +12,8 @@
 			<a class="card-buttons action-button" data-toggle="tooltip" title="Edit This comment" (click)="editComment();">
 				<fa-icon [icon]="faPen"></fa-icon>&nbsp;Edit
 			</a>&nbsp;&nbsp;
-			<a class="card-buttons action-button" data-toggle="tooltip" title="Delete This comment" (click)="confirmForComment.show(currentComment)">
+			<!-- confirmForComment.show(currentComment) -->
+			<a class="card-buttons action-button" data-toggle="tooltip" title="Delete This comment" (click)="confirmDelete()">
 				<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;Delete
 			</a>
 		</span>
@@ -40,5 +41,3 @@
 </div>
 
 <hr class="mb8 mt8" />
-
-<app-confirm-modal #confirmForComment id="confirmForComment" (confirmed)="deleteComment($event)"></app-confirm-modal>

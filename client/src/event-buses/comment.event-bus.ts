@@ -16,9 +16,6 @@ export class CommentEventBus {
     
     public commentChanged$ = this.commentChangedSource.asObservable();
 
-    // Mostly managed by the product images component.
-    public comments: Array<IComment>;
-
 	constructor(private alertService: AlertService){};
 	
 	public addComment(comment:IComment, item:ICommentable){
@@ -31,6 +28,11 @@ export class CommentEventBus {
 
 	public removeComment(comment:IComment, item:ICommentable){
 		this.emitMessage(comment,CommentEventType.removed,item);
+	}
+
+	
+	public cancelCommentAdd(comment:IComment, item:ICommentable){
+		this.emitMessage(comment,CommentEventType.cancelAdd,item);
 	}
     
     private emitMessage(comment: IComment, eventType: CommentEventType, item: ICommentable){

@@ -1,37 +1,39 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgxSmartModalService } from '../../../../node_modules/ngx-smart-modal';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { NgxSmartModalComponent, NgxSmartModalService } from '../../../../node_modules/ngx-smart-modal';
 
 @Component({
-  selector: 'app-confirm-modal',
-  templateUrl: './confirm-modal.component.html',
-  styleUrls: ['./confirm-modal.component.scss']
+	selector: 'app-confirm-modal',
+	templateUrl: './confirm-modal.component.html',
+	styleUrls: ['./confirm-modal.component.scss']
 })
 export class ConfirmModalComponent implements OnInit {
 
-  @Output() confirmed = new EventEmitter();
-  @Output() cancelled = new EventEmitter();
+	@Output() confirmed = new EventEmitter();
+	@Output() cancelled = new EventEmitter();
 
-  @Input() isVisible:boolean = false;
+	@Input() isVisible: boolean = false;
 
-  private item:any = null;
+	@ViewChild('childModal') childModal: NgxSmartModalComponent;
 
-  constructor(public ngxSmartModalService: NgxSmartModalService,) { }
+	private item: any = null;
 
-  ngOnInit() {
-  }
+	constructor(public ngxSmartModalService: NgxSmartModalService, ) { }
 
-  public show(item: any){
-    this.item = item;
-    this.ngxSmartModalService.open("confirmModal");
-  }
+	ngOnInit() {
+	}
 
-  public confirm(){
-    this.confirmed.emit(this.item);
-    this.ngxSmartModalService.close("confirmModal");
-  }
+	public show(item: any) {
+		this.item = item;
+		this.childModal.open();
+	}
 
-  public cancel(){
-    this.cancelled.emit();
-    this.ngxSmartModalService.close("confirmModal");
-  }
+	public confirm() {
+		this.confirmed.emit(this.item);
+		this.childModal.close();
+	}
+
+	public cancel() {
+		this.cancelled.emit();
+		this.childModal.close();
+	}
 }

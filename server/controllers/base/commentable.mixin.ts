@@ -65,7 +65,7 @@ export function Commentable<TBase extends Constructor>(Base: TBase) {
 				// Save the update to the database
 				await controller.repository.save(item);
 
-				//item = await controller.preSendResponseHook(item);
+				item = await controller.preSendResponseHook(item);
 
 				// Send the new product which is not a template back.
 				response.status(200).json(item);

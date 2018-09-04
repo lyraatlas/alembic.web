@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faComment, faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { AlertType } from '../../../enumerations';
+import { CommentEventBus } from '../../../event-buses/comment.event-bus';
 import { IComment, ICommentable } from '../../../models';
 import { AlertService, LikeableServiceMixin, UserService } from '../../../services';
 import { CommentableServiceMixin } from '../../../services/mixins/commentable.service.mixin';
@@ -32,6 +33,7 @@ export class CommentItemComponent implements OnInit {
 	constructor(
 		public userService: UserService,
 		public alertService: AlertService,
+		public commentEventBus: CommentEventBus
 	) { }
 
 	ngOnInit() {
@@ -55,12 +57,8 @@ export class CommentItemComponent implements OnInit {
 
 	cancelComment() {
 		this.isEditing = false;
-		// we're going to clean up here as well.
-		if (this.isAdding) {
-			let index = this.commentableItem.comments.findIndex((comment) => {
-				return comment._id == 'new';
-			})
-			this.commentableItem.comments.splice(index, 1);
+		if(this.isAdding){
+			this.commentEventBus.cancelCommentAdd(this.currentComment,this.commentableItem);
 			this.isAdding = false;
 		}
 	}
@@ -71,6 +69,7 @@ export class CommentItemComponent implements OnInit {
 				this.currentComment.comment = this.tempCommentText;
 				this.notifyOnSave();
 				this.isEditing = false;
+				this.commentEventBus.editComment(this.currentComment,this.commentableItem)
 			});
 		}
 		if (this.isAdding) {
@@ -81,6 +80,7 @@ export class CommentItemComponent implements OnInit {
 				this.currentComment = responseItem.comments[responseItem.comments.length - 1];
 				this.notifyOnSave();
 				this.isAdding = false;
+				this.commentEventBus.addComment(this.currentComment,this.commentableItem)
 			});
 		}
 	}
@@ -92,15 +92,7 @@ export class CommentItemComponent implements OnInit {
 		}, true);
 	}
 
-	deleteComment() {
-		console.log(`About to delete comment:${this.currentComment._id}`);
-		this.commentService.removeComment(this.commentableItem, this.currentComment._id).subscribe(responseItem => {
-			this.isEditing = false;
-			this.commentableItem = responseItem;
-			this.alertService.send({
-				text: "Comment has been deleted.",
-				alertType: AlertType.success
-			}, true);
-		});
+	confirmDelete(){
+		this.commentEventBus.removeComment(this.currentComment, this.commentableItem);
 	}
 }
