@@ -25,7 +25,7 @@ export class CommentListComponent implements OnInit {
 	@Input() public likerService: LikeableServiceMixin;
 	@Input() public commentService: CommentableServiceMixin;
 
-	private deleteMessage:ICommentEventMessage = null;
+	private deleteMessage: ICommentEventMessage = null;
 
 	@ViewChild('confirmForComment') confirmForComment: ConfirmModalComponent;
 
@@ -55,12 +55,12 @@ export class CommentListComponent implements OnInit {
 		this.commentableItem = message.item;
 	}
 
-	confirmDeleteComment(message:ICommentEventMessage){
+	confirmDeleteComment(message: ICommentEventMessage) {
 		this.deleteMessage = message;
 		this.confirmForComment.show(message.comment);
 	}
 
-	deleteComment(){
+	deleteComment() {
 		console.log(`About to delete comment:${this.deleteMessage.comment._id}:${this.deleteMessage.comment.comment}`);
 		this.commentService.removeComment(this.commentableItem, this.deleteMessage.comment._id).subscribe(responseItem => {
 			this.commentableItem = responseItem;
@@ -72,15 +72,7 @@ export class CommentListComponent implements OnInit {
 	}
 
 	addComment() {
-		let canAddComment = true;
-		this.commentableItem.comments.forEach(comment => {
-			if (comment._id == 'new') {
-				canAddComment = false;
-			}
-		});
-		if (canAddComment) {
-			this.commentableItem.comments.push({ _id: 'new' });
-		}
+		this.commentEventBus.startAddComment(this.commentableItem);
 	}
 
 	addCancelled() {

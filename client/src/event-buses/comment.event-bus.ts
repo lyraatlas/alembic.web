@@ -18,6 +18,18 @@ export class CommentEventBus {
 
 	constructor(private alertService: AlertService){};
 	
+	public startAddComment(item:ICommentable){
+		let canAddComment = true;
+		item.comments.forEach(comment => {
+			if (comment._id == 'new') {
+				canAddComment = false;
+			}
+		});
+		if (canAddComment) {
+			item.comments.push({ _id: 'new' });
+		}
+	}
+
 	public addComment(comment:IComment, item:ICommentable){
 		this.emitMessage(comment,CommentEventType.created,item);
 	}

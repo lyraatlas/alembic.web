@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { faComment, faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { AlertType } from '../../../enumerations';
 import { CommentEventBus } from '../../../event-buses/comment.event-bus';
@@ -19,7 +19,7 @@ export class CommentItemComponent implements OnInit {
 	@Input() public commentService: CommentableServiceMixin;
 	@Input() public currentComment: IComment = {};
 	@Input() public index: number = 0;
-
+	@ViewChild("scrollLocator") scrollLocator: ElementRef;
 
 	public faTrashAlt = faTrashAlt;
 	public faComment = faComment;
@@ -43,6 +43,7 @@ export class CommentItemComponent implements OnInit {
 		}
 		if (this.currentComment._id == 'new') {
 			this.isAdding = true;
+			this.scrollLocator.nativeElement.scrollIntoView({ behavior: "smooth", block: "start" });
 		}
 	}
 

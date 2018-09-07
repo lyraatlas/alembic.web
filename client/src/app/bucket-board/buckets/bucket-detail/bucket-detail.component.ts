@@ -5,6 +5,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CONST } from '../../../../constants';
 import { AlertType, EditControlMode } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
+import { CommentEventBus } from '../../../../event-buses/comment.event-bus';
 import { IBucket, IBucketItem, ITokenPayload } from '../../../../models';
 import { AlertService, LikeableServiceMixin } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
@@ -43,10 +44,10 @@ export class BucketDetailComponent implements OnInit {
 		private errorEventBus: ErrorEventBus,
 		public ngxSmartModalService: NgxSmartModalService,
 		public alertService: AlertService,
+		public commentEventBus: CommentEventBus,
 	) { }
 	
 	@ViewChild('quickEditItemControl') quickEditItemControl: BucketItemQuickEditComponent;
-
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
@@ -156,6 +157,10 @@ export class BucketDetailComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	addComment(bucket:IBucket){
+		this.commentEventBus.startAddComment(this.bucket);
 	}
 
 	async fetchBucket(): Promise<any> {

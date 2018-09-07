@@ -1,13 +1,13 @@
-<ngx-smart-modal #childModal hideDelay="100" identifier="childModal" customClass="nsm-dialog-animation-ttb">
-  <h3>Are you sure you want to delete?</h3>
+<ngx-smart-modal #childModal hideDelay="100" identifier="childModal" customClass="fixed">
+	<h3>Are you sure you want to delete?</h3>
 
-  <hr />
-  <div class="row">
-    <div class="col-xs-offset-1 col-xs-5">
-      <button type="button" class="btn btn-fill btn-wd btn-danger" (click)="confirm()">Delete</button>
-    </div>
-    <div class="col-xs-5">
-      <button type="button" class="btn btn-fill btn-wd" (click)="cancel()">Cancel</button>
-    </div>
-  </div>
+	<hr />
+	<div class="row">
+		<div class="col-xs-offset-1 col-xs-5">
+			<button type="button" class="btn btn-fill btn-wd btn-danger" (click)="confirm()">Delete</button>
+		</div>
+		<div class="col-xs-5">
+			<button type="button" class="btn btn-fill btn-wd" (click)="cancel()">Cancel</button>
+		</div>
+	</div>
 </ngx-smart-modal>
