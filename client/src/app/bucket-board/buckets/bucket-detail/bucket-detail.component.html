@@ -132,15 +132,20 @@
 	</div>
 </div>
 <app-comment-list [(commentService)]="bucketService.commenter" [(commentableItem)]="bucket"></app-comment-list>
-<ngx-smart-modal #quickEditBucketModal hidedelay="100" identifier="quickEditBucketModal" customclass="nsm-dialog-animation-ttb">
+
+<ngx-smart-modal #quickEditBucketModal hidedelay="100" identifier="quickEditBucketModal" customClass="nsm-dialog-animation-ttb">
 	<app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()" [mode]="editControlMode"></app-bucket-edit-control>
 </ngx-smart-modal>
-<ngx-smart-modal #quickeditbucketitem hidedelay="100" identifier="quickEditBucketItem" customclass="modal-expander nsm-dialog-animation-ttb bucket-item-quick-edit-modal ">
+
+<ngx-smart-modal #quickeditbucketitem hidedelay="100" identifier="quickEditBucketItem" customClass="modal-expander nsm-dialog-animation-ttb bucket-item-quick-edit-modal">
 	<app-bucket-item-quick-edit #quickEditItemControl [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)"
 	 (cancel)="cancelQuickEdit()"></app-bucket-item-quick-edit>
 </ngx-smart-modal>
+
 <app-confirm-modal #confirmForBucket id="confirmForBucket" (confirmed)="deleteBucket($event)"></app-confirm-modal>
+
 <app-confirm-modal #confirmForItem id="confirmForItem" (confirmed)="deleteItem($event)"></app-confirm-modal>
+
 <div class="container " style="margin-top: 50px;  padding-top: 10px;">
 	<div class="row justify-content-between">
 		<div class="col-12 col-lg-6 text-center">
