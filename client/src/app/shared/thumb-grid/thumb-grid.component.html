@@ -1,3 +1,7 @@
-<p>
-  thumb-grid works!
-</p>
+<div class="mb16">
+	<div style="display:inline-block; margin:2px;"  *ngFor="let image of imageList; let i=index">
+		<a style="height: 50px; width: 50px; margin-top:5px;" [routerLink]="image.routerLink">
+				<img src="//{{image.variations[0].url}}" height="50" width="50" />
+		</a>
+	</div>
+</div>

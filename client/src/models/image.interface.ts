@@ -4,7 +4,8 @@ export interface IImage{
     _id?: string,
     order?: number,
     isActive?: boolean,
-    variations?: IImageVariation[],
+	variations?: IImageVariation[],
+	routerLink?: string,
 }
 
 export interface IImageVariation{

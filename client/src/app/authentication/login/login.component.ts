@@ -55,7 +55,6 @@ export class LoginComponent implements OnInit {
 
     login(model: IUser, isValid: boolean) {
         if(isValid){
-            console.log(model, isValid);
             this.loading = true;
             this.authenticationService.loginLocal(model.email, model.password)
                 .subscribe(

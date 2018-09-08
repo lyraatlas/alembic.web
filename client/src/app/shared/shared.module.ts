@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
@@ -30,6 +31,7 @@ import { ThumbGridComponent } from './thumb-grid/thumb-grid.component';
         NgxSmartModalModule,
         FontAwesomeModule,
 		FileDropModule,
+		RouterModule
     ],
     declarations: [
         LaDndDirective,
@@ -43,7 +45,8 @@ import { ThumbGridComponent } from './thumb-grid/thumb-grid.component';
 		LaDndDirective,
 		ConfirmModalComponent,
 		CommentListComponent,
-		ConfirmModalComponent
+		ConfirmModalComponent,
+		ThumbGridComponent
 	]
 })
 export class SharedModule { }

@@ -7,6 +7,7 @@ import { AlertType, EditControlMode } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
 import { CommentEventBus } from '../../../../event-buses/comment.event-bus';
 import { IBucket, IBucketItem, ITokenPayload } from '../../../../models';
+import { IImage } from '../../../../models/image.interface';
 import { AlertService, LikeableServiceMixin } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
 import { BucketService } from '../../../../services/bucket.service';
@@ -35,6 +36,8 @@ export class BucketDetailComponent implements OnInit {
 	public originalName: string;
 	public originalDesc: string;
 
+	public bucketItemImages: Array<IImage> = [];
+
 	public userId: string = (JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)) as ITokenPayload).userId;
 
 	constructor(private route: ActivatedRoute,
@@ -46,7 +49,7 @@ export class BucketDetailComponent implements OnInit {
 		public alertService: AlertService,
 		public commentEventBus: CommentEventBus,
 	) { }
-	
+
 	@ViewChild('quickEditItemControl') quickEditItemControl: BucketItemQuickEditComponent;
 
 	ngOnInit() {
@@ -122,7 +125,6 @@ export class BucketDetailComponent implements OnInit {
 
 
 	quickEditItem(bucketItem: IBucketItem) {
-		//this.quickEditItemControl.clearControl();
 		this.bucketItem = bucketItem;
 		this.ngxSmartModalService.open("quickEditBucketItem");
 	}
@@ -142,7 +144,6 @@ export class BucketDetailComponent implements OnInit {
 	}
 
 	addBucketItem() {
-		//this.quickEditItemControl.clearControl();
 		this.bucketItem = {};
 		this.ngxSmartModalService.open("quickEditBucketItem");
 	}
@@ -159,7 +160,7 @@ export class BucketDetailComponent implements OnInit {
 		}
 	}
 
-	addComment(bucket:IBucket){
+	addComment(bucket: IBucket) {
 		this.commentEventBus.startAddComment(this.bucket);
 	}
 
@@ -182,10 +183,24 @@ export class BucketDetailComponent implements OnInit {
 				// Now we're going to build up a list of rows.  we're going to put 4 items in each row.
 				let currentBucketIndex = 0;
 
+				this.bucketItemImages.length = 0;
 				for (let i = 0; i < numberOfRows; i++) {
 					for (let slotNumber = 0; slotNumber < this.itemsPerRow; slotNumber++) {
+						let bItem = (this.bucket.bucketItems[currentBucketIndex] as IBucketItem);
 						LikeableServiceMixin.calculateLikeStatus(this.bucket.bucketItems as IBucketItem[]);
-						this.bucketItemTable[i][slotNumber] = this.bucket.bucketItems[currentBucketIndex] as IBucketItem;
+						this.bucketItemTable[i][slotNumber] = bItem;
+
+						// We're also going to create an array that contains all the images.  This will be what we pass down to the control
+						// which will help build up our image grid component.  We also need to tell this component what to use for a "detal" link.
+						
+						if (bItem && bItem.images && bItem.images.length > 0) {
+							for (let z = 0; z < bItem.images.length; z++) {
+								const img = bItem.images[z];
+								img.routerLink = `/bucket-item/detail/${bItem._id}`;
+							}
+							this.bucketItemImages = this.bucketItemImages.concat(bItem.images);
+						}
+
 						++currentBucketIndex;
 					}
 				}
