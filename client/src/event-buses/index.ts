@@ -1,2 +1,2 @@
-export * from './error.event-bus'
-export * from './product-image.event-bus'
+export * from './comment.event-bus';
+export * from './error.event-bus';

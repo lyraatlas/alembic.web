@@ -4,9 +4,9 @@ import { BaseRequestOptions, HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { ErrorEventBus, ProductImageEventBus } from '../event-buses';
+import { ErrorEventBus } from '../event-buses';
 import { CommentEventBus } from '../event-buses/comment.event-bus';
-import { AlertService, AuthenticationService, LikeableServiceMixin, ProductService, SupplierService, UserService } from '../services';
+import { AlertService, AuthenticationService, LikeableServiceMixin, SupplierService, UserService } from '../services';
 import { BucketItemService } from '../services/bucket-item.service';
 import { BucketService } from '../services/bucket.service';
 import { NotificationService } from '../services/notification.service';
@@ -55,10 +55,8 @@ import { SidebarModule } from './sidebar/sidebar.module';
         AuthenticationService,
         AuthGuard,
         BaseRequestOptions,
-        ProductService,
         SupplierService,
         ErrorEventBus,
-        ProductImageEventBus,
         NotificationService,
         NgxSmartModalService,
         LikeableServiceMixin,

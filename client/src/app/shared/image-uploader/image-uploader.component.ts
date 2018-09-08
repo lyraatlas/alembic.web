@@ -3,7 +3,6 @@ import { humanizeBytes, UploadFile, UploadInput, UploadOutput } from 'ngx-upload
 import { CONST } from '../../../constants';
 import * as enums from '../../../enumerations';
 import { environment } from '../../../environments/environment';
-import { ProductImageEventBus } from '../../../event-buses';
 import { AlertService } from '../../../services';
 
 interface FormData {
@@ -26,7 +25,7 @@ export class ImageUploaderComponent implements OnInit {
   humanizeBytes: Function;
   dragOver: boolean;
 
-  constructor(private alertService: AlertService, private productImageEventBus: ProductImageEventBus) {
+  constructor(private alertService: AlertService) {
     this.formData = {
       concurrency: 1,
       autoUpload: false,
@@ -61,7 +60,7 @@ export class ImageUploaderComponent implements OnInit {
     } else if (output.type === 'drop') {
       this.dragOver = false;
     } else if (output.type === 'done'){
-        this.productImageEventBus.uploadProductImage();
+        //this.productImageEventBus.uploadProductImage();
         this.uploadInput.emit({ type: 'remove', id: output.file.id });
       if(output.file.responseStatus != 200){
         this.alertService.send({ text: 'There was an error with the image upload', alertType: enums.AlertType.danger }, true);

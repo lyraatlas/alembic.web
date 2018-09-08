@@ -548,7 +548,7 @@ ul.lead li {
   background: #333347 !important;
 }
 .bg-secondary {
-  background: #f8f8f8;
+  background: #f8f8f8 !important;
 }
 .bg-white {
   background: #fff;
@@ -2629,7 +2629,7 @@ button[type="submit"] .form-loading {
   background: #363636;
 }
 .bg-secondary .feature.boxed {
-  background: #fff;
+  background: #fff
 }
 .feature.bordered {
   padding: 32px;
