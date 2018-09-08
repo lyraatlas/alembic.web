@@ -6,7 +6,7 @@ import { UploadFile } from '../../../../classes/upload-file.class';
 import { UploadResponse } from '../../../../classes/upload-response.class';
 import { AlertType, EditControlMode, UploadStatus } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
-import { IBucket, IImage } from '../../../../models';
+import { IBucket } from '../../../../models';
 import { IBucketItem } from '../../../../models/bucket-item.interface';
 import { AlertService, BucketService, UserService } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
