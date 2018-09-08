@@ -2,136 +2,148 @@
 	<div class="content" *ngIf="bucket">
 		<div class="container pt24">
 			<div class="row">
-				<h2 class="col-md-12 card-title mb8">{{bucket.name}}</h2>
+				<h2 class="col-lg-12 card-title mb8">{{bucket.name}}</h2>
 			</div>
 			<div class="row pb8" style="cursor: pointer;">
 				<!--Comment and Like button in large form factor-->
-				<div class="col-xs-3 col-md-3 hidden-sm hidden-xs">
+				<div class="col-3 col-lg-3 d-none d-md-block"> <a data-toggle="tooltip" title="Add A Like" (click)="toggleLike()" tooltip="">
 
-					<a data-toggle="tooltip" title="Add A Like" (click)="toggleLike()" tooltip>
 						<fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+
 						<span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{bucket.likedBy.length}}</span>
+
 					</a>
 					<span style="font-size:16">&nbsp;&#183;&nbsp;</span>
 					<a title="Add A Comment" (click)="addComment(bucket)">
+
 						<fa-icon [icon]="faComment"></fa-icon>
+
 						<span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{bucket.comments.length}}</span>
+
 					</a>
-
 				</div>
-
 				<!--Comment and Like button in small/xs form factor-->
-				<div class="col-xs-12 col-sm-12 visible-sm visible-xs" style="font-size: 16px;">
-					<a class=" " data-toggle="tooltip" title="Add A Like" (click)="toggleLike()" tooltip style="">
+				<div class="col-12 col-md-12 d-none d-sm-block d-md-none d-block d-sm-none" style="font-size: 16px;"> <a class=" " data-toggle="tooltip"
+					 title="Add A Like" (click)="toggleLike()" tooltip="" style="">
+
 						<fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+
 						<span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{bucket.likedBy.length}}</span>
+
 					</a>
 					<span style="font-size:16">&nbsp;&#183;&nbsp;</span>
 					<a title="Add A Comment" (click)="addComment(bucket)">
+
 						<fa-icon [icon]="faComment"></fa-icon>
+
 						<span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{bucket.comments.length}}</span>
+
 					</a>
 				</div>
-
 			</div>
 			<div class="row">
-				<p class="col-md-12">{{bucket.description}}</p>
+				<p class="col-lg-12">{{bucket.description}}</p>
 			</div>
 			<div class="row">
-				<button type="button" class="btn col-md-3  hidden-sm hidden-xs row-btn " style="max-width:175px;" (click)="addBucketItem(); ">
+				<button type="button" class="btn col-lg-3 row-btn d-none d-md-block" style="max-width:175px;" (click)="addBucketItem(); ">
 					<fa-icon [icon]="faPlusCircle"></fa-icon>&nbsp;&nbsp;Add Item</button>
-				<button type="button" class="btn col-md-3  hidden-sm hidden-xs" style="max-width:175px;" (click)="editBucket(bucket)">
+				<button type="button" class="btn col-lg-3 d-none d-md-block" style="max-width:175px;" (click)="editBucket(bucket)">
 					<fa-icon [icon]="faEdit"></fa-icon>&nbsp;&nbsp;Edit Board</button>
-				<button type="button" class="btn col-md-3 hidden-sm hidden-xs danger" style="max-width:175px;" (click)="confirmForBucket.show(bucket)">
+				<button type="button" class="btn col-lg-3 danger d-none d-md-block" style="max-width:175px;" (click)="confirmForBucket.show(bucket)">
 					<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;&nbsp;Delete Board</button>
 			</div>
 			<div class="row mb8" style="font-size: 24px; cursor: pointer; opacity: .7">
-				<div class="col-sm-12 col-xs-12 visible-sm visible-xs">
-					<a class="mr8" (click)="addBucketItem();">
+				<div class="col-md-12 col-12 d-none d-sm-block d-md-none d-block d-sm-none"> <a class="mr8" (click)="addBucketItem();">
+
 						<fa-icon [icon]="faPlusCircle"></fa-icon>
+
 					</a>
 					<a class="mr8" (click)="editBucket(bucket)">
+
 						<fa-icon [icon]="faEdit"></fa-icon>
+
 					</a>
 					<a class="" (click)="showDeleteConfirm()">
+
 						<fa-icon [icon]="faTrashAlt"></fa-icon>
+
 					</a>
 				</div>
 			</div>
 			<app-thumb-grid [(imageList)]="bucketItemImages"></app-thumb-grid>
-			<hr />
+			<hr>
 		</div>
-
 		<div class="container pb24" style="min-height: 300px;">
-
 			<div class="row" *ngFor="let row of bucketItemTable;">
-
 				<ng-container *ngFor="let bucketItem of row; let i=index">
-
 					<ng-container *ngIf="bucketItem && bucketItem._id">
-
-						<div class="col-md-3 col-sm-12" style="margin-bottom: 16px;">
-
-							<div class="card">
+						<div class="col-lg-3 col-md-12" style="margin-bottom: 16px;">
+							<div class="card"> 
 								<a [routerLink]="['/bucket-item/detail', bucketItem._id]">
-									<img style="border-radius: 6px 6px 0px 0px" *ngIf="bucketItem.images.length > 0 && bucketItem.images[0].variations" src="//{{bucketItem.images[0].variations[1].url}}">
-									<div class="card-content">
-										<h3 class="card-title">{{bucketItem.name}}</h3>
-										<!-- <p class="card-subtitle">{{bucketItem.images[0]}}</p> -->
-										<h5 class="card-text">{{bucketItem.description}}</h5>
-									</div>
-								</a>
 
-								<div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
-									<a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucketItem)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
+									<img style="border-radius: 6px 6px 0px 0px" *ngIf="bucketItem.images.length > 0 && bucketItem.images[0].variations" src="//{{bucketItem.images[0].variations[1].url}}">
+
+									<div class="card-content">
+
+										<h3 class="card-title">{{bucketItem.name}}</h3>
+
+										<!-- <p class="card-subtitle">{{bucketItem.images[0]}}</p> -->
+
+										<h5 class="card-text">{{bucketItem.description}}</h5>
+
+									</div>
+
+								</a>
+								<div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; "> <a class="col-3 card-buttons"
+									 data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucketItem)" tooltip="" style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
+
 										<fa-icon [class.gold]="bucketItem.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+
 										<span *ngIf="bucketItem.likedBy && bucketItem.likedBy.length > 0">&nbsp;{{bucketItem.likedBy.length}}</span>
+
 									</a>
-									<a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucketItem)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
+									<a class="col-3 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucketItem)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
+
 										<fa-icon [icon]="faComment"></fa-icon>
+
 										<span *ngIf="bucketItem.comments && bucketItem.comments.length > 0">&nbsp;{{bucketItem.comments.length}}</span>
+
 									</a>
-									<a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEditItem(bucketItem);"
-									 style="border-right: 1px solid lightgrey; padding: 8px;  cursor: pointer">
+									<a class="col-3 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEditItem(bucketItem);" style="border-right: 1px solid lightgrey; padding: 8px;  cursor: pointer">
+
 										<fa-icon [icon]="faPen"></fa-icon>
+
 									</a>
-									<a class="col-xs-3 card-buttons" data-toggle="tooltip" title="Delete This bucketItem" (click)="confirmForItem.show(bucketItem)"
+									<a class="col-3 card-buttons" data-toggle="tooltip" title="Delete This bucketItem" (click)="confirmForItem.show(bucketItem)"
 									 style=" padding: 8px;  cursor: pointer">
+
 										<fa-icon [icon]="faTrashAlt"></fa-icon>
+
 									</a>
 								</div>
-
 							</div>
 						</div>
-						<!-- If we're on the first element in the list we're going to offset it by 2 [class.col-md-offset-1]="i==0"-->
-
+						<!-- If we're on the first element in the list we're going to offset it
+							by 2 [class.offset-md-1]="i==0"-->
 					</ng-container>
 				</ng-container>
 			</div>
 		</div>
 	</div>
 </div>
-
 <app-comment-list [(commentService)]="bucketService.commenter" [(commentableItem)]="bucket"></app-comment-list>
-
-<ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal" customClass="nsm-dialog-animation-ttb">
+<ngx-smart-modal #quickEditBucketModal hidedelay="100" identifier="quickEditBucketModal" customclass="nsm-dialog-animation-ttb">
 	<app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()" [mode]="editControlMode"></app-bucket-edit-control>
 </ngx-smart-modal>
-
-<ngx-smart-modal #quickEditBucketItem hideDelay="100" identifier="quickEditBucketItem" customClass="modal-expander nsm-dialog-animation-ttb bucket-item-quick-edit-modal ">
+<ngx-smart-modal #quickeditbucketitem hidedelay="100" identifier="quickEditBucketItem" customclass="modal-expander nsm-dialog-animation-ttb bucket-item-quick-edit-modal ">
 	<app-bucket-item-quick-edit #quickEditItemControl [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)"
 	 (cancel)="cancelQuickEdit()"></app-bucket-item-quick-edit>
 </ngx-smart-modal>
-
 <app-confirm-modal #confirmForBucket id="confirmForBucket" (confirmed)="deleteBucket($event)"></app-confirm-modal>
-
 <app-confirm-modal #confirmForItem id="confirmForItem" (confirmed)="deleteItem($event)"></app-confirm-modal>
-
 <div class="container " style="margin-top: 50px;  padding-top: 10px;">
-
 	<div class="row justify-content-between">
-
-		<div class="col-xs-12 col-md-6 text-center" >
+		<div class="col-12 col-lg-6 text-center">
 			<div class="panel" style="padding-left: 100px; padding-top: 100px; padding-right: 100px; background-color: #bad3ff;">
 				<h3>This is the first box.</h3>
 			</div>
@@ -139,8 +151,7 @@
 				<h3>This is the second box.</h3>
 			</div>
 		</div>
-
-		<div class="col-xs-12 col-md-6 text-center" style="">
+		<div class="col-12 col-lg-6 text-center" style="">
 			<div>
 				<h3>This is the first box.</h3>
 			</div>
@@ -148,9 +159,8 @@
 				<h3>This is the second box.</h3>
 			</div>
 			<div style="padding-left: 100px; padding-top: 100px; padding-right: 100px; background-color: #bad3ff;">
-					<h3>This is the third box.</h3>
-				</div>
+				<h3>This is the third box.</h3>
+			</div>
 		</div>
-
 	</div>
 </div>

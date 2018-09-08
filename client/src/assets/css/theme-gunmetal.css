@@ -1282,7 +1282,7 @@ nav .cart-overview a {
 .offscreen-container.bg-dark .close-nav i {
   color: #fff;
 }
-@media all and (max-width: 990px) {
+@media all and (max-width: 768px) {
   .offscreen-container {
     width: 100vw;
   }
@@ -1295,7 +1295,7 @@ nav .cart-overview a {
     transform: none !important;
   }
 }
-@media all and (max-width: 990px) {
+@media all and (max-width: 768px) {
   nav.fixed {
     position: absolute !important;
     opacity: 1 !important;
@@ -1529,7 +1529,7 @@ nav.transparent {
   transform: none;
   visibility: visible;
 }
-@media all and (max-width: 990px) {
+@media all and (max-width: 768px) {
   nav.transparent .nav-open {
     background: #fff;
   }
