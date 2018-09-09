@@ -20,7 +20,8 @@
 						<div>
 							<label for="laFileInput" class="camera-label transition" style="font-weight: normal">
 								<fa-icon [icon]="faPlusSquare" style="font-size:32px;"></fa-icon>
-								<br>Click Here to Select Pictures from your device</label>
+								<br>Click Here to Select Pictures from your device
+							</label>
 							<input type="file" #laFileInput name="laFileInput" id="laFileInput" class="inputfile" (change)="onFilesSelected($event)"
 							 multiple>
 						</div>
@@ -30,8 +31,8 @@
 			<div class="upload-table" *ngIf="uploadFiles && uploadFiles.length > 0">
 				<table class="table">
 					<thead>
-						<tr>
-							<th>Images</th>
+						<tr style="border:none;">
+							<th style="border:none;">Images</th>
 						</tr>
 					</thead>
 					<tbody class="upload-name-style">
@@ -49,38 +50,39 @@
 			</div>
 		</div>
 		<form #f="ngForm" novalidate (ngSubmit)="saveBucketItem(f.valid)" class="col-lg-6" *ngIf="currentBucketItem">
-			<div class="">
-				<fieldset>
-					<div class="form-group">
-						<label class="col col-form-label">Name</label>
-						<div class="col" [ngClass]="{ 'form-error': (!name.valid && f.submitted) }">
-							<input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="currentBucketItem.name">
-							<small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
-								You have to name your Bucket Items.
-							</small>
-						</div>
+			<fieldset>
+				<div class="form-group">
+					<label class="col-form-label">Name</label>
+					<div [ngClass]="{ 'form-error': (!name.valid && f.submitted) }">
+						<input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="currentBucketItem.name">
+						<small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
+							You have to name your Bucket Items.
+						</small>
 					</div>
-					<div class="form-group">
-						<label class="col col-form-label">Description</label>
-						<div class="col" [ngClass]="{ 'form-error': (!description.valid && f.submitted) }">
-							<textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="currentBucketItem.description"></textarea>
-							<small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
+				</div>
+				<div class="form-group">
+					<label class="col-form-label">Description</label>
+					<div [ngClass]="{ 'form-error': (!description.valid && f.submitted) }">
+						<textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control"
+						 [(ngModel)]="currentBucketItem.description"></textarea>
+						<small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
 
-								A little description is always nice.
+							A little description is always nice.
 
-							</small>
-						</div>
+						</small>
 					</div>
-				</fieldset>
-			</div>
-			<div class="">
+				</div>
+			</fieldset>
+			<div class="row">
 				<hr>
 			</div>
-			<div class="" style="text-align: center">
-				<button type="button" class="btn btn-fill" (click)="cancelHandler()">Cancel</button>
-			</div>
-			<div class="" style="text-align: center">
-				<button type="button" class="btn btn-fill" [disabled]="!isUploadComplete" (click)="saveBucketItem(f.valid)">Save</button>
+			<div class="row">
+				<div class="col-lg-6 text-center">
+					<button type="button" class="btn btn-fill center-block" (click)="cancelHandler()">Cancel</button>
+				</div>
+				<div class="col-lg-6 text-center">
+					<button type="button" class="btn btn-fill center-block" [disabled]="!isUploadComplete" (click)="saveBucketItem(f.valid)">Save</button>
+				</div>
 			</div>
 		</form>
 	</div>

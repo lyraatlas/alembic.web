@@ -137,7 +137,7 @@
 	<app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()" [mode]="editControlMode"></app-bucket-edit-control>
 </ngx-smart-modal>
 
-<ngx-smart-modal #quickeditbucketitem hidedelay="100" identifier="quickEditBucketItem" customClass="modal-expander nsm-dialog-animation-ttb bucket-item-quick-edit-modal">
+<ngx-smart-modal #quickeditbucketitem hidedelay="100" identifier="quickEditBucketItem" customClass="nsm-dialog-animation-ttb bucket-item-quick-edit-modal">
 	<app-bucket-item-quick-edit #quickEditItemControl [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)"
 	 (cancel)="cancelQuickEdit()"></app-bucket-item-quick-edit>
 </ngx-smart-modal>
