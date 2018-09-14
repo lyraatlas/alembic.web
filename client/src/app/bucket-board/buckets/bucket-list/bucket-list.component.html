@@ -11,52 +11,19 @@
         <hr />
     </div>
     <div class="container" style="min-height: 300px; padding:0px 0px 32px; ">
+		
+		<div class="card-columns">
 
-        <div class="row" *ngFor="let row of bucketTable;">
+			<ng-container *ngFor="let item of buckets; let i=index">
+				<app-bucket-card [bucket]="item"></app-bucket-card>
+			</ng-container>
 
-            <ng-container *ngFor="let bucket of row; let i=index">
-
-                <ng-container *ngIf="bucket && bucket._id">
-
-                    <div class="col-md-3 col-sm-12" style="margin-bottom: 16px;">
-
-                        <div class="card">
-                            <a [routerLink]="['/bucket-board/detail', bucket._id]">
-                                <img style="border-radius: 6px 6px 0px 0px" *ngIf="bucket.images.length > 0 && bucket.images[0].variations" src="//{{bucket.images[0].variations[1].url}}">
-                                <div class="card-content">
-                                    <h3 class="card-title">{{bucket.name}}</h3>
-                                    <!-- <p class="card-subtitle">{{bucket.images[0]}}</p> -->
-                                    <h5 class="card-text">{{bucket.description}}</h5>
-                                </div>
-                            </a>
-
-                            <div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
-                                <a class="col-4 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucket)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
-                                    <fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
-                                    <span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{bucket.likedBy.length}}</span>
-                                </a>
-                                <a class="col-4 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucket)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
-                                    <fa-icon [icon]="faComment"></fa-icon>
-                                    <span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{bucket.comments.length}}</span>
-                                </a>
-                                <a class="col-4 card-buttons" data-toggle="tooltip" title="Edit This Bucket" (click)="quickEdit(bucket)" style=" padding: 8px;  cursor: pointer">
-                                    <fa-icon [icon]="faPen"></fa-icon>
-                                </a>
-                            </div>
-
-                        </div>
-                    </div>
-                    <!-- If we're on the first element in the list we're going to offset it by 2 [class.col-md-offset-1]="i==0"-->
-
-                </ng-container>
-            </ng-container>
-        </div>
+		</div>
 	</div>
 	
 </div>
 
 
 <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal" customClass="la-modal nsm-dialog-animation-fade">
-        <app-bucket-edit-control class="la-modal" [(bucket)]="quickEditBucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()"
-            [mode]="editControlMode"></app-bucket-edit-control>
+        <app-bucket-edit-control class="la-modal" ></app-bucket-edit-control>
     </ngx-smart-modal>

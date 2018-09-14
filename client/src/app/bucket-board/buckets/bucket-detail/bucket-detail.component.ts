@@ -1,17 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faComment, faEdit, faHeart, faPen, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CONST } from '../../../../constants';
-import { AlertType, EditControlMode } from '../../../../enumerations';
+import { AlertType, BucketEventType, EditControlMode } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
+import { BucketEventBus } from '../../../../event-buses/bucket.event-bus';
 import { CommentEventBus } from '../../../../event-buses/comment.event-bus';
 import { IBucket, IBucketItem, ITokenPayload } from '../../../../models';
 import { IImage } from '../../../../models/image.interface';
 import { AlertService, LikeableServiceMixin } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
 import { BucketService } from '../../../../services/bucket.service';
-import { BucketItemQuickEditComponent } from '../../items/bucket-item-quick-edit/bucket-item-quick-edit.component';
 
 @Component({
 	selector: 'app-bucket-detail',
@@ -48,9 +48,8 @@ export class BucketDetailComponent implements OnInit {
 		public ngxSmartModalService: NgxSmartModalService,
 		public alertService: AlertService,
 		public commentEventBus: CommentEventBus,
+		public bucketEventBus: BucketEventBus
 	) { }
-
-	@ViewChild('quickEditItemControl') quickEditItemControl: BucketItemQuickEditComponent;
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
@@ -60,13 +59,31 @@ export class BucketDetailComponent implements OnInit {
 				this.fetchBucket();
 			}
 		});
-		this.bucketService.commenter
+
+		this.bucketEventBus.BucketChanged$.subscribe(message => {
+			switch (+message.eventType) {
+				case +BucketEventType.edited:
+					this.bucket = message.bucket;
+					this.ngxSmartModalService.close("quickEditBucketModal");
+					break;
+				case +BucketEventType.cancelEdit:
+					this.bucket = message.bucket;
+					this.ngxSmartModalService.close("quickEditBucketModal");
+					break;
+				case +BucketEventType.startEdit:
+					this.ngxSmartModalService.open("quickEditBucketModal");
+					break;
+				default:
+					break;
+			}
+		});
 	}
 
 	//#region Bucket Methods
 
 	deleteBucket(bucket: IBucket) {
 		this.bucketService.delete(this.currentBucketId).subscribe((item) => {
+			this.bucketEventBus.removeBucket(this.bucket);
 			// item is some kind of delete response;
 			this.alertService.send({
 				text: "Successfully Deleted Bucket Board",
@@ -82,20 +99,10 @@ export class BucketDetailComponent implements OnInit {
 		});
 	}
 
-	canceled() {
-		this.bucket.description = this.originalDesc;
-		this.bucket.name = this.originalName;
-		this.ngxSmartModalService.close("quickEditBucketModal");
-	}
-
 	//#endregion
 
 	backToBuckets() {
 		this.router.navigate(['/bucket-board']);
-	}
-
-	cancelQuickEdit() {
-		this.ngxSmartModalService.close("quickEditBucketItem");
 	}
 
 	async deleteItem(bucketItem: IBucketItem) {
@@ -110,19 +117,6 @@ export class BucketDetailComponent implements OnInit {
 			this.errorEventBus.throw(error);
 		});
 	}
-
-	bucketSaved(bucket: IBucket) {
-		this.ngxSmartModalService.close("quickEditBucketModal");
-		this.fetchBucket();
-	}
-
-	editBucket(bucket: IBucket) {
-		this.originalName = bucket.name;
-		this.originalDesc = bucket.description;
-		this.editControlMode = EditControlMode.edit;
-		this.ngxSmartModalService.open("quickEditBucketModal");
-	}
-
 
 	quickEditItem(bucketItem: IBucketItem) {
 		this.bucketItem = bucketItem;
@@ -192,7 +186,7 @@ export class BucketDetailComponent implements OnInit {
 
 						// We're also going to create an array that contains all the images.  This will be what we pass down to the control
 						// which will help build up our image grid component.  We also need to tell this component what to use for a "detal" link.
-						
+
 						if (bItem && bItem.images && bItem.images.length > 0) {
 							for (let z = 0; z < bItem.images.length; z++) {
 								const img = bItem.images[z];

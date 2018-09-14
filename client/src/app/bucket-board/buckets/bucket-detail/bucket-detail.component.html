@@ -134,7 +134,7 @@
 <app-comment-list [(commentService)]="bucketService.commenter" [(commentableItem)]="bucket"></app-comment-list>
 
 <ngx-smart-modal #quickEditBucketModal hidedelay="100" identifier="quickEditBucketModal" customClass="nsm-dialog-animation-ttb">
-	<app-bucket-edit-control class="la-modal" [(bucket)]="bucket" (bucketSaved)="bucketSaved($event)" (cancel)="canceled()" [mode]="editControlMode"></app-bucket-edit-control>
+	<app-bucket-edit-control class="la-modal"></app-bucket-edit-control>
 </ngx-smart-modal>
 
 <ngx-smart-modal #quickeditbucketitem hidedelay="100" identifier="quickEditBucketItem" customClass="nsm-dialog-animation-ttb bucket-item-quick-edit-modal">
@@ -146,26 +146,3 @@
 
 <app-confirm-modal #confirmForItem id="confirmForItem" (confirmed)="deleteItem($event)"></app-confirm-modal>
 
-<div class="container " style="margin-top: 50px;  padding-top: 10px;">
-	<div class="row justify-content-between">
-		<div class="col-12 col-lg-6 text-center">
-			<div class="panel" style="padding-left: 100px; padding-top: 100px; padding-right: 100px; background-color: #bad3ff;">
-				<h3>This is the first box.</h3>
-			</div>
-			<div>
-				<h3>This is the second box.</h3>
-			</div>
-		</div>
-		<div class="col-12 col-lg-6 text-center" style="">
-			<div>
-				<h3>This is the first box.</h3>
-			</div>
-			<div style="padding-left: 100px; padding-top: 100px; padding-right: 100px; background-color: #bad3ff;">
-				<h3>This is the second box.</h3>
-			</div>
-			<div style="padding-left: 100px; padding-top: 100px; padding-right: 100px; background-color: #bad3ff;">
-				<h3>This is the third box.</h3>
-			</div>
-		</div>
-	</div>
-</div>

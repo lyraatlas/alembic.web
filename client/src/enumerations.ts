@@ -13,6 +13,16 @@ export enum CommentEventType{
 	cancelAdd =4,
 }
 
+export enum BucketEventType{
+	created = 1,
+	edited = 2, 
+	removed = 3,
+	cancelCreate =4,
+	cancelEdit=5,
+	startCreate=6,
+	startEdit=8,
+}
+
 export enum UploadStatus{
     pending = 1,
     uploading = 2,
