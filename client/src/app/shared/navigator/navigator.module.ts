@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NavigatorComponent } from './navigator.component';
-import { Component, OnInit } from '@angular/core';
 
 @NgModule({
-    imports: [ RouterModule, CommonModule ],
+    imports: [ RouterModule, CommonModule, FontAwesomeModule ],
     declarations: [ NavigatorComponent ],
     exports: [ NavigatorComponent ]
 })

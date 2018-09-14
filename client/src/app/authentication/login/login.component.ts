@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
-        this.checkFullPageBackgroundImage();
+        //this.checkFullPageBackgroundImage();
 
         var navbar: HTMLElement = this.element.nativeElement;
         this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
@@ -99,13 +99,13 @@ export class LoginComponent implements OnInit {
         // }); 
     }
 
-    checkFullPageBackgroundImage() {
-        var $page = $('.full-page');
-        var image_src = $page.data('image');
+    // checkFullPageBackgroundImage() {
+    //     var $page = $('.full-page');
+    //     var image_src = $page.data('image');
 
-        if (image_src !== undefined) {
-            var image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>'
-            $page.append(image_container);
-        }
-    };
+    //     if (image_src !== undefined) {
+    //         var image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>'
+    //         $page.append(image_container);
+    //     }
+    // };
 }

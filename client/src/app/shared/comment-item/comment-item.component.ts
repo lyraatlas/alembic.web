@@ -1,11 +1,11 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { faComment, faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import * as moment from 'moment';
 import { AlertType } from '../../../enumerations';
 import { CommentEventBus } from '../../../event-buses/comment.event-bus';
 import { IComment, ICommentable } from '../../../models';
 import { AlertService, LikeableServiceMixin, UserService } from '../../../services';
 import { CommentableServiceMixin } from '../../../services/mixins/commentable.service.mixin';
-import moment = require('moment');
 
 @Component({
 	selector: 'app-comment-item',

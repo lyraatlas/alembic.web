@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map'
-import { BaseService } from './base/base.service';
-import { CONST } from '../constants';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import * as jwtDecode from 'jwt-decode';
-import { IUser } from '../models/user.interface';
-import { environment } from '../environments/environment';
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
+import { CONST } from '../constants';
 import { MimeType } from '../enumerations';
+import { environment } from '../environments/environment';
+import { IUser } from '../models/user.interface';
+import { BaseService } from './base/base.service';
 
 declare const FB: any;
 

@@ -28,7 +28,7 @@
 
 			<div class="row">
 				<div class="col-md-2">
-					<i class="et-line-profile-male" style="font-size:50px;"></i>
+						<fa-icon [icon]="faUser" style="font-size: 50px;"></fa-icon>
 				</div>
 				<div class="col-md-10">
 					<h5>Free Account</h5>
@@ -56,7 +56,7 @@
 		</div>
 
 		<div class="col-lg-6">
-			<form #f="ngForm" novalidate (ngSubmit)="registerUser(f.value, f.valid)" class="form-horizontal">
+			<form #f="ngForm" novalidate (ngSubmit)="registerUser(f.valid)" class="form-horizontal">
 				<div class="">
 					<div class="content">
 						<div class="form-group" [ngClass]="{ 'form-error': (firstName.invalid && f.submitted) }">

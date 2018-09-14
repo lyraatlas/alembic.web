@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { AlertType } from '../../../enumerations';
 import { IUser } from '../../../models';
 import { AlertService, AuthenticationService } from '../../../services';
@@ -22,6 +23,8 @@ export class RegisterComponent implements OnInit {
 	public password2: string = '';
 	public showPasswordWarning: boolean = false;
 	public passwordWarningMessage: string = '';
+
+	public faUser = faUser;
 
 	constructor(
 		private route: ActivatedRoute,

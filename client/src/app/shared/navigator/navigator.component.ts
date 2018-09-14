@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { CONST } from '../../../constants';
 import { AuthenticationService } from '../../../services';
 declare var $: any;
@@ -17,6 +18,7 @@ export class NavigatorComponent implements OnInit, AfterViewInit {
   private mr_navScrolled = false;
   private mr_navFixed = false;
   private mr_outOfSight = false;
+  public faBars = faBars;
   constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
   ngOnInit() {

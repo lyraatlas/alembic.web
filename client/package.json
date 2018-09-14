@@ -13,7 +13,7 @@
     "devbuild": "ng build --aot --extract-css=true --output-hashing=all --sourcemaps=true --output-path=dist/dev --env=dev --no-progress",
     "testbuild": "ng build --aot --extract-css=true --output-hashing=all --sourcemaps=true --output-path=dist/test --env=test --no-progress",
     "stagebuild": "ng build --aot --extract-css=true --output-hashing=all --sourcemaps=true --output-path=dist/stage --env=stage --no-progress",
-    "localbuild": "ng build --output-path=dist/dev  --env=local"
+    "localbuild": "ng build --output-hashing=all --aot --target production --environment local"
   },
   "private": true,
   "dependencies": {
@@ -27,8 +27,9 @@
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
     "@fortawesome/angular-fontawesome": "^0.1.1",
-    "@fortawesome/fontawesome-svg-core": "^1.2.0",
-    "@fortawesome/free-solid-svg-icons": "^5.1.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.4",
+    "@fortawesome/free-brands-svg-icons": "^5.3.1",
+    "@fortawesome/free-solid-svg-icons": "^5.3.1",
     "@ngui/map": "^0.18.3",
     "@swimlane/ngx-datatable": "^11.1.2",
     "@types/googlemaps": "^3.26.14",
