@@ -76,7 +76,7 @@ $transition-timing-function: ease-in-out !default;
 // This is basically allowing us to have our modals scroll, and get a size based on their content. 
 // If you mess with the "position" attribute here, you most likely lose that ability. For instance when adding/editing a bucket item, and 
 // having a bunch
-body.dialog-open ngx-smart-modal {
+body.dialog-open {
     position: inherit;
     left: 0;
     top: 0;

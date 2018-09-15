@@ -9,6 +9,7 @@ import { Ng2CompleterModule } from "ng2-completer";
 import { FileDropModule } from 'ngx-file-drop';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgUploaderModule } from 'ngx-uploader';
+import { BucketItemEventBus } from '../../event-buses/bucket-item.event-bus';
 import { BucketEventBus } from '../../event-buses/bucket.event-bus';
 import { ImageUploaderModule } from '../shared/image-uploader/image-uploader.module';
 import { SharedModule } from '../shared/shared.module';
@@ -17,6 +18,7 @@ import { BucketCardComponent } from './buckets/bucket-card/bucket-card.component
 import { BucketDetailComponent } from './buckets/bucket-detail/bucket-detail.component';
 import { BucketEditControlComponent } from './buckets/bucket-edit-control/bucket-edit-control.component';
 import { BucketListComponent } from './buckets/bucket-list/bucket-list.component';
+import { BucketItemCardComponent } from './items/bucket-item-card/bucket-item-card.component';
 import { BucketItemQuickEditComponent } from './items/bucket-item-quick-edit/bucket-item-quick-edit.component';
 
 @NgModule({
@@ -40,9 +42,11 @@ import { BucketItemQuickEditComponent } from './items/bucket-item-quick-edit/buc
         BucketEditControlComponent,
         BucketItemQuickEditComponent,
         BucketCardComponent,
+        BucketItemCardComponent,
 	],
 	providers: [
-		BucketEventBus
+		BucketEventBus,
+		BucketItemEventBus
 	]
 })
 export class BucketListModule { }

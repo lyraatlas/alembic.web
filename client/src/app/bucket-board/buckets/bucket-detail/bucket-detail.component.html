@@ -47,7 +47,7 @@
 			<div class="row">
 				<button type="button" class="btn col-lg-3 row-btn d-none d-md-block" style="max-width:175px;" (click)="addBucketItem(); ">
 					<fa-icon [icon]="faPlusCircle"></fa-icon>&nbsp;&nbsp;Add Item</button>
-				<button type="button" class="btn col-lg-3 d-none d-md-block" style="max-width:175px;" (click)="editBucket(bucket)">
+				<button type="button" class="btn col-lg-3 d-none d-md-block" style="max-width:175px;" (click)="editBucket()">
 					<fa-icon [icon]="faEdit"></fa-icon>&nbsp;&nbsp;Edit Board</button>
 				<button type="button" class="btn col-lg-3 danger d-none d-md-block" style="max-width:175px;" (click)="confirmForBucket.show(bucket)">
 					<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;&nbsp;Delete Board</button>
@@ -73,64 +73,19 @@
 			<app-thumb-grid [(imageList)]="bucketItemImages"></app-thumb-grid>
 			<hr>
 		</div>
-		<div class="container pb24" style="min-height: 300px;">
-			<div class="row" *ngFor="let row of bucketItemTable;">
-				<ng-container *ngFor="let bucketItem of row; let i=index">
-					<ng-container *ngIf="bucketItem && bucketItem._id">
-						<div class="col-lg-3 col-md-12" style="margin-bottom: 16px;">
-							<div class="card"> 
-								<a [routerLink]="['/bucket-item/detail', bucketItem._id]">
-
-									<img style="border-radius: 6px 6px 0px 0px" *ngIf="bucketItem.images.length > 0 && bucketItem.images[0].variations" src="//{{bucketItem.images[0].variations[1].url}}">
-
-									<div class="card-content">
-
-										<h3 class="card-title">{{bucketItem.name}}</h3>
-
-										<!-- <p class="card-subtitle">{{bucketItem.images[0]}}</p> -->
-
-										<h5 class="card-text">{{bucketItem.description}}</h5>
-
-									</div>
-
-								</a>
-								<div class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; "> <a class="col-3 card-buttons"
-									 data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucketItem)" tooltip="" style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
-
-										<fa-icon [class.gold]="bucketItem.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
-
-										<span *ngIf="bucketItem.likedBy && bucketItem.likedBy.length > 0">&nbsp;{{bucketItem.likedBy.length}}</span>
-
-									</a>
-									<a class="col-3 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucketItem)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
-
-										<fa-icon [icon]="faComment"></fa-icon>
-
-										<span *ngIf="bucketItem.comments && bucketItem.comments.length > 0">&nbsp;{{bucketItem.comments.length}}</span>
-
-									</a>
-									<a class="col-3 card-buttons" data-toggle="tooltip" title="Edit This bucketItem" (click)="quickEditItem(bucketItem);" style="border-right: 1px solid lightgrey; padding: 8px;  cursor: pointer">
-
-										<fa-icon [icon]="faPen"></fa-icon>
-
-									</a>
-									<a class="col-3 card-buttons" data-toggle="tooltip" title="Delete This bucketItem" (click)="confirmForItem.show(bucketItem)"
-									 style=" padding: 8px;  cursor: pointer">
-
-										<fa-icon [icon]="faTrashAlt"></fa-icon>
-
-									</a>
-								</div>
-							</div>
-						</div>
-						<!-- If we're on the first element in the list we're going to offset it
-							by 2 [class.offset-md-1]="i==0"-->
+		<div class="container pb24" style="min-height: 300px; ">
+		
+			<div class="card-columns">
+		
+					<ng-container *ngFor="let item of bucket.bucketItems;">
+							<app-bucket-item-card [bucketItem]="item" [bucket]="bucket"></app-bucket-item-card>
 					</ng-container>
-				</ng-container>
+		
 			</div>
 		</div>
 	</div>
 </div>
+
 <app-comment-list [(commentService)]="bucketService.commenter" [(commentableItem)]="bucket"></app-comment-list>
 
 <ngx-smart-modal #quickEditBucketModal hidedelay="100" identifier="quickEditBucketModal" customClass="nsm-dialog-animation-ttb">
@@ -138,8 +93,7 @@
 </ngx-smart-modal>
 
 <ngx-smart-modal #quickeditbucketitem hidedelay="100" identifier="quickEditBucketItem" customClass="nsm-dialog-animation-ttb bucket-item-quick-edit-modal">
-	<app-bucket-item-quick-edit #quickEditItemControl [(bucket)]="bucket" [(currentBucketItem)]="bucketItem" (bucketItemSaved)="bucketItemSaved($event)"
-	 (cancel)="cancelQuickEdit()"></app-bucket-item-quick-edit>
+	<app-bucket-item-quick-edit #quickEditItemControl ></app-bucket-item-quick-edit>
 </ngx-smart-modal>
 
 <app-confirm-modal #confirmForBucket id="confirmForBucket" (confirmed)="deleteBucket($event)"></app-confirm-modal>

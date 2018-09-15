@@ -28,20 +28,21 @@ export class BucketItemService extends BaseService<IBucketItem>{
 
   public removeFromBucket(bucketItemId: string, bucketId: string): Observable<string> {
 
-    this.requestOptions.body = {
-      bucketId: bucketId,
-      buckItemId: bucketItemId
-    };
+	let tempOptions = this.requestOptions;
 
-    const deleted =  this.http.delete(`${this.buildUrl({ operation: CONST.ep.REMOVE_REFERENCES })}/${bucketItemId}`, this.requestOptions)
+	tempOptions.body = {
+		bucketId: bucketId,
+		buckItemId: bucketItemId
+	  };
+
+    return this.http.delete(`${this.buildUrl({ operation: CONST.ep.REMOVE_REFERENCES })}/${bucketItemId}`, tempOptions)
       .map(res => {
-        return res.json();
+		this.requestOptions.body = undefined;
+		return res.json();
       })
       .catch(this.handleError);
 
-     this.requestOptions.body = undefined;
-
-     return deleted;
+     
   }
 
   public uploadImage(relatedImageUpload: UploadFile, bucketItemId: string): Observable<UploadResponse> {

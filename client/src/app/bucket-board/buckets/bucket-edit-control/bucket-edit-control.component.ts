@@ -69,7 +69,12 @@ export class BucketEditControlComponent implements OnInit {
 					break;
 				case +EditControlMode.edit:
 					this.bucketService.update(this.bucket, this.bucket._id).subscribe(response => {
-						this.bucket = response
+
+						// On save we only get back id's from the server after updating.  So we're going to save off a version of the items,
+						// and then overwrite the bucket details.
+						let tempItems = this.bucket.bucketItems;
+						this.bucket = response;
+						this.bucket.bucketItems = tempItems;
 
 						this.alertService.send({ text: 'Successfully Saved.', alertType: AlertType.success }, false);
 

@@ -1,11 +1,12 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faCameraRetro, faPlusSquare, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { UploadFile } from '../../../../classes/upload-file.class';
 import { UploadResponse } from '../../../../classes/upload-response.class';
-import { AlertType, EditControlMode, UploadStatus } from '../../../../enumerations';
+import { AlertType, BucketItemEventType, EditControlMode, UploadStatus } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
+import { BucketItemEventBus } from '../../../../event-buses/bucket-item.event-bus';
 import { IBucket, IImage } from '../../../../models';
 import { IBucketItem } from '../../../../models/bucket-item.interface';
 import { AlertService, BucketService, UserService } from '../../../../services';
@@ -18,12 +19,9 @@ import { BucketItemService } from '../../../../services/bucket-item.service';
 })
 export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 
-	@Output() bucketItemChanged = new EventEmitter();
-	@Output() cancel = new EventEmitter();
-	@Output() bucketItemSaved = new EventEmitter<IBucketItem>();
 
-	@Input() bucket: IBucket = {};
-	@Input() currentBucketItem: IBucketItem = {};
+    public bucket: IBucket = {};
+	public currentBucketItem: IBucketItem = {};
 
 	@ViewChild('laFileInput') fileInput: ElementRef;
 
@@ -48,9 +46,26 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 		public userService: UserService,
 		private route: ActivatedRoute,
 		private bucketItemService: BucketItemService,
+		private bucketItemEventBus: BucketItemEventBus,
 		private router: Router) { }
 
 	ngOnInit() {
+		this.bucketItemEventBus.BucketItemChanged$.subscribe((message)=>{
+			switch (+message.eventType) {
+				case +BucketItemEventType.startCreate:
+					this.controlMode = EditControlMode.create;
+					this.currentBucketItem = {};
+					this.bucket = message.bucket;
+					break;
+				case +BucketItemEventType.startEdit:
+					this.controlMode = EditControlMode.edit;
+					this.currentBucketItem = message.bucketItem;
+					this.bucket = message.bucket;
+					break;
+				default:
+					break;
+			}
+		})
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -89,7 +104,7 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 		if (files.length > 5) {
 			this.alertService.send({
 				alertType: AlertType.warning,
-				text: "Sorry but you can only upload 5 images at a time."
+				text: "Sorry, but you can only upload 5 images at a time."
 			});
 			return;
 		}
@@ -200,40 +215,10 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 
 			// If we have an id then we just update the bucket item.
 			if (this.currentBucketItem._id) {
-
-				this.bucketItemService.update(this.currentBucketItem, this.currentBucketItem._id).subscribe(item => {
-
-					this.clearControl();
-
-					this.bucketItemSaved.emit(item);
-				}, error => {
-					this.errorEventBus.throw(error);
-				});
+				this.bucketItemEventBus.saveEditBucketItem(this.currentBucketItem);
 
 			} else {
-				// First we go in and create the bucket item.  Then we're going to update the bucket with the new bucket item.
-				this.bucketItemService.create(this.currentBucketItem)
-					.map(createdItem => {
-
-						(this.bucket.bucketItems as string[]).push(createdItem._id);
-						// Save off the created item for later so we can emit it.
-						this.currentBucketItem = createdItem;
-						return createdItem;
-					})
-					.flatMap(() => {
-
-						return this.bucketService.update(this.bucket, this.bucket._id);
-
-					})
-					.subscribe((updatedBucket) => {
-
-						this.bucket = updatedBucket;
-						this.bucketItemSaved.emit(this.currentBucketItem);
-						this.clearControl();
-
-					}, error => {
-						this.errorEventBus.throw(error);
-					});
+				this.bucketItemEventBus.createBucketItem(this.currentBucketItem);
 			}
 		}
 	}
@@ -243,7 +228,6 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 		if (!this.bucket.bucketItems) {
 			this.bucket.bucketItems = new Array<string>();
 		}
-
 	}
 
 	public validateFileType(type: string) {
@@ -276,7 +260,9 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 	}
 
 	cancelHandler() {
-		this.cancel.emit(null);
+		+this.controlMode == +EditControlMode.create ?
+			this.bucketItemEventBus.cancelBucketItemCreate(null) :
+			this.bucketItemEventBus.cancelEditBucketItem(this.currentBucketItem);
 	}
 }
 

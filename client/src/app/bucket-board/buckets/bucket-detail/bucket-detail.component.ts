@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faComment, faEdit, faHeart, faPen, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CONST } from '../../../../constants';
-import { AlertType, BucketEventType, EditControlMode } from '../../../../enumerations';
+import { AlertType, BucketEventType, BucketItemEventType } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
+import { BucketItemEventBus } from '../../../../event-buses/bucket-item.event-bus';
 import { BucketEventBus } from '../../../../event-buses/bucket.event-bus';
 import { CommentEventBus } from '../../../../event-buses/comment.event-bus';
 import { IBucket, IBucketItem, ITokenPayload } from '../../../../models';
 import { IImage } from '../../../../models/image.interface';
-import { AlertService, LikeableServiceMixin } from '../../../../services';
+import { AlertService } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
 import { BucketService } from '../../../../services/bucket.service';
+import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
 
 @Component({
 	selector: 'app-bucket-detail',
@@ -20,25 +22,22 @@ import { BucketService } from '../../../../services/bucket.service';
 })
 export class BucketDetailComponent implements OnInit {
 	// Icons
+
 	public faHeart = faHeart;
 	public faEdit = faEdit;
 	public faPlusCircle = faPlusCircle;
 	public faTrashAlt = faTrashAlt;
 	public faComment = faComment;
 	public faPen = faPen;
-
 	public currentBucketId: string;
-	public bucketItem: IBucketItem = {};
-	public bucket: IBucket;
-	public itemsPerRow = 4;
-	public bucketItemTable: Array<Array<IBucket>> = new Array();
-	public editControlMode = EditControlMode.edit;
-	public originalName: string;
-	public originalDesc: string;
+
+	public bucket: IBucket = this.bucketItemEventBus.bucket;
 
 	public bucketItemImages: Array<IImage> = [];
 
 	public userId: string = (JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)) as ITokenPayload).userId;
+
+	@ViewChild('confirmForItem') public itemConfirmModal: ConfirmModalComponent;
 
 	constructor(private route: ActivatedRoute,
 		private router: Router,
@@ -48,21 +47,25 @@ export class BucketDetailComponent implements OnInit {
 		public ngxSmartModalService: NgxSmartModalService,
 		public alertService: AlertService,
 		public commentEventBus: CommentEventBus,
-		public bucketEventBus: BucketEventBus
+		public bucketEventBus: BucketEventBus,
+		public bucketItemEventBus: BucketItemEventBus
 	) { }
 
 	ngOnInit() {
-		this.route.params.subscribe(params => {
+		this.route.params.subscribe( async params => {
 			// if there isn't an id then it's a new product.
 			if (params['id']) {
 				this.currentBucketId = params['id'];
-				this.fetchBucket();
+				await this.bucketItemEventBus.loadBucket(this.currentBucketId);
+				this.bucket = this.bucketItemEventBus.bucket;
+				this.buildImageGrid();
 			}
 		});
 
 		this.bucketEventBus.BucketChanged$.subscribe(message => {
 			switch (+message.eventType) {
 				case +BucketEventType.edited:
+					//save off the items first, because on an update, we only have id's back from the server
 					this.bucket = message.bucket;
 					this.ngxSmartModalService.close("quickEditBucketModal");
 					break;
@@ -77,6 +80,56 @@ export class BucketDetailComponent implements OnInit {
 					break;
 			}
 		});
+
+		this.bucketItemEventBus.BucketItemChanged$.subscribe(message => {
+			switch (+message.eventType) {
+				case +BucketItemEventType.created:
+					if(!this.bucket.bucketItems){
+						this.bucket.bucketItems = new Array<IBucketItem>();
+					}
+					this.bucket.bucketItems = message.bucket.bucketItems;
+					this.ngxSmartModalService.close("quickEditBucketItem");
+					//this.router.navigate(['/bucket-item/detail', message.bucket._id]);
+					break;
+				case +BucketItemEventType.edited:
+					this.updateBucketItem(message.bucketItem);
+					this.ngxSmartModalService.close("quickEditBucketItem");
+					break;
+				case +BucketItemEventType.cancelCreate:
+				case +BucketItemEventType.cancelEdit:
+					this.bucket = message.bucket;
+					this.ngxSmartModalService.close("quickEditBucketItem");
+					break;
+				case +BucketItemEventType.startEdit:
+				case +BucketItemEventType.startCreate:
+						this.ngxSmartModalService.open("quickEditBucketItem");
+						break;
+				case +BucketItemEventType.startDelete:
+						this.itemConfirmModal.show(message.bucketItem);
+						break;
+				case +BucketItemEventType.startDelete:
+						this.bucket = message.bucket;
+						break;
+				default:
+					break;
+			}
+		});
+	}
+
+	public buildImageGrid(){
+		this.bucketItemImages = new Array<IImage>();
+		
+		for (let index = 0; index < this.bucket.bucketItems.length; index++) {
+			const bItem = this.bucket.bucketItems[index] as IBucketItem;
+
+			if (bItem && bItem.images && bItem.images.length > 0) {
+				for (let z = 0; z < bItem.images.length; z++) {
+					const img = bItem.images[z];
+					img.routerLink = `/bucket-item/detail/${bItem._id}`;
+				}
+				this.bucketItemImages = this.bucketItemImages.concat(bItem.images);
+			}
+		}
 	}
 
 	//#region Bucket Methods
@@ -93,9 +146,17 @@ export class BucketDetailComponent implements OnInit {
 		})
 	}
 
+	editBucket(){
+		this.ngxSmartModalService.open("quickEditBucketModal");
+		this.bucketEventBus.startEditBucket(this.bucket);
+	}
+
 	toggleLike() {
 		this.bucketService.liker.toggleLike(this.bucket, this.errorEventBus).subscribe(item => {
+			// on update we're going to save off the items, and load them back on the object.
+			let items = this.bucket.bucketItems;
 			this.bucket = item;
+			this.bucket.bucketItems = items;
 		});
 	}
 
@@ -106,104 +167,24 @@ export class BucketDetailComponent implements OnInit {
 	}
 
 	async deleteItem(bucketItem: IBucketItem) {
-		this.bucketItemService.removeFromBucket(bucketItem._id, this.bucket._id).subscribe(async res => {
-			this.bucketItem = {};
-			await this.fetchBucket();
-			this.alertService.send({
-				text: `Successfully Deleted Item: ${bucketItem.name}`,
-				alertType: AlertType.success
-			}, true);
-		}, error => {
-			this.errorEventBus.throw(error);
-		});
-	}
-
-	quickEditItem(bucketItem: IBucketItem) {
-		this.bucketItem = bucketItem;
-		this.ngxSmartModalService.open("quickEditBucketItem");
-	}
-
-	bucketItemSaved(event) {
-		this.ngxSmartModalService.close("quickEditBucketItem");
-		// We also need to clean up any of our temp variables.
-		this.bucketItem = {};
-		this.fetchBucket();
-	}
-
-	addRemoveLike(item: IBucketItem) {
-		this.bucketItemService.liker.toggleLike(item, this.errorEventBus).subscribe(item => {
-			this.bucketItem = item;
-			this.updateBucketItemInTable(this.bucketItem);
-		});
+		this.bucketItemEventBus.removeBucketItem(bucketItem);
 	}
 
 	addBucketItem() {
-		this.bucketItem = {};
+		this.bucketItemEventBus.startCreateBucketItem();
 		this.ngxSmartModalService.open("quickEditBucketItem");
 	}
 
-	updateBucketItemInTable(bucketItem: IBucketItem) {
-		for (let j = 0; j < this.bucketItemTable.length; j++) {
-			const row = this.bucketItemTable[j];
-			for (let i = 0; i < row.length; i++) {
-				const item = row[i];
-				if (item && item._id && item._id == bucketItem._id) {
-					row[i] = bucketItem;
-				}
+	updateBucketItem(bucketItem: IBucketItem) {
+		for (let j = 0; j < this.bucket.bucketItems.length; j++) {
+			const item = this.bucket.bucketItems[j] as IBucketItem;
+			if (item && item._id && item._id == bucketItem._id) {
+				this.bucket.bucketItems[j] = bucketItem;
 			}
 		}
 	}
 
 	addComment(bucket: IBucket) {
 		this.commentEventBus.startAddComment(this.bucket);
-	}
-
-	async fetchBucket(): Promise<any> {
-
-		await this.bucketService.get(this.currentBucketId).subscribe((item: IBucket) => {
-
-			this.bucket = item;
-
-			LikeableServiceMixin.calculateLikeStatus(new Array(this.bucket));
-
-			if (this.bucket && this.bucket.bucketItems && this.bucket.bucketItems.length > 0) {
-
-				const numberOfRows = Math.ceil(this.bucket.bucketItems.length / this.itemsPerRow);
-
-				for (let i = 0; i < numberOfRows; i++) {
-					this.bucketItemTable[i] = new Array<IBucket>();
-				}
-
-				// Now we're going to build up a list of rows.  we're going to put 4 items in each row.
-				let currentBucketIndex = 0;
-
-				this.bucketItemImages.length = 0;
-				for (let i = 0; i < numberOfRows; i++) {
-					for (let slotNumber = 0; slotNumber < this.itemsPerRow; slotNumber++) {
-						let bItem = (this.bucket.bucketItems[currentBucketIndex] as IBucketItem);
-						LikeableServiceMixin.calculateLikeStatus(this.bucket.bucketItems as IBucketItem[]);
-						this.bucketItemTable[i][slotNumber] = bItem;
-
-						// We're also going to create an array that contains all the images.  This will be what we pass down to the control
-						// which will help build up our image grid component.  We also need to tell this component what to use for a "detal" link.
-
-						if (bItem && bItem.images && bItem.images.length > 0) {
-							for (let z = 0; z < bItem.images.length; z++) {
-								const img = bItem.images[z];
-								img.routerLink = `/bucket-item/detail/${bItem._id}`;
-							}
-							this.bucketItemImages = this.bucketItemImages.concat(bItem.images);
-						}
-
-						++currentBucketIndex;
-					}
-				}
-			} else {
-				this.bucketItemTable = new Array();
-			}
-			return item;
-		}, error => {
-			this.errorEventBus.throw(error);
-		});
 	}
 }
