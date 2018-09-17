@@ -1,12 +1,12 @@
 <h3 class="mb0" *ngIf="mode ==  editControlMode.edit">Edit Your Bucket Board</h3>
 <h3 class="mb0" *ngIf="mode ==  editControlMode.create"> Create Your Bucket Board</h3>
 <hr class="">
-<form #f="ngForm" novalidate="" (ngSumit)="saveBucket(f.valid)" class="" *ngIf="bucket">
+<form #f="ngForm" novalidate="" (ngSubmit)="saveBucket(f.valid)" class="" *ngIf="bucket">
 	<fieldset>
 		<div class="form-group">
 			<label class="col-md-3 col-form-label">Name</label>
 			<div class="col-md-12" [ngClass]="{ &apos;form-error&apos;: (!name.valid && f.submitted) }">
-				<input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="bucket.name">				
+				<input type="text" name="name" placeholder="Name" #name="ngModel" required class="form-control" [(ngModel)]="bucket.name">
 				<small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-warning">
 					You have to name your buckets.
 				</small>
@@ -15,7 +15,8 @@
 		<div class="form-group">
 			<label class="col-md-3 col-form-label">Description</label>
 			<div class="col-md-12" [ngClass]="{ &apos;form-error&apos;: (!description.valid && f.submitted) }">
-				<textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control" [(ngModel)]="bucket.description"></textarea>
+				<textarea rows="4" name="description" placeholder="Description" #description="ngModel" required class="form-control"
+				 [(ngModel)]="bucket.description"></textarea>
 				<small [hidden]="description.valid || (description.pristine && !f.submitted)" class="text-warning">
 
 					A little description is always nice.
