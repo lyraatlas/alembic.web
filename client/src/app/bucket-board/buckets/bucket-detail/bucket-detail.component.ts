@@ -2,13 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faComment, faEdit, faHeart, faPen, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { CONST } from '../../../../constants';
 import { AlertType, BucketEventType, BucketItemEventType } from '../../../../enumerations';
 import { ErrorEventBus } from '../../../../event-buses';
 import { BucketItemEventBus } from '../../../../event-buses/bucket-item.event-bus';
 import { BucketEventBus } from '../../../../event-buses/bucket.event-bus';
 import { CommentEventBus } from '../../../../event-buses/comment.event-bus';
-import { IBucket, IBucketItem, ITokenPayload } from '../../../../models';
+import { IBucket, IBucketItem } from '../../../../models';
 import { IImage } from '../../../../models/image.interface';
 import { AlertService } from '../../../../services';
 import { BucketItemService } from '../../../../services/bucket-item.service';
@@ -34,8 +33,6 @@ export class BucketDetailComponent implements OnInit {
 	public bucket: IBucket = this.bucketItemEventBus.bucket;
 
 	public bucketItemImages: Array<IImage> = [];
-
-	public userId: string = (JSON.parse(localStorage.getItem(CONST.CLIENT_DECODED_TOKEN_LOCATION)) as ITokenPayload).userId;
 
 	@ViewChild('confirmForItem') public itemConfirmModal: ConfirmModalComponent;
 
@@ -166,7 +163,7 @@ export class BucketDetailComponent implements OnInit {
 		this.router.navigate(['/bucket-board']);
 	}
 
-	async deleteItem(bucketItem: IBucketItem) {
+	deleteItem(bucketItem: IBucketItem) {
 		this.bucketItemEventBus.removeBucketItem(bucketItem);
 	}
 

@@ -231,26 +231,20 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 	}
 
 	public validateFileType(type: string) {
-		return (type == "image/jpeg" || type == "image/jpg" || type == "image/png")
+		return (type == "image/jpeg" || type == "image/jpg" || type == "image/png" || type=="image/gif");
 	}
 
 	public validateFileName(name: string) {
 		const parts = name.split('.');
 		if (parts && parts.length > 1) {
 			const extension = parts[parts.length - 1];
-			console.log(extension);
-			console.log(name);
 			return (extension == 'jpg' ||
 				extension == 'jpeg' ||
-				extension == 'png')
+				extension == 'gif' ||
+				extension == 'png'
+				)
 		}
 		return false;
-	}
-
-	public clearControl() {
-		// this will clear the array
-		this.uploadFiles.length = 0;
-		this.currentBucketItem = {};
 	}
 
 	public fileOver(event) {
