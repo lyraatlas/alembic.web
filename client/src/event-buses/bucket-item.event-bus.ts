@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { CommentEventBus, ErrorEventBus } from '.';
 import { AlertType, BucketItemEventType } from '../enumerations';
@@ -61,11 +62,18 @@ export class BucketItemEventBus {
 	public createBucketItem(bucketItem: IBucketItem) {
 
 		// First we go in and create the bucket item.  Then we're going to update the bucket with the new bucket item.
-		this.bucketItemService.create(bucketItem)
+		let serverCall: Observable<IBucketItem>;
+		// we have a bit of a tricky situation.  Sometimes we're doing an update, and sometimes it's a create
+		// in the case of when we have already added images it's mor of an update.  luckily the return types are the same so everything 
+		// following is the same.
+		if (!bucketItem._id) {
+			serverCall = this.bucketItemService.create(bucketItem);
+		}
+		else {
+			serverCall = this.bucketItemService.update(bucketItem, bucketItem._id);
+		}
+		serverCall
 			.map(createdItem => {
-
-				(this.bucket.bucketItems as Array<IBucketItem>).push(createdItem);
-				// Save off the created item for later so we can emit it.
 				this.createdBucketItem = createdItem;
 				return createdItem;
 			})
@@ -74,18 +82,15 @@ export class BucketItemEventBus {
 				return this.bucketService.update(this.bucket, this.bucket._id);
 
 			})
-			.subscribe((updatedBucket) => {
-				// Careful here, the updated bucket only contains ID's for the items.
-				let items = this.bucket.bucketItems;
-				this.bucket = updatedBucket;
-				this.bucket.bucketItems = items;
-
+			.flatMap(()=>{
+				return this.bucketService.get(this.bucket._id);
+			})
+			.subscribe((fullBucket) => {
+				this.bucket = fullBucket;
 				this.emitMessage(this.createdBucketItem, this.bucket, BucketItemEventType.created);
-
 			}, error => {
 				this.errorEventBus.throw(error);
 			});
-
 	}
 
 	public cancelBucketItemCreate(bucketItem: IBucketItem) {

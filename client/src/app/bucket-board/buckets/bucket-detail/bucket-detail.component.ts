@@ -49,7 +49,7 @@ export class BucketDetailComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.route.params.subscribe( async params => {
+		this.route.params.subscribe(async params => {
 			// if there isn't an id then it's a new product.
 			if (params['id']) {
 				this.currentBucketId = params['id'];
@@ -81,7 +81,7 @@ export class BucketDetailComponent implements OnInit {
 		this.bucketItemEventBus.BucketItemChanged$.subscribe(message => {
 			switch (+message.eventType) {
 				case +BucketItemEventType.created:
-					if(!this.bucket.bucketItems){
+					if (!this.bucket.bucketItems) {
 						this.bucket.bucketItems = new Array<IBucketItem>();
 					}
 					this.bucket.bucketItems = message.bucket.bucketItems;
@@ -99,23 +99,26 @@ export class BucketDetailComponent implements OnInit {
 					break;
 				case +BucketItemEventType.startEdit:
 				case +BucketItemEventType.startCreate:
-						this.ngxSmartModalService.open("quickEditBucketItem");
-						break;
+					this.ngxSmartModalService.open("quickEditBucketItem");
+					break;
 				case +BucketItemEventType.startDelete:
-						this.itemConfirmModal.show(message.bucketItem);
-						break;
+					this.itemConfirmModal.show(message.bucketItem);
+					break;
 				case +BucketItemEventType.startDelete:
-						this.bucket = message.bucket;
-						break;
+					this.bucket = message.bucket;
+					break;
+				case +BucketItemEventType.removed:
+					this.buildImageGrid();
+					break;
 				default:
 					break;
 			}
 		});
 	}
 
-	public buildImageGrid(){
+	public buildImageGrid() {
 		this.bucketItemImages = new Array<IImage>();
-		
+
 		for (let index = 0; index < this.bucket.bucketItems.length; index++) {
 			const bItem = this.bucket.bucketItems[index] as IBucketItem;
 
@@ -143,7 +146,7 @@ export class BucketDetailComponent implements OnInit {
 		})
 	}
 
-	editBucket(){
+	editBucket() {
 		this.ngxSmartModalService.open("quickEditBucketModal");
 		this.bucketEventBus.startEditBucket(this.bucket);
 	}

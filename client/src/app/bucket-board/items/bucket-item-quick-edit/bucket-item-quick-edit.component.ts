@@ -20,7 +20,7 @@ import { BucketItemService } from '../../../../services/bucket-item.service';
 export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 
 
-    public bucket: IBucket = {};
+	public bucket: IBucket = {};
 	public currentBucketItem: IBucketItem = {};
 
 	@ViewChild('laFileInput') fileInput: ElementRef;
@@ -50,12 +50,15 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 		private router: Router) { }
 
 	ngOnInit() {
-		this.bucketItemEventBus.BucketItemChanged$.subscribe((message)=>{
+		this.bucketItemEventBus.BucketItemChanged$.subscribe((message) => {
 			switch (+message.eventType) {
 				case +BucketItemEventType.startCreate:
 					this.controlMode = EditControlMode.create;
 					this.currentBucketItem = {};
 					this.bucket = message.bucket;
+					this.uploadFiles.length = 0;
+					this.name = "";
+					this.description ="";
 					break;
 				case +BucketItemEventType.startEdit:
 					this.controlMode = EditControlMode.edit;
@@ -65,7 +68,8 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 				default:
 					break;
 			}
-		})
+			console.dir(message);
+		});
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -83,7 +87,7 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 				});
 			});
 		}
-		else{
+		else {
 			// If we're adding something new, we need to clear out the array.  
 			// This happens when someone presses add, and we need to "reset" the control.
 			this.uploadFiles.length = 0;
@@ -186,7 +190,7 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 			--totalImages;
 			this.isUploadComplete = totalImages <= 0;
 
-			const index = this.uploadFiles.findIndex(uploadFileSingle =>{
+			const index = this.uploadFiles.findIndex(uploadFileSingle => {
 				return uploadFileSingle.id == uploadResponse.uploadFile.id;
 			});
 			this.uploadFiles[index].status = UploadStatus.finished;
@@ -198,9 +202,9 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 		});
 	}
 
-	getAddedImage(currentImages: IImage[], newImages: IImage[]): IImage{
-		let addedImages = newImages.filter(newItem =>{
-			return !currentImages.some(current =>{
+	getAddedImage(currentImages: IImage[], newImages: IImage[]): IImage {
+		let addedImages = newImages.filter(newItem => {
+			return !currentImages.some(current => {
 				return newItem._id == current._id;
 			})
 		});
@@ -214,10 +218,10 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 			this.intializeBucketItemsArray();
 
 			// If we have an id then we just update the bucket item.
-			if (this.currentBucketItem._id) {
+			if (+this.controlMode == +EditControlMode.edit) {
 				this.bucketItemEventBus.saveEditBucketItem(this.currentBucketItem);
 
-			} else {
+			} else if (+this.controlMode == +EditControlMode.create) {
 				this.bucketItemEventBus.createBucketItem(this.currentBucketItem);
 			}
 		}
@@ -231,7 +235,7 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 	}
 
 	public validateFileType(type: string) {
-		return (type == "image/jpeg" || type == "image/jpg" || type == "image/png" || type=="image/gif");
+		return (type == "image/jpeg" || type == "image/jpg" || type == "image/png" || type == "image/gif");
 	}
 
 	public validateFileName(name: string) {
@@ -242,7 +246,7 @@ export class BucketItemQuickEditComponent implements OnInit, OnChanges {
 				extension == 'jpeg' ||
 				extension == 'gif' ||
 				extension == 'png'
-				)
+			)
 		}
 		return false;
 	}
