@@ -3,7 +3,7 @@ import * as log from 'winston';
 import { ApiErrorHandler } from "../../api-error-handler";
 import { CONST } from "../../constants";
 import { OwnershipType } from "../../enumerations";
-import { IBaseModelDoc, IOwned, IOwner, ITokenPayload, IValidationError, SearchCriteria } from '../../models/';
+import { IBaseModelDoc, IOwned, IOwner, ITokenPayload, IValidationError, SearchOptions } from '../../models/';
 import { IQueryResponse } from '../../models/query-response.interface';
 import { BaseRepository } from "../../repositories/";
 import { Authz } from "../authorization";
@@ -112,7 +112,11 @@ export abstract class BaseController {
 
     public async updateValidation(model: IBaseModelDoc) {
         return true;
-    }
+	}
+	
+	public async preSendQueryResponseHook(request: Request, response: Response, next: NextFunction, queryResponse: IQueryResponse<IBaseModelDoc>): Promise<IQueryResponse<IBaseModelDoc>>{
+		return queryResponse;
+	}
 
     public getId(request: Request): string {
         return request && request.params ? request.params['id'] : null;
@@ -143,10 +147,10 @@ export abstract class BaseController {
 
     public async query<T extends IBaseModelDoc>(request: Request, response: Response, next: NextFunction): Promise<IQueryResponse<T>> {
         try {
-                const searchCriteria = new SearchCriteria(request, next);
+                const searchOptions = new SearchOptions(request, next);
 
                 // We're going to query for the models.
-                let models: T[] = await this.repository.query(request.body, this.defaultPopulationArgument, searchCriteria) as T[];
+                let models: T[] = await this.repository.query(request.body, this.defaultPopulationArgument, searchOptions) as T[];
 
                 // A pager will need to know the total count of models, based on the search parameters.  
                 let totalCount = await this.repository.searchingCount(request.body);
@@ -154,11 +158,14 @@ export abstract class BaseController {
                 let queryResponse: IQueryResponse<T> = {
                     results: models,
                     paging: {
-                        limit: searchCriteria.limit,
-                        skip: searchCriteria.skip,
+                        limit: searchOptions.limit,
+                        skip: searchOptions.skip,
                         count: totalCount,
                     }
-                }
+				}
+
+				await this.preSendQueryResponseHook(request,response,next,queryResponse);
+
                 response.json(queryResponse);
 
                 log.info(`Queried for: ${this.repository.getCollectionName()}, Found: ${models.length}`);
@@ -169,9 +176,9 @@ export abstract class BaseController {
     public async clear(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
             if (this.isAdmin(request, response)) {
-                let before: number = await this.repository.count(new SearchCriteria(request, next));
+                let before: number = await this.repository.count(new SearchOptions(request, next));
                 await this.repository.clear(request.body);
-                let after: number = await this.repository.count(new SearchCriteria(request, next));
+                let after: number = await this.repository.count(new SearchOptions(request, next));
 
                 response.json({
                     Collection: this.repository.getCollectionName(),
@@ -285,13 +292,13 @@ export abstract class BaseController {
 
     public async count(request: Request, response: Response, next: NextFunction): Promise<number> {
         try {
-                const searchCriteria = new SearchCriteria(request, next);
+                const searchCriteria = new SearchOptions(request, next);
                 const count: number = await this.repository.count(searchCriteria);
 
                 response.json({
                     CollectionName: this.repository.getCollectionName(),
                     CollectionCount: count,
-                    SearchCriteria: searchCriteria.criteria,
+                    SearchCriteria: searchCriteria.searchCriteria,
                 });
 
                 log.info(`Executed Count Operation: ${this.repository.getCollectionName()}, Count: ${count}`);
@@ -303,7 +310,7 @@ export abstract class BaseController {
 
     public async list(request: Request, response: Response, next: NextFunction): Promise<IBaseModelDoc[]> {
         try {
-                let models: IBaseModelDoc[] = await this.repository.list(new SearchCriteria(request, next), this.defaultPopulationArgument);
+                let models: IBaseModelDoc[] = await this.repository.list(new SearchOptions(request, next), this.defaultPopulationArgument);
 
                 response.json(models);
 
@@ -315,7 +322,7 @@ export abstract class BaseController {
 
     public async listByOwner(request: Request, response: Response, next: NextFunction): Promise<IBaseModelDoc[]> {
         try {
-                let models: IBaseModelDoc[] = await this.repository.listByOwner(new SearchCriteria(request, next), this.getCurrentOwner(request), this.defaultPopulationArgument);
+                let models: IBaseModelDoc[] = await this.repository.listByOwner(new SearchOptions(request, next), this.getCurrentOwner(request), this.defaultPopulationArgument);
 
                 response.json(models);
 

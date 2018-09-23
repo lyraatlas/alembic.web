@@ -1,6 +1,6 @@
 
-import { Model, Document } from "mongoose";
-import { SearchCriteria, IBaseModel, IBaseModelDoc, IOwner } from "../../models/index";
+import { Model } from "mongoose";
+import { IBaseModel, IBaseModelDoc, IOwner, SearchOptions } from "../../models/index";
 import log = require('winston');
 
 export abstract class BaseRepository<IModelDoc extends IBaseModelDoc>{
@@ -29,7 +29,7 @@ export abstract class BaseRepository<IModelDoc extends IBaseModelDoc>{
         return await query;
     }
 
-    public async list(searchCriteria: SearchCriteria, populationArgument?: any): Promise<IModelDoc[]> {
+    public async list(searchCriteria: SearchOptions, populationArgument?: any): Promise<IModelDoc[]> {
         let query = this.mongooseModelInstance.find()
             .skip(searchCriteria.skip)
             .limit(searchCriteria.limit)
@@ -40,7 +40,7 @@ export abstract class BaseRepository<IModelDoc extends IBaseModelDoc>{
         return await query;
     }
 
-    public async listByOwner(searchCriteria: SearchCriteria, owner: IOwner, populationArgument?: any): Promise<IModelDoc[]> {
+    public async listByOwner(searchCriteria: SearchOptions, owner: IOwner, populationArgument?: any): Promise<IModelDoc[]> {
         let query = this.mongooseModelInstance.find(
             { 'owners.ownerId': owner.ownerId, 'owners.ownershipType': owner.ownershipType }
         )
@@ -57,9 +57,9 @@ export abstract class BaseRepository<IModelDoc extends IBaseModelDoc>{
         return new this.mongooseModelInstance();
     }
 
-    public async count(searchCriteria: SearchCriteria): Promise<number> {
+    public async count(searchCriteria: SearchOptions): Promise<number> {
         return await this.mongooseModelInstance
-            .find(searchCriteria.criteria)
+            .find(searchCriteria.searchCriteria)
             .count();
     }
 
@@ -85,7 +85,7 @@ export abstract class BaseRepository<IModelDoc extends IBaseModelDoc>{
         return await this.mongooseModelInstance.remove(searchBody);
     }
 
-    public async query(searchBody: any, populationArgument: any, searchCriteria: SearchCriteria): Promise<IModelDoc[]> {
+    public async query(searchBody: any, populationArgument: any, searchCriteria: SearchOptions): Promise<IModelDoc[]> {
         this.recursivlyConvertRegexes(searchBody);
         let query;
 
