@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faFacebookSquare } from '@fortawesome/free-brands-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { AlertType } from '../../../enumerations';
 import { IUser } from '../../../models';
@@ -25,6 +26,7 @@ export class RegisterComponent implements OnInit {
 	public passwordWarningMessage: string = '';
 
 	public faUser = faUser;
+	public faFacebookSquare = faFacebookSquare;
 
 	constructor(
 		private route: ActivatedRoute,

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { faBell, faCheck, faExclamation, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { IMessage } from '../../../classes/message.interface';
 import { AlertType } from '../../../enumerations';
 import { AlertService } from '../../../services';
@@ -13,6 +14,11 @@ declare var $: any;
 })
 
 export class AlertComponent {
+
+	public faExclamation = faExclamation;
+	public faBell = faBell;
+	public faCheck = faCheck;
+	public faInfo = faInfo;
 
     constructor(private alertService: AlertService) { }
 
@@ -30,7 +36,7 @@ export class AlertComponent {
                             from: 'top',
                             align: 'center'
                         },
-                        z_index: 1500,
+						z_index: 1500,
                     });
             }
         });
@@ -46,7 +52,7 @@ export class AlertComponent {
                 case AlertType.warning:
                     return 5000;
                 case AlertType.success:
-                    return 1000;
+                    return 1000000;
                 default:
                     return 1000;
             }
@@ -57,13 +63,13 @@ export class AlertComponent {
         if (message && message.alertType) {
             switch (+message.alertType) {
                 case AlertType.danger:
-                    return "ti-alert";
+                    return "fa fa-exclamation";
                 case AlertType.info:
-                    return "ti-info";
+                    return "fa fa-info";
                 case AlertType.warning:
-                    return "ti-bell";
+                    return "fa fa-bell";
                 case AlertType.success:
-                    return "ti-check";
+                    return "fa fa-check";
                 default:
                     break;
             }
