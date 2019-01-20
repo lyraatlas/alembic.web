@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
+import { ControllerUtilities } from '.';
 import { CONST } from '../constants';
-import { IBucketItemDoc } from '../models';
+import { IBucketDoc, IBucketItemDoc, SearchOptions } from '../models';
+import { IBucketItemSearchCriteria } from '../models/bucket-item-search-criteria.interface';
+import { IQueryResponse } from '../models/query-response.interface';
 import { BucketItemRepository, BucketRepository } from "../repositories";
+import { CommentRepository } from '../repositories/comment.repo';
 import { BaseController } from './base/base.controller';
 import { Commentable } from './base/commentable.mixin';
 import { ImageControllerMixin } from './base/images.controller.mixin';
@@ -15,7 +19,8 @@ export class BucketItemControllerBase extends BaseController {
     public isOwnershipRequired = true;
 
     public repository = new BucketItemRepository();
-    public bucketRepo = new BucketRepository();
+	public bucketRepo = new BucketRepository();
+	public commentRepository = new CommentRepository();
 
     constructor() {
         super();
@@ -59,13 +64,32 @@ export class BucketItemControllerBase extends BaseController {
         return BucketItem;
     }
 
-    public async preSendResponseHook(BucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
-        return BucketItem;
-    }
+    public async preSendResponseHook(bucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
+		// We're going to get details on the comments.
+		await new ControllerUtilities().populateComments(bucketItem);
+
+        return bucketItem;
+	}
 
     public async preDestroyHook(request: Request, response: Response, next: NextFunction, bucketItem: IBucketItemDoc): Promise<IBucketItemDoc> {
         return await BucketItemController.destroyImages(bucketItem);
-    }
+	}
+
+	public async preSendQueryResponseHook(request: Request, response: Response, next: NextFunction, queryResponse: IQueryResponse<IBucketDoc>) : Promise<IQueryResponse<IBucketDoc>>{
+		let searchOptions = request.body as SearchOptions;
+		if(queryResponse && 
+			queryResponse.results && 
+			searchOptions.searchCriteria && 
+			(searchOptions.searchCriteria as IBucketItemSearchCriteria).includeComments){
+
+			for (let i = 0; i < queryResponse.results.length; i++) {
+				let bucketItem = queryResponse.results[i];
+				queryResponse.results[i] = await new ControllerUtilities().populateComments(bucketItem) as IBucketDoc;
+			}
+
+		}
+		return queryResponse;
+	}
 }
 
 // All of our mixin controllers.

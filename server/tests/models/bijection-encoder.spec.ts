@@ -1,13 +1,10 @@
-import { Database } from '../../config/database/database';
-import { App, server } from '../../server-entry';
-import { Cleanup } from "../cleanup.util.spec";
-import { suite, test } from "mocha-typescript";
-import { DatabaseBootstrap } from "../../config/database/database-bootstrap";
-import { BijectionEncoder } from '../../utils/bijection-encoder';
-
-import * as supertest from 'supertest';
 import * as chai from 'chai';
-import { IdentityApiService } from '../../services/index';
+import { suite, test } from "mocha-typescript";
+import * as supertest from 'supertest';
+import { App } from '../../server-entry';
+import { BijectionEncoder } from '../../utils/bijection-encoder';
+import { Cleanup } from "../cleanup.util.spec";
+
 
 const api = supertest.agent(App.server);
 const mongoose = require("mongoose");
@@ -25,7 +22,7 @@ class IdEncoderTest {
 
     // This guy doesn't do anything with the database, but the next test is expecting a clean database.
     public static async after() {
-        await Cleanup.clearDatabase();
+        await Cleanup.clearDatabase(false);
     }
 
     @test('Just setting up a test for testing initialization')

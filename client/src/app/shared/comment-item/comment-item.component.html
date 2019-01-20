@@ -2,21 +2,28 @@
 
 <div #scrollLocator class="row no-margin">
 
-	<div class="col">
+	<div class="col" style="padding:0px;">
 
-		<span *ngIf="!isAdding" class="sub" style="opacity:.5">
+		<div *ngIf="!isAdding" class="sub" style="opacity:.5">
 			<b>{{currentComment.commentByUser.firstName}} {{currentComment.commentByUser.lastName}} </b> - {{formatTime(currentComment.createdAt)}}
-		</span>&nbsp;&nbsp;
+		</div>
 
-		<span *ngIf="!isAdding && !isEditing" class="card-buttons" >
+	</div>
+</div>
+
+<div class="row" style="margin:0px 0px 8px 0px" >
+
+	<div class="col" style="padding:0px;">
+
+		<div *ngIf="!isAdding && !isEditing" class="card-buttons" >
 			<a class="card-buttons action-button" data-toggle="tooltip" title="Edit This comment" (click)="editComment();">
-				<fa-icon [icon]="faPen"></fa-icon>&nbsp;Edit
+				<fa-icon [icon]="faPen"></fa-icon>&nbsp;edit
 			</a>&nbsp;&nbsp;
 			<!-- confirmForComment.show(currentComment) -->
 			<a class="card-buttons action-button" data-toggle="tooltip" title="Delete This comment" (click)="confirmDelete()">
-				<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;Delete
+				<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;delete
 			</a>
-		</span>
+		</div>
 
 	</div>
 </div>

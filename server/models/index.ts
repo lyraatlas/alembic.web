@@ -13,7 +13,7 @@ export * from './multer-file.interface';
 // New stuff
 export * from './notification.interface';
 export * from './owned.interface';
-export * from './search-criteria';
+export * from './search-options';
 export * from './time-stamped.interface';
 export * from './token-payload.interface';
 export * from './user.interface';

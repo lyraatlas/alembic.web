@@ -202,6 +202,15 @@ db.collection.createIndex( { "$**": "text" } )
 
 Obviously when the time comes we'll want to put a text index just on the fields that we want to search over, and not all fields.
 
+I also went and created an index for name and description through the mlab interface... it looked something like this:
+
+{ "name": "text", "description", "text" }
+
+I also went and created these on the models.
+
+// This is the free text search index, which is used by query
+BucketSchema.index({ "name": "text", "description" : "text" });
+
 # Long running TODO list
 
 Clean up email verification emails to actually be sent out.

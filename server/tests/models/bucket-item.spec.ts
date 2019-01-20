@@ -39,7 +39,7 @@ class BucketItemItemTester {
     }
 
     public static async after() {
-        await Cleanup.clearDatabase();
+        await Cleanup.clearDatabase(false);
     }
 
     @test('Just setting up a test for testing initialization')
@@ -87,6 +87,28 @@ class BucketItemItemTester {
 
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property('name');
+        return;
+	}
+	
+	@test('It should search by query, and should return our result.')
+    public async getByQueryShouldWork() {
+        let createdId = await this.createBucketItem(AuthUtil.userToken);
+
+        let response = await api
+            .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKET_ITEMS}/query`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(
+				{  
+					"$text": {
+						"$search": "gulag", 
+						"$caseSensitive": false 
+					} 
+				}
+			);
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('results');
+        expect(response.body.results.length).to.be.greaterThan(0);
         return;
     }
 
@@ -497,7 +519,8 @@ class BucketItemItemTester {
 
     private async createBucketItem(authToken: string): Promise<string> {
         let bucketItem: IBucketItem = {
-            name: "Russia Is Amazing",
+			name: "Russia Is Amazing",
+			description: "Don't get caught in the gulag"
         }
 
         let createResponse = await api

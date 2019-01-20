@@ -11,7 +11,7 @@ export class CommentRepository {
 		// We need to grab the user on this comment.
 
 		const userRepo = new UserRepository();
-		const user = await userRepo.single(comment.commentBy as string);
+		const user = await userRepo.single(comment.commentBy.toString());
 		// we need to clean up the user a bit. we don't want to send back a ton of details on this.
 		let cleanUser:IUser = {
 			firstName :	 user.firstName,

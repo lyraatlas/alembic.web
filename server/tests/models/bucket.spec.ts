@@ -1,15 +1,12 @@
-import { Database } from '../../config/database/database';
-import { App, server } from '../../server-entry';
-import { Bucket, IBucket, ITokenPayload, ICommentable } from '../../models';
-import { Config } from '../../config/config';
+import * as chai from 'chai';
+import { suite, test } from "mocha-typescript";
+import * as supertest from 'supertest';
 import { CONST } from "../../constants";
+import { IBucket, ICommentable } from '../../models';
+import { App } from '../../server-entry';
 import { AuthUtil } from "../authentication.util";
 import { Cleanup } from "../cleanup.util.spec";
-import { suite, test } from "mocha-typescript";
-import { DatabaseBootstrap } from "../../config/database/database-bootstrap";
 
-import * as supertest from 'supertest';
-import * as chai from 'chai';
 
 const api = supertest.agent(App.server);
 const mongoose = require("mongoose");
@@ -42,7 +39,7 @@ class BucketTest {
     }
 
     public static async after() {
-        await Cleanup.clearDatabase();
+        await Cleanup.clearDatabase(false);
     }
 
     @test('Just setting up a test for testing initialization')
@@ -90,6 +87,28 @@ class BucketTest {
 
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property('name');
+        return;
+	}
+	
+	@test('It should search by query, and should return our result.')
+    public async getByQueryShouldWork() {
+        let createdId = await this.createBucket(AuthUtil.userToken);
+
+        let response = await api
+            .post(`${CONST.ep.API}${CONST.ep.V1}${CONST.ep.BUCKETS}/query`)
+            .set("x-access-token", AuthUtil.userToken)
+            .send(
+				{  
+					"$text": {
+						"$search": "russia", 
+						"$caseSensitive": false 
+					} 
+				}
+			);
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('results');
+        expect(response.body.results.length).to.be.greaterThan(0);
         return;
     }
 
@@ -282,7 +301,9 @@ class BucketTest {
         expect(response.status).to.equal(200);
         expect(response.body.comments.length).to.equal(0);
         return;
-    }
+	}
+	
+
 
     @test('it should remove a like from a bucket')
     public async RemoveALikeFromABucket() {

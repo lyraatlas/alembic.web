@@ -37,7 +37,7 @@ export function ImageControllerMixin<TBase extends Constructor>(Base: TBase) {
         }
         ]
 
-        public static const uploadDirectoryRootLocation: string = '../../../';
+        public static uploadDirectoryRootLocation: string = '../../../';
 
         public static async imageTransformer(request: Request, response: Response, next: NextFunction, controller: BaseController, imageStyles: IImageStyle[]) {
             try {

@@ -51,6 +51,9 @@ const BucketItemSchema = new Schema({
 
 BucketItemSchema.index({location: '2dsphere'});
 
+// This is the free text search index, which is used by query
+BucketItemSchema.index({ "name": "text", "description" : "text" });
+
 //If you do any pre save methods, and you use fat arrow syntax 'this' doesn't refer to the document.
 BucketItemSchema.pre('save', function (next) {
     //If there's any validators, this field requires validation.

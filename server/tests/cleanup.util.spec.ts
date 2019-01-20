@@ -1,23 +1,18 @@
 //During the test the env variable is set to test
-import { Database } from '../config/database/database';
-import { App, server } from '../server-entry';
-import { Notification, Bucket, BucketItem, User, EmailVerification } from '../models';
-import { Config } from '../config/config';
-import { HealthStatus } from '../health-status';
-import mongoose = require('mongoose');
-import * as log from 'winston';
-
-
 import * as chai from 'chai';
-import { CONST } from "../constants";
+import * as log from 'winston';
+import { Database } from '../config/database/database';
+import { Bucket, BucketItem, EmailVerification, Notification, User } from '../models';
+import mongoose = require('mongoose');
+
+
 let expect = chai.expect;
 let should = chai.should();
 chai.use(require('chai-http'));
-import { suite, test, context, } from "mocha-typescript";
 
 export class Cleanup {
     
-    public static async clearDatabase() {
+    public static async clearDatabase(removeUsers: boolean) {
         //await Database.connect();
         if (process.env.NODE_ENV === 'integration'
             && Database.databaseName.includes('integration')
@@ -25,8 +20,14 @@ export class Cleanup {
             log.info('Clearing the database.');
             await Notification.remove({});
             await Bucket.remove({});
-            await BucketItem.remove({});
-            await User.remove({});
+			await BucketItem.remove({});
+			// So the reeason that we have a flag here, is that we only want to remove the users at the end
+			// otherwise when related items try to populate their users on them the call will fail.
+			// for instance if we're trying to retrieve buckets, and their comments, and their user names.  If we have deleted them, then 
+			// we will fail on the retrieval of the related user data. 
+			if(removeUsers){
+				await User.remove({});
+			}
             await EmailVerification.remove({});
             log.info('Database all clear');
         }

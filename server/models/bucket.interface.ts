@@ -48,6 +48,9 @@ const BucketSchema = new Schema({
     href: { type: String }
 }, { timestamps: true });
 
+// This is the free text search index, which is used by query
+BucketSchema.index({ "name": "text", "description" : "text" });
+
 //If you do any pre save methods, and you use fat arrow syntax 'this' doesn't refer to the document.
 BucketSchema.pre('save', function (next) {
     //If there's any validators, this field requires validation.

@@ -1,15 +1,11 @@
-import { Database } from '../../config/database/database';
-import { App, server } from '../../server-entry';
-import { Bucket, IBucket, ITokenPayload, IUser } from '../../models';
-import { Config } from '../../config/config';
-import { CONST } from "../../constants";
-import { AuthUtil } from "../authentication.util";
-import { Cleanup } from "../cleanup.util.spec";
-import { suite, test } from "mocha-typescript";
-import { DatabaseBootstrap } from "../../config/database/database-bootstrap";
-
-import * as supertest from 'supertest';
 import * as chai from 'chai';
+import { suite, test } from "mocha-typescript";
+import * as supertest from 'supertest';
+import { CONST } from "../../constants";
+import { IUser } from '../../models';
+import { App } from '../../server-entry';
+import { Cleanup } from "../cleanup.util.spec";
+
 
 const api = supertest.agent(App.server);
 const mongoose = require("mongoose");
@@ -37,7 +33,7 @@ class AuthenticationTest {
     }
 
     public static async after() {
-        await Cleanup.clearDatabase();
+        await Cleanup.clearDatabase(false);
     }
 
     @test('Just setting up a test for testing initialization')

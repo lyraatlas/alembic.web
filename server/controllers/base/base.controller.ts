@@ -96,7 +96,7 @@ export abstract class BaseController {
             ApiErrorHandler.sendAuthFailure(response, 403, 'Only Admins can execute this operation');
             return false;
         }
-    }
+	}
 
     public async isValid(model: IBaseModelDoc): Promise<IValidationError[]> {
         return null;

@@ -1,15 +1,11 @@
-import { Database } from '../config/database/database';
-import { App, server } from '../server-entry';
-import { ITokenPayload } from '../models';
-import { Config } from '../config/config';
-import { CONST } from "../constants";
-import { AuthUtil} from "./authentication.util";
-import { Cleanup } from "./cleanup.util.spec";
-import { suite, test } from "mocha-typescript";
-import { DatabaseBootstrap } from "../config/database/database-bootstrap";
-
-import * as supertest from 'supertest';
 import * as chai from 'chai';
+import { suite, test } from "mocha-typescript";
+import * as supertest from 'supertest';
+import { DatabaseBootstrap } from "../config/database/database-bootstrap";
+import { App } from '../server-entry';
+import { AuthUtil } from "./authentication.util";
+import { Cleanup } from "./cleanup.util.spec";
+
 
 const api = supertest.agent(App.server);
 const mongoose = require("mongoose");
@@ -27,7 +23,7 @@ class BootstrapTest {
         // product this code is run by the product test.
         App.server.on('dbConnected', async () => {
             console.log('Got the dbConnected Signal, so now we can clear, and seed the database.' )
-            await Cleanup.clearDatabase();
+            await Cleanup.clearDatabase(true);
             console.log('About to seed the database');
             await DatabaseBootstrap.seed();
 
@@ -40,7 +36,7 @@ class BootstrapTest {
     }
 
     public static async after() {
-        await Cleanup.clearDatabase();
+        await Cleanup.clearDatabase(false);
     }
 
     @test('Just setting up a test for testing initialization')
