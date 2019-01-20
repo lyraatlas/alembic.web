@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faFacebookF } from '@fortawesome/free-brands-svg-icons';
 import { AlertType } from '../../../enumerations';
 import { IUser } from '../../../models';
 import { AlertService, AuthenticationService } from '../../../services';
@@ -18,7 +19,9 @@ export class LoginComponent implements OnInit {
     test: Date = new Date();
     toggleButton;
     sidebarVisible: boolean;
-    nativeElement: Node;
+	nativeElement: Node;
+	
+	public faFacebookSquare = faFacebookF;
 
     constructor(
         private route: ActivatedRoute,

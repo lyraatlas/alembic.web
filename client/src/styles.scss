@@ -10,6 +10,9 @@
 
 @import "/assets/css/custom.css";
 
+.gold{
+	color: rgb(190, 150, 86);
+ }
 
 .ngx-datatable.bootstrap .datatable-footer .datatable-pager a{
     background-color: #424242;
@@ -113,4 +116,30 @@ body.dialog-open {
 
 .form-label-center{
 	line-height: 3;
+}
+
+
+// Overriding a bunch of the styling for the default jquery notify.  These styles come up when you're presented with the alert component.
+.alert{
+	opacity: 1;
+}
+
+.alert .close{
+	color: #676767;
+	margin: -2px 0 0 0; 
+}
+
+.alert span[data-notify="icon"]{
+	font-size: 14px;
+	color: #676767;
+	float:left;
+	margin: 2px 15px 0 0;
+	left: auto;
+	position: unset;
+	top: auto;
+}
+
+.alert span[data-notify="message"]{
+	margin-left: 15px;
+	color: #676767;
 }
