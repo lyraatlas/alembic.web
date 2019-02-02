@@ -20,28 +20,28 @@ import { ThumbGridComponent } from './thumb-grid/thumb-grid.component';
 // While that's fine, I don't want to have to create a module for every shared component.  So this 
 // will wrap the remaining components.
 @NgModule({
-    imports: [
+	imports: [
 		CommonModule,
-        FormsModule,
-        DataTablesModule,
-        ImageUploaderModule,
-        NgUploaderModule,
-        Ng2CompleterModule,
-        NgxDatatableModule,
-        NgxSmartModalModule,
-        FontAwesomeModule,
+		FormsModule,
+		DataTablesModule,
+		ImageUploaderModule,
+		NgUploaderModule,
+		Ng2CompleterModule,
+		NgxDatatableModule,
+		NgxSmartModalModule,
+		FontAwesomeModule,
 		FileDropModule,
 		RouterModule
-    ],
-    declarations: [
-        LaDndDirective,
+	],
+	declarations: [
+		LaDndDirective,
 		ConfirmModalComponent,
 		CommentListComponent,
 		ConfirmModalComponent,
 		CommentItemComponent,
 		ThumbGridComponent,
 	],
-	exports:[
+	exports: [
 		LaDndDirective,
 		ConfirmModalComponent,
 		CommentListComponent,
