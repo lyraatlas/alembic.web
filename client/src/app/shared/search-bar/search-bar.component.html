@@ -1,43 +1,19 @@
-<!-- <form #f="ngForm" novalidate="" (ngSubmit)="search(f.valid)" class="">
-	 <fieldset>
-		<div class="form-group">
-			<label class="col-md-3 col-form-label">Search</label>
-			<div class="col-md-5"">
-					<input type=" text" name="search" placeholder="Search" #search="ngModel" class="form-control" [(ngModel)]="search">
-			</div>
-			<div class="col-lg-6 text-center">
-				<button type="button" class="btn btn-fill center-block" (click)="searchHandler()">Search</button>
-			</div>
-		</div>
-	</fieldset>
-</form> -->
-<div class="row">
-	<div class="col-md-3"></div>
-	<div class="col-md-6 col-md-offset-3">
-		<div class="col-auto">
-			<label class="sr-only" for="inlineFormInputGroup">Search</label>
-			<div class="input-group mb-2">
-				<a (click)="searchHandler()" class="">
+<div class="container">
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6 col-md-offset-3">
+			<div class="input-group">
+				<a (click)="searchHandler()">
 					<div class="input-group-prepend" style="height:50px;">
 						<div class="input-group-text" style="background:#f5f5f5; border:none; border-radius: .55em 0 0 .55em;">
 							<fa-icon class="gold" [icon]="faSearch"></fa-icon>
 						</div>
 					</div>
 				</a>
-				<input style="border-radius: 0 .55em .55em 0;" type="text" class="form-control" id="inlineFormInputGroup" placeholder="Search">
+				<input style="border-radius: 0 .55em .55em 0;" type="text" class="form-control" placeholder="Search" (keyup.enter)="searchHandler()"
+				 [(ngModel)]="searchText">
 			</div>
 		</div>
+		<div class="col-md-3"></div>
 	</div>
-	<div class="col-md-3"></div>
 </div>
-
-
-
-<!-- <div class="card-buttons">
-	<a class="card-buttons action-button" data-toggle="tooltip" title="Cancel Changes" (click)="cancelComment()">
-		<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;Cancel
-	</a>&nbsp;&nbsp;
-	<a class="card-buttons action-button" data-toggle="tooltip" title="Save Changes" (click)="saveComment();">
-		<fa-icon [icon]="faPen"></fa-icon>&nbsp;Save
-	</a>
-</div> -->

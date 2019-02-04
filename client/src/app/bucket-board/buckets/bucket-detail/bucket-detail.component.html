@@ -6,7 +6,8 @@
 			</div>
 			<div class="row pb8" style="cursor: pointer;">
 				<!--Comment and Like button in large form factor-->
-				<div class="col-3 col-lg-3 d-none d-md-block"> <a data-toggle="tooltip" title="Add A Like" (click)="toggleLike()" tooltip="">
+				<div class="col-3 col-lg-3 d-none d-md-block"> <a data-toggle="tooltip" title="Add A Like" (click)="toggleLike()"
+					 tooltip="">
 
 						<fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
 
@@ -23,8 +24,8 @@
 					</a>
 				</div>
 				<!--Comment and Like button in small/xs form factor-->
-				<div class="col-12 col-md-12 d-none d-sm-block d-md-none d-block d-sm-none" style="font-size: 16px;"> <a class=" " data-toggle="tooltip"
-					 title="Add A Like" (click)="toggleLike()" tooltip="" style="">
+				<div class="col-12 col-md-12 d-none d-sm-block d-md-none d-block d-sm-none" style="font-size: 16px;"> <a class=" "
+					 data-toggle="tooltip" title="Add A Like" (click)="toggleLike()" tooltip="">
 
 						<fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
 
@@ -46,11 +47,14 @@
 			</div>
 			<div class="row">
 				<button type="button" class="btn col-lg-3 row-btn d-none d-md-block" style="max-width:175px;" (click)="addBucketItem(); ">
-					<fa-icon [icon]="faPlusCircle"></fa-icon>&nbsp;&nbsp;Add Item</button>
+					<fa-icon [icon]="faPlusCircle"></fa-icon>&nbsp;&nbsp;Add Item
+				</button>
 				<button type="button" class="btn col-lg-3 d-none d-md-block" style="max-width:175px;" (click)="editBucket()">
-					<fa-icon [icon]="faEdit"></fa-icon>&nbsp;&nbsp;Edit Board</button>
+					<fa-icon [icon]="faEdit"></fa-icon>&nbsp;&nbsp;Edit Board
+				</button>
 				<button type="button" class="btn col-lg-3 danger d-none d-md-block" style="max-width:175px;" (click)="confirmForBucket.show(bucket)">
-					<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;&nbsp;Delete Board</button>
+					<fa-icon [icon]="faTrashAlt"></fa-icon>&nbsp;&nbsp;Delete Board
+				</button>
 			</div>
 			<div class="row mb8" style="font-size: 24px; cursor: pointer; opacity: .7">
 				<div class="col-md-12 col-12 d-none d-sm-block d-md-none d-block d-sm-none"> <a class="mr8" (click)="addBucketItem();">
@@ -74,13 +78,13 @@
 			<hr>
 		</div>
 		<div class="container pb24" style="min-height: 300px; ">
-		
+
 			<div class="card-columns">
-		
-					<ng-container *ngFor="let item of bucket.bucketItems;">
-							<app-bucket-item-card [bucketItem]="item" [bucket]="bucket"></app-bucket-item-card>
-					</ng-container>
-		
+
+				<ng-container *ngFor="let item of bucket.bucketItems;">
+					<app-bucket-item-card [bucketItem]="item" [bucket]="bucket"></app-bucket-item-card>
+				</ng-container>
+
 			</div>
 		</div>
 	</div>
@@ -93,10 +97,9 @@
 </ngx-smart-modal>
 
 <ngx-smart-modal #quickeditbucketitem hidedelay="100" identifier="quickEditBucketItem" customClass="nsm-dialog-animation-ttb bucket-item-quick-edit-modal">
-	<app-bucket-item-quick-edit #quickEditItemControl ></app-bucket-item-quick-edit>
+	<app-bucket-item-quick-edit #quickEditItemControl></app-bucket-item-quick-edit>
 </ngx-smart-modal>
 
 <app-confirm-modal #confirmForBucket id="confirmForBucket" (confirmed)="deleteBucket($event)"></app-confirm-modal>
 
 <app-confirm-modal #confirmForItem id="confirmForItem" (confirmed)="deleteItem($event)"></app-confirm-modal>
-

@@ -1,17 +1,18 @@
 <div class="container">
-    <div class="container" style="padding:24px 0px">
-        <h2 class="card-title">Your Bucket Boards</h2>
-        <p>
-            This is where all your bucket boards are. You can create as many bucket boards as you like to help organize your bucket lists.
-            Organize them however you like. A lot of people create bucket boards by activity or region. For instance create
-            a board for all your dream scuba trips, or a bucket for everywhere you want to go in south america.
-        </p>
-        <button type="button" class="btn btn-fill btn-wd" (click)="createBucket()">Add New Bucket Board</button>
+	<div class="container" style="padding:24px 0px">
+		<h2 class="card-title">Your Bucket Boards</h2>
+		<p>
+			This is where all your bucket boards are. You can create as many bucket boards as you like to help organize your bucket
+			lists.
+			Organize them however you like. A lot of people create bucket boards by activity or region. For instance create
+			a board for all your dream scuba trips, or a bucket for everywhere you want to go in south america.
+		</p>
+		<button type="button" class="btn btn-fill btn-wd" (click)="createBucket()">Add New Bucket Board</button>
 
-        <hr />
-    </div>
-    <div class="container" style="min-height: 300px; padding:0px 0px 32px; ">
-		
+		<hr />
+	</div>
+	<div class="container" style="min-height: 300px; padding:0px 0px 32px; ">
+
 		<div class="card-columns">
 
 			<ng-container *ngFor="let item of buckets; let i=index">
@@ -20,10 +21,10 @@
 
 		</div>
 	</div>
-	
+
 </div>
 
 
 <ngx-smart-modal #quickEditBucketModal hideDelay="100" identifier="quickEditBucketModal" customClass="la-modal nsm-dialog-animation-fade">
-        <app-bucket-edit-control class="la-modal" ></app-bucket-edit-control>
-    </ngx-smart-modal>
+	<app-bucket-edit-control class="la-modal"></app-bucket-edit-control>
+</ngx-smart-modal>

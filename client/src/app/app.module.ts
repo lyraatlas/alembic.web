@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ErrorEventBus } from '../event-buses';
 import { CommentEventBus } from '../event-buses/comment.event-bus';
+import { SearchBarEventBus } from '../event-buses/search-bar.event-bus';
 import { AlertService, AuthenticationService, LikeableServiceMixin, SupplierService, UserService } from '../services';
 import { BucketItemService } from '../services/bucket-item.service';
 import { BucketService } from '../services/bucket.service';
@@ -24,46 +25,45 @@ import { NavigatorModule } from './shared/navigator/navigator.module';
 import { SharedModule } from './shared/shared.module';
 import { SidebarModule } from './sidebar/sidebar.module';
 
-
-
 @NgModule({
-    imports:      [
-        BrowserModule,
-        FormsModule,
-        AppRoutingModule,
-        HttpModule,
-        SidebarModule,
-        NavbarModule,
-        NavigatorModule,
-        FooterModule,
-        AuthenticationModule,
-        DashboardModule,
-        NgxSmartModalModule.forRoot(),
+	imports: [
+		BrowserModule,
+		FormsModule,
+		AppRoutingModule,
+		HttpModule,
+		SidebarModule,
+		NavbarModule,
+		NavigatorModule,
+		FooterModule,
+		AuthenticationModule,
+		DashboardModule,
+		NgxSmartModalModule.forRoot(),
 		FontAwesomeModule,
 		SharedModule
-    ],
-    declarations: [
-        AppComponent,
-        AdminLayoutComponent,
-        AuthLayoutComponent,
-        AlertComponent,
-    ],
-    providers: [
-        AlertService,
-        UserService,
-        BucketService,
-        AuthenticationService,
-        AuthGuard,
-        BaseRequestOptions,
-        SupplierService,
-        ErrorEventBus,
-        NotificationService,
-        NgxSmartModalService,
-        LikeableServiceMixin,
+	],
+	declarations: [
+		AppComponent,
+		AdminLayoutComponent,
+		AuthLayoutComponent,
+		AlertComponent,
+	],
+	providers: [
+		AlertService,
+		UserService,
+		BucketService,
+		AuthenticationService,
+		AuthGuard,
+		BaseRequestOptions,
+		SupplierService,
+		ErrorEventBus,
+		NotificationService,
+		NgxSmartModalService,
+		LikeableServiceMixin,
 		BucketItemService,
-		CommentEventBus
-    ],
-    bootstrap:    [ AppComponent ]
+		CommentEventBus,
+		SearchBarEventBus
+	],
+	bootstrap: [AppComponent]
 })
 
 export class AppModule { }

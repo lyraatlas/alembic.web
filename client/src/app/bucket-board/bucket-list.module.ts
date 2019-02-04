@@ -22,31 +22,35 @@ import { BucketItemCardComponent } from './items/bucket-item-card/bucket-item-ca
 import { BucketItemQuickEditComponent } from './items/bucket-item-quick-edit/bucket-item-quick-edit.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(BucketListRoutes),
-        FormsModule,
-        DataTablesModule,
-        ImageUploaderModule,
-        NgUploaderModule,
-        Ng2CompleterModule,
-        NgxDatatableModule,
-        NgxSmartModalModule,
-        FontAwesomeModule,
+	imports: [
+		CommonModule,
+		RouterModule.forChild(BucketListRoutes),
+		FormsModule,
+		DataTablesModule,
+		ImageUploaderModule,
+		NgUploaderModule,
+		Ng2CompleterModule,
+		NgxDatatableModule,
+		NgxSmartModalModule,
+		FontAwesomeModule,
 		FileDropModule,
-		SharedModule,		
-    ],
-    declarations: [
-        BucketListComponent,
-        BucketDetailComponent,
-        BucketEditControlComponent,
-        BucketItemQuickEditComponent,
-        BucketCardComponent,
-        BucketItemCardComponent,
+		SharedModule,
+	],
+	declarations: [
+		BucketListComponent,
+		BucketDetailComponent,
+		BucketEditControlComponent,
+		BucketItemQuickEditComponent,
+		BucketCardComponent,
+		BucketItemCardComponent,
 	],
 	providers: [
 		BucketEventBus,
 		BucketItemEventBus
+	],
+	exports: [
+		BucketCardComponent,
+		BucketItemCardComponent
 	]
 })
 export class BucketListModule { }

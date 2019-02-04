@@ -1,0 +1,13 @@
+.ts-visible {
+   visibility: visible;
+   opacity: 1;
+   transition: // first step
+   opacity 1s ease-out
+}
+
+.ts-hidden {
+   visibility: hidden;
+   opacity: 0;
+   transition: // first step
+   opacity 1s ease-out
+}
