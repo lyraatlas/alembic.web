@@ -142,6 +142,9 @@ This will run a mongo instance for you. image name is lyram
 This will run it in the background use the one above if you want to see logs from mongo which can be useful for figuring out what's going on.
 `docker run -p 27017:27017 -d --name lyram mongo`
 
+I wonder if I need or want the alembic-development end.
+"mongoConnectionString": "mongodb://localhost:27017/alembic-development"
+
 # Linux Cheat Sheet
 
 To copy out to the server. You run this directly from a local console. Don't log into the server.
