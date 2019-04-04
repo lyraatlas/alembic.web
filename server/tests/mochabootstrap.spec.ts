@@ -1,1 +1,1 @@
-process.env.NODE_ENV='integration';
+process.env.NODE_ENV = "local";
