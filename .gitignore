@@ -74,4 +74,5 @@ img-uploads/
 server/environments/development.secrets.json
 server/environments/integration.secrets.json
 server/environments/production.secrets.json
+server/environments/local.secrets.json
 server/environments/all-environments.secrets.json
