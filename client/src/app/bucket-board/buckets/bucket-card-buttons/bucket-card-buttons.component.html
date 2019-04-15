@@ -1,0 +1,25 @@
+<div [hidden]="!isEditable" class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
+  <a class="col-4 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucket)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
+    <fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+    <span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{ bucket.likedBy.length }}</span>
+  </a>
+  <a class="col-4 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucket)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
+    <fa-icon [icon]="faComment"></fa-icon>
+    <span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{ bucket.comments.length }}</span>
+  </a>
+  <a class="col-4 card-buttons" data-toggle="tooltip" title="Edit This Bucket" (click)="quickEdit(bucket)" style=" padding: 8px;  cursor: pointer">
+    <fa-icon [icon]="faPen"></fa-icon>
+  </a>
+</div>
+<!-- The only thing different there is the class, and whether that last edit button is visisble.
+     We shouldn't copy this code twice, figure out how to bind to the correct class -->
+<div [hidden]="isEditable" class="row no-margin" style="font-size: 16px; text-align: center;border-top: 1px solid lightgrey; ">
+  <a class="col-6 card-buttons" data-toggle="tooltip" title="Add A Like" (click)="addRemoveLike(bucket)" tooltip style="border-right: 1px solid lightgrey; padding: 8px; cursor: pointer">
+    <fa-icon [class.gold]="bucket.isLikedByCurrentUser" [icon]="faHeart"></fa-icon>
+    <span *ngIf="bucket.likedBy && bucket.likedBy.length > 0">&nbsp;{{ bucket.likedBy.length }}</span>
+  </a>
+  <a class="col-6 card-buttons" data-toggle="tooltip" title="Add A Comment" (click)="addComment(bucket)" style="border-right: 1px solid lightgrey;  padding: 8px; cursor: pointer">
+    <fa-icon [icon]="faComment"></fa-icon>
+    <span *ngIf="bucket.comments && bucket.comments.length > 0">&nbsp;{{ bucket.comments.length }}</span>
+  </a>
+</div>

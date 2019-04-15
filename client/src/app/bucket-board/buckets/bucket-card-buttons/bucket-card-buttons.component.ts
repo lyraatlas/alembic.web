@@ -1,21 +1,16 @@
 import { Component, Input, OnInit } from "@angular/core";
-import {
-  faComment,
-  faHeart,
-  faPen,
-  faPencilAlt
-} from "@fortawesome/free-solid-svg-icons";
+import { faComment, faHeart, faPen, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { ErrorEventBus } from "../../../../event-buses";
 import { BucketEventBus } from "../../../../event-buses/bucket.event-bus";
 import { IBucket } from "../../../../models";
 import { BucketService } from "../../../../services";
 
 @Component({
-  selector: "app-bucket-card",
-  templateUrl: "./bucket-card.component.html",
-  styleUrls: ["./bucket-card.component.scss"]
+  selector: "app-bucket-card-buttons",
+  templateUrl: "./bucket-card-buttons.component.html",
+  styleUrls: ["./bucket-card-buttons.component.scss"]
 })
-export class BucketCardComponent implements OnInit {
+export class BucketCardButtonsComponent implements OnInit {
   public faComment = faComment;
   public faHeart = faHeart;
   public faPencilAlt = faPencilAlt;
@@ -23,11 +18,7 @@ export class BucketCardComponent implements OnInit {
 
   @Input() bucket: IBucket;
   @Input() isEditable: boolean = true;
-  constructor(
-    public bucketService: BucketService,
-    public errorEventBus: ErrorEventBus,
-    public bucketEventBus: BucketEventBus
-  ) {}
+  constructor(public bucketService: BucketService, public errorEventBus: ErrorEventBus, public bucketEventBus: BucketEventBus) {}
 
   ngOnInit() {}
 
@@ -36,10 +27,8 @@ export class BucketCardComponent implements OnInit {
   }
 
   addRemoveLike(bucket: IBucket) {
-    this.bucketService.liker
-      .toggleLike(bucket, this.errorEventBus)
-      .subscribe(item => {
-        bucket = item;
-      });
+    this.bucketService.liker.toggleLike(bucket, this.errorEventBus).subscribe(item => {
+      bucket = item;
+    });
   }
 }

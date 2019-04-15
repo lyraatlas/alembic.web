@@ -1,69 +1,62 @@
-<div class="nav-container"> <a id="top"></a>
-	<nav class="nav-centered">
-		<div class=" text-center logo logo-dark no-margin">
-			<div class="row">
-				<div class="col d-none d-md-none d-lg-block"> <a href="/">
+<div class="nav-container">
+  <a id="top"></a>
+  <nav class="nav-centered">
+    <div class=" text-center logo logo-dark no-margin">
+      <div class="row">
+        <div class="col d-none d-md-none d-lg-block">
+          <a href="/">
+            <div style="font-family: Playfair Display; font-size: 50px;margin-top:16px; margin-bottom:8px; font-weight:100; font-style:normal;">
+              <img src="assets/img/toplogo.png" alt="Lyra Atlas" class="logo lyralogo" />
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-bar text-center">
+      <div class="module widget-handle mobile-toggle left d-none d-sm-block d-md-none d-block d-sm-none">
+        <fa-icon [icon]="faBars" style="line-height: 4"></fa-icon>
+        <div class="text-right" style="padding-left:10px; padding-top:2px; float:right; font-family: Playfair Display; font-size: 50px; font-weight:100; font-style:normal;">
+          <img src="assets/img/toplogo.png" alt="Lyra Atlas" width="100px" class="logo lyralogo" />
+        </div>
+      </div>
+      <div class="module-group text-left">
+        <div class="module left">
+          <ul class="menu">
+            <li>
+              <a href="/">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="/bucket-board">
+                Bucket Boards
+              </a>
+            </li>
+            <li>
+              <a href="/browse">
+                Explore
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-toggle btn-magnify" data-toggle="dropdown" href="/settings">
+                <i class="ti-user"></i>
 
-						<div style="font-family: Playfair Display; font-size: 50px;margin-top:16px; margin-bottom:8px; font-weight:100; font-style:normal;">
+                <span>{{ email }}</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-toggle btn-magnify" data-toggle="dropdown" href="#" (click)="logout()">
+                <i class="ti-power-off"></i>
 
-							<img src="assets/img/toplogo.png" alt="Lyra Atlas" class="logo lyralogo">
-
-						</div>
-
-					</a>
-				</div>
-			</div>
-		</div>
-		<div class="nav-bar text-center">
-			<div class="module widget-handle mobile-toggle left d-none d-sm-block d-md-none d-block d-sm-none">
-				<fa-icon [icon]="faBars" style="line-height: 4"></fa-icon>
-				<div class="text-right" style="padding-left:10px; padding-top:2px; float:right; font-family: Playfair Display; font-size: 50px; font-weight:100; font-style:normal;">
-					<img src="assets/img/toplogo.png" alt="Lyra Atlas" width="100px" class="logo lyralogo">
-				</div>
-			</div>
-			<div class="module-group text-left">
-				<div class="module left">
-					<ul class="menu">
-						<li> <a href="/">
-
-								Home
-
-							</a>
-						</li>
-						<li> <a href="/bucket-board">
-
-								Bucket Boards
-
-							</a>
-						</li>
-						<li> <a href="/browse">
-
-								Explore
-
-							</a>
-						</li>
-						<li> <a class="dropdown-toggle btn-magnify" data-toggle="dropdown" href="/settings">
-
-								<i class="ti-user"></i>
-
-								<span>{{email}}</span>
-
-							</a>
-						</li>
-						<li> <a class="dropdown-toggle btn-magnify" data-toggle="dropdown" href="#" (click)="logout()">
-
-								<i class="ti-power-off"></i>
-
-								<span>Logout</span>
-
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="mt16">
-			<app-search-bar></app-search-bar>
-		</div>
-	</nav>
+                <span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="pb16 search-bar">
+      <app-search-bar></app-search-bar>
+    </div>
+  </nav>
 </div>

@@ -1,48 +1,38 @@
 <div class="container" *ngIf="buckets && buckets.length > 0">
-	<div class="container" style="padding:24px 0px">
+  <div class="container" style="padding:24px 0px">
+    <h2 class="card-title">
+      Bucket Boards
+    </h2>
 
-		<h2 class="card-title">
-			<!-- <button type="button" *ngIf="!isBucketsExpanded" (click)="toggleBuckets(true)" class="mb0 btn btn-sm btn-light"
-			 style="font-size:20px;border:none;" href="#buckets">
-				<fa-icon [icon]="faPlusCircle"></fa-icon>
-			</button>
-			<button type="button" *ngIf="isBucketsExpanded" (click)="toggleBuckets(false)" class="mb0 btn btn-sm btn-light"
-			 style="font-size:20px;border:none;" href="#buckets">
-				<fa-icon [icon]="faMinusCircle"></fa-icon>
-			</button> -->
-			Bucket Boards
-		</h2>
-
-		<hr />
-	</div>
-	<div style="min-height: 100px; padding:0px 0px 32px; " [class]="isBucketsExpanded ? 'container ts-visible' : 'container ts-hidden'"
-	 id="buckets">
-
-		<div class="card-columns">
-
-			<ng-container *ngFor="let item of buckets; let i=index">
-				<app-bucket-card [bucket]="item"></app-bucket-card>
-			</ng-container>
-
-		</div>
-	</div>
-
+    <hr />
+  </div>
+  <div style="min-height: 100px; padding:0px 0px 32px; " [class]="isBucketsExpanded ? 'container ts-visible' : 'container ts-hidden'" id="buckets">
+    <div class="card-columns">
+      <ng-container *ngFor="let item of buckets; let i = index">
+        <app-bucket-card [bucket]="item" [isEditable]="false"></app-bucket-card>
+      </ng-container>
+    </div>
+  </div>
 </div>
 
 <div class="container" *ngIf="bucketItems && bucketItems.length > 0">
-	<div class="container" style="padding:24px 0px">
-		<h2 class="card-title">Bucket Items</h2>
-		<hr />
-	</div>
-	<div class="container pb24" style="min-height: 300px; ">
+  <div class="container" style="padding:24px 0px">
+    <h2 class="card-title">Bucket Items</h2>
+    <hr />
+  </div>
+  <div class="container pb24" style="min-height: 300px; ">
+    <div class="card-columns">
+      <ng-container *ngFor="let item of bucketItems">
+        <app-bucket-item-card [bucketItem]="item" [bucket]="bucket"></app-bucket-item-card>
+      </ng-container>
+    </div>
+  </div>
+</div>
 
-		<div class="card-columns">
-
-			<ng-container *ngFor="let item of bucketItems;">
-				<app-bucket-item-card [bucketItem]="item" [bucket]="bucket"></app-bucket-item-card>
-			</ng-container>
-
-		</div>
-	</div>
-
+<div class="container" *ngIf="(!buckets || buckets.length === 0) && (!bucketItems || bucketItems.length === 0)">
+  <div class="container" style="padding:24px 0px; text-align: center;">
+    <h2>No Results Found.</h2>
+    <p>Sad Panda.</p>
+    <img src="assets/img/no-results.png" alt="No Results Panda" style="width: 100px;" />
+  </div>
 </div>

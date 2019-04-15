@@ -20,6 +20,7 @@ import { BucketEditControlComponent } from './buckets/bucket-edit-control/bucket
 import { BucketListComponent } from './buckets/bucket-list/bucket-list.component';
 import { BucketItemCardComponent } from './items/bucket-item-card/bucket-item-card.component';
 import { BucketItemQuickEditComponent } from './items/bucket-item-quick-edit/bucket-item-quick-edit.component';
+import { BucketCardButtonsComponent } from './buckets/bucket-card-buttons/bucket-card-buttons.component';
 
 @NgModule({
 	imports: [
@@ -43,6 +44,7 @@ import { BucketItemQuickEditComponent } from './items/bucket-item-quick-edit/buc
 		BucketItemQuickEditComponent,
 		BucketCardComponent,
 		BucketItemCardComponent,
+		BucketCardButtonsComponent,
 	],
 	providers: [
 		BucketEventBus,
